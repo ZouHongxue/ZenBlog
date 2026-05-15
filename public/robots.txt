@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ZouHongxue.github.io/ZenBlog/sitemap-index.xml

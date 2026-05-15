@@ -7,9 +7,12 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
+  type?: 'website' | 'article';
 }
-const { title, description = 'Zen 的个人博客', image } = Astro.props;
+const { title, description = 'Zen 的个人博客，记录技术与生活', image, type = 'website' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImage = image ?? `${Astro.site}ZenBlog/og-default.png`;
+const siteName = 'Zen Blog';
 ---
 <!doctype html>
 <html lang="zh-CN">
@@ -21,7 +24,21 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <title>{title} · Zen Blog</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalURL} />
-  {image && <meta property="og:image" content={image} />}
+
+  <!-- Open Graph -->
+  <meta property="og:type" content={type} />
+  <meta property="og:site_name" content={siteName} />
+  <meta property="og:title" content={`${title} · Zen Blog`} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:locale" content="zh_CN" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={`${title} · Zen Blog`} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
   <!-- Prevent flash of wrong theme -->
   <script is:inline>
     const t = localStorage.getItem('theme');

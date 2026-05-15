@@ -6,8 +6,27 @@ const pubDate = new Date(frontmatter.pubDate).toLocaleDateString('zh-CN', {
   year: 'numeric', month: 'long', day: 'numeric'
 });
 const [titleZh, titleEn] = frontmatter.title.split('|').map((s: string) => s.trim());
+
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": frontmatter.title,
+  "description": frontmatter.description,
+  "datePublished": new Date(frontmatter.pubDate).toISOString(),
+  "author": {
+    "@type": "Person",
+    "name": frontmatter.author || "Zen",
+    "url": "https://ZouHongxue.github.io/ZenBlog/about"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Zen"
+  },
+  "keywords": (frontmatter.tags || []).join(', '),
+  "inLanguage": "zh-CN"
+});
 ---
-<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+<BaseLayout title={frontmatter.title} description={frontmatter.description} type="article">
   <article class="max-w-4xl mx-auto px-4 sm:px-6 py-14">
     <a href={`${base}blog`} class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 mb-10 transition-colors">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -39,4 +58,5 @@ const [titleZh, titleEn] = frontmatter.title.split('|').map((s: string) => s.tri
       <slot />
     </div>
   </article>
+  <script type="application/ld+json" set:html={jsonLd} />
 </BaseLayout>
