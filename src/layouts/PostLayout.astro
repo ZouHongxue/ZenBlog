@@ -7,7 +7,7 @@ const pubDate = new Date(frontmatter.pubDate).toLocaleDateString('zh-CN', {
 });
 ---
 <BaseLayout title={frontmatter.title} description={frontmatter.description}>
-  <article class="max-w-3xl mx-auto px-4 sm:px-6 py-14">
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 py-14">
     <a href={`${base}blog`} class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 mb-10 transition-colors">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
