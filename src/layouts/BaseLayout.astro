@@ -40,6 +40,15 @@ const siteName = 'Zen Blog';
   <meta name="twitter:title" content={`${title} · Zen Blog`} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImage} />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2RMNB42G86" is:inline></script>
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2RMNB42G86');
+  </script>
+
   <!-- Prevent flash of wrong theme -->
   <script is:inline>
     const t = localStorage.getItem('theme');

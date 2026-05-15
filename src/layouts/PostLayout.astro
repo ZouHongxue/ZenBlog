@@ -51,7 +51,11 @@ const jsonLd = JSON.stringify({
           <span class="block text-xl sm:text-2xl text-gray-400 dark:text-gray-500 font-medium mt-2">{titleEn}</span>
         )}
       </h1>
-      <p class="text-gray-500 dark:text-gray-400 text-sm">{pubDate} · {frontmatter.author || 'Zen'}</p>
+      <p class="text-gray-500 dark:text-gray-400 text-sm">
+        {pubDate} · {frontmatter.author || 'Zen'}
+        <span class="mx-1.5 opacity-40">·</span>
+        <span id="reading-time" class="opacity-70">阅读中…</span>
+      </p>
     </header>
 
     <div class="prose-zen">
@@ -112,6 +116,26 @@ const jsonLd = JSON.stringify({
           分享到 X
         </a>
       </div>
+    </div>
+
+    <!-- Giscus 评论 -->
+    <div class="mt-16 pt-10 border-t border-gray-100 dark:border-gray-800">
+      <h2 class="text-base font-semibold text-gray-900 dark:text-white mb-6">评论</h2>
+      <script src="https://giscus.app/client.js"
+        data-repo="ZouHongxue/ZenBlog"
+        data-repo-id="MDEwOlJlcG9zaXRvcnkxMDg5NDAyMTU="
+        data-category="Announcements"
+        data-category-id="DIC_kwDOBn5Lt84C9G_u"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+      </script>
     </div>
   </article>
 
@@ -227,4 +251,11 @@ const jsonLd = JSON.stringify({
   closeBtn?.addEventListener('click', closeModal);
   backdrop?.addEventListener('click', closeModal);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  // Reading time
+  const articleText = document.querySelector('.prose-zen')?.textContent || '';
+  const charCount = articleText.trim().length;
+  const minutes = Math.max(1, Math.ceil(charCount / 400));
+  const rtEl = document.getElementById('reading-time');
+  if (rtEl) rtEl.textContent = `约 ${minutes} 分钟`;
 </script>
