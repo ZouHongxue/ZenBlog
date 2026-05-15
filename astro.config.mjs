@@ -6,5 +6,11 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://ZouHongxue.github.io',
   base: '/ZenBlog',
-  integrations: [tailwind(), mdx(), sitemap()],
+  integrations: [
+    tailwind(),
+    mdx(),
+    sitemap({
+      filter: (page) => !page.endsWith('/rss.xml'),
+    }),
+  ],
 });

@@ -57,6 +57,174 @@ const jsonLd = JSON.stringify({
     <div class="prose-zen">
       <slot />
     </div>
+
+    <!-- Share Bar -->
+    <div class="mt-16 pt-8 border-t border-gray-100 dark:border-gray-800">
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">觉得有用？分享给朋友 ↓</p>
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Copy Link -->
+        <button
+          id="share-copy"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 dark:hover:border-indigo-600 transition-all"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          复制链接
+        </button>
+
+        <!-- Weibo -->
+        <a
+          id="share-weibo"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-red-400 hover:text-red-500 dark:hover:text-red-400 dark:hover:border-red-600 transition-all"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.739 5.443zm5.83-9.927c-.268-.083-.452-.14-.312-.504.31-.778.342-1.447.005-1.926-.63-.892-2.354-.845-4.328-.005 0 0-.621.27-.462-.22.303-.97.258-1.783-.213-2.254-1.073-1.073-3.927.041-6.384 2.498-1.84 1.84-2.906 3.765-2.906 5.438 0 3.205 4.11 5.155 8.133 5.155 5.27 0 8.775-3.062 8.775-5.49 0-1.468-1.238-2.305-2.308-2.692zm-1.95-6.564c-.228.063-.457.128-.677.2-.225.071-.433-.044-.504-.27-.07-.225.044-.468.27-.539.244-.077.49-.152.737-.218.25-.068.505-.127.761-.178.256-.05.481.116.53.37.05.255-.115.48-.369.529-.25.048-.499.106-.748.106zm.85-2.45c-.657.18-1.308.379-1.953.589-.224.074-.468-.046-.543-.27-.075-.225.045-.469.27-.543.659-.215 1.325-.418 1.997-.602.268-.072.541.085.613.351.072.268-.085.541-.384.475zm4.27 1.394c-.47-1.306-1.59-2.258-2.991-2.637-1.048-.282-2.131-.197-3.078.24-.255.12-.538.01-.657-.246-.12-.255-.009-.54.246-.659 1.178-.557 2.536-.664 3.838-.303 1.745.471 3.14 1.701 3.738 3.299.097.262-.035.552-.297.647-.262.097-.551-.033-.649-.295l-.15-.046z"/>
+          </svg>
+          微博
+        </a>
+
+        <!-- WeChat -->
+        <button
+          id="share-wechat"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-green-500 hover:text-green-600 dark:hover:text-green-400 dark:hover:border-green-600 transition-all"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.278 1.786-1.533 1.273-2.305 3.160-1.633 5.428.716 2.4 3.064 3.921 5.554 3.921.896 0 1.785-.159 2.621-.464a.61.61 0 0 1 .527.071l1.394.816a.232.232 0 0 0 .12.036c.115 0 .211-.096.211-.213 0-.051-.022-.1-.033-.15l-.288-1.083a.42.42 0 0 1 .157-.486C21.35 17.418 22.5 15.79 22.5 13.985c.001-2.896-2.555-5.158-5.562-5.127zm-2.559 2.623c.471 0 .853.388.853.865a.86.86 0 0 1-.853.865.86.86 0 0 1-.853-.865c0-.477.382-.865.853-.865zm5.116 0c.471 0 .853.388.853.865a.86.86 0 0 1-.853.865.86.86 0 0 1-.853-.865c0-.477.382-.865.853-.865z"/>
+          </svg>
+          分享到微信
+        </button>
+
+        <!-- X (Twitter) -->
+        <a
+          id="share-x"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-gray-900 hover:text-gray-900 dark:hover:text-white dark:hover:border-gray-400 transition-all"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.736-8.836L2.25 2.25h6.978l4.259 5.632 4.757-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
+          </svg>
+          分享到 X
+        </a>
+      </div>
+    </div>
   </article>
+
+  <!-- WeChat QR Modal -->
+  <div id="wechat-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <!-- Backdrop -->
+    <div id="wechat-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <!-- Card -->
+    <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-4 max-w-xs w-full">
+      <button id="wechat-close" class="absolute top-3 right-3 p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="关闭">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="flex items-center gap-2 text-green-600 dark:text-green-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.278 1.786-1.533 1.273-2.305 3.160-1.633 5.428.716 2.4 3.064 3.921 5.554 3.921.896 0 1.785-.159 2.621-.464a.61.61 0 0 1 .527.071l1.394.816a.232.232 0 0 0 .12.036c.115 0 .211-.096.211-.213 0-.051-.022-.1-.033-.15l-.288-1.083a.42.42 0 0 1 .157-.486C21.35 17.418 22.5 15.79 22.5 13.985c.001-2.896-2.555-5.158-5.562-5.127zm-2.559 2.623c.471 0 .853.388.853.865a.86.86 0 0 1-.853.865.86.86 0 0 1-.853-.865c0-.477.382-.865.853-.865zm5.116 0c.471 0 .853.388.853.865a.86.86 0 0 1-.853.865.86.86 0 0 1-.853-.865c0-.477.382-.865.853-.865z"/>
+        </svg>
+        <span class="font-semibold text-sm">分享到微信</span>
+      </div>
+      <div id="wechat-qr" class="rounded-xl overflow-hidden bg-white p-2 shadow-inner"></div>
+      <p class="text-xs text-gray-500 dark:text-gray-400 text-center leading-relaxed">
+        用微信扫一扫<br/>即可分享此文章
+      </p>
+    </div>
+  </div>
   <script type="application/ld+json" set:html={jsonLd} />
 </BaseLayout>
+
+<script>
+  const pageUrl = window.location.href;
+  const pageTitle = document.title;
+
+  // Copy link
+  const copyBtn = document.getElementById('share-copy');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pageUrl);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = pageUrl;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      const orig = copyBtn.innerHTML;
+      copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg> 已复制！`;
+      copyBtn.classList.add('border-green-400', 'text-green-600');
+      setTimeout(() => {
+        copyBtn.innerHTML = orig;
+        copyBtn.classList.remove('border-green-400', 'text-green-600');
+      }, 2000);
+    });
+  }
+
+  // Weibo
+  const weiboLink = document.getElementById('share-weibo') as HTMLAnchorElement | null;
+  if (weiboLink) {
+    weiboLink.href = `https://service.weibo.com/share/share.php?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent(pageTitle)}`;
+  }
+
+  // X (Twitter)
+  const xLink = document.getElementById('share-x') as HTMLAnchorElement | null;
+  if (xLink) {
+    xLink.href = `https://x.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(pageTitle)}`;
+  }
+
+  // WeChat QR modal
+  const wechatBtn = document.getElementById('share-wechat');
+  const modal = document.getElementById('wechat-modal');
+  const backdrop = document.getElementById('wechat-backdrop');
+  const closeBtn = document.getElementById('wechat-close');
+  const qrContainer = document.getElementById('wechat-qr');
+  let qrGenerated = false;
+
+  function openModal() {
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    // Generate QR code only once
+    if (!qrGenerated && qrContainer) {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+      script.onload = () => {
+        // @ts-ignore
+        new QRCode(qrContainer, {
+          text: pageUrl,
+          width: 180,
+          height: 180,
+          colorDark: '#1f2937',
+          colorLight: '#ffffff',
+          correctLevel: /* QRCode.CorrectLevel.H */ 3,
+        });
+        qrGenerated = true;
+      };
+      document.head.appendChild(script);
+    }
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  wechatBtn?.addEventListener('click', openModal);
+  closeBtn?.addEventListener('click', closeModal);
+  backdrop?.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+</script>
