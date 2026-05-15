@@ -5,6 +5,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const pubDate = new Date(frontmatter.pubDate).toLocaleDateString('zh-CN', {
   year: 'numeric', month: 'long', day: 'numeric'
 });
+const [titleZh, titleEn] = frontmatter.title.split('|').map((s: string) => s.trim());
 ---
 <BaseLayout title={frontmatter.title} description={frontmatter.description}>
   <article class="max-w-4xl mx-auto px-4 sm:px-6 py-14">
@@ -25,8 +26,11 @@ const pubDate = new Date(frontmatter.pubDate).toLocaleDateString('zh-CN', {
           ))}
         </div>
       )}
-      <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
-        {frontmatter.title}
+      <h1 class="font-bold leading-tight mb-4">
+        <span class="block text-3xl sm:text-4xl text-gray-900 dark:text-white">{titleZh}</span>
+        {titleEn && (
+          <span class="block text-xl sm:text-2xl text-gray-400 dark:text-gray-500 font-medium mt-2">{titleEn}</span>
+        )}
       </h1>
       <p class="text-gray-500 dark:text-gray-400 text-sm">{pubDate} · {frontmatter.author || 'Zen'}</p>
     </header>
