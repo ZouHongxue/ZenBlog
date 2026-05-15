@@ -1,0 +1,38 @@
+---
+import BaseLayout from './BaseLayout.astro';
+const { frontmatter } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const pubDate = new Date(frontmatter.pubDate).toLocaleDateString('zh-CN', {
+  year: 'numeric', month: 'long', day: 'numeric'
+});
+---
+<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 py-14">
+    <a href={`${base}blog`} class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 mb-10 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      返回博客
+    </a>
+
+    <header class="mb-10">
+      {frontmatter.tags && (
+        <div class="flex flex-wrap gap-2 mb-4">
+          {frontmatter.tags.map((tag: string) => (
+            <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+      <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
+        {frontmatter.title}
+      </h1>
+      <p class="text-gray-500 dark:text-gray-400 text-sm">{pubDate} · {frontmatter.author || 'Zen'}</p>
+    </header>
+
+    <div class="prose-zen">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

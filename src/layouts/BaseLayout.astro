@@ -1,0 +1,40 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+const { title, description = 'Zen 的个人博客', image } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/svg+xml" href="/zen-blog/favicon.svg" />
+  <meta name="generator" content={Astro.generator} />
+  <title>{title} · Zen Blog</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalURL} />
+  {image && <meta property="og:image" content={image} />}
+  <!-- Prevent flash of wrong theme -->
+  <script is:inline>
+    const t = localStorage.getItem('theme');
+    if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+</head>
+<body class="min-h-screen flex flex-col">
+  <Nav />
+  <main class="flex-1">
+    <slot />
+  </main>
+  <Footer />
+</body>
+</html>
