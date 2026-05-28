@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ZouHongxue.github.io/ZenBlog/sitemap.xml
+Sitemap: https://zenhome.qzz.io/sitemap.xml

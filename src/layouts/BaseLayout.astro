@@ -11,7 +11,7 @@ interface Props {
 }
 const { title, description = 'Zen 的个人博客，记录技术与生活', image, type = 'website' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const ogImage = image ?? `${Astro.site}ZenBlog/og-default.png`;
+const ogImage = image ?? `${Astro.site}og-default.png`;
 const siteName = 'Zen Blog';
 ---
 <!doctype html>

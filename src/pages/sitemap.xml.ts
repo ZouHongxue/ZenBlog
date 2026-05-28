@@ -2,7 +2,7 @@ import { getCollection } from 'astro:content';
 
 export async function GET() {
   const posts = await getCollection('blog');
-  const base = 'https://ZouHongxue.github.io/ZenBlog';
+  const base = 'https://zenhome.qzz.io';
 
   const pages = [
     { url: `${base}/`, lastmod: new Date().toISOString() },
