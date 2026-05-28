@@ -2,17 +2,32 @@
 import ThemeToggle from './ThemeToggle.astro';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
-<header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-gray-950/80 border-b border-gray-200 dark:border-gray-800">
-  <nav class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-    <a href={base} class="font-semibold text-lg tracking-tight text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+<header class="sticky top-0 z-50 backdrop-blur-md bg-white/85 dark:bg-[#0f0f10]/85 border-b border-gray-100 dark:border-white/[0.06]">
+  <nav class="max-w-4xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+    <a href={base} class="font-bold text-base tracking-tight text-gray-900 dark:text-white transition-opacity hover:opacity-70">
       Zen
     </a>
-    <div class="flex items-center gap-1">
-      <a href={base} class="px-3 py-1.5 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">首页</a>
-      <a href={`${base}blog`} class="px-3 py-1.5 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">博客</a>
-      <a href={`${base}about`} class="px-3 py-1.5 rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">关于</a>
-      <div class="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1"></div>
+    <div class="flex items-center gap-0.5">
+      <a href={base} class="nav-link px-3.5 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors rounded-md hover:bg-gray-100/70 dark:hover:bg-white/5">首页</a>
+      <a href={`${base}blog`} class="nav-link px-3.5 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors rounded-md hover:bg-gray-100/70 dark:hover:bg-white/5">博客</a>
+      <a href={`${base}about`} class="nav-link px-3.5 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors rounded-md hover:bg-gray-100/70 dark:hover:bg-white/5">关于</a>
+      <div class="w-px h-4 bg-gray-200 dark:bg-white/10 mx-1.5"></div>
       <ThemeToggle />
     </div>
   </nav>
 </header>
+
+<script>
+  // Highlight current nav link
+  const path = window.location.pathname;
+  document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach(link => {
+    const href = link.getAttribute('href') || '';
+    const isActive = href !== '/'
+      ? path.startsWith(href)
+      : path === href || path === '/';
+    if (isActive) {
+      link.classList.remove('text-gray-500', 'dark:text-gray-400');
+      link.classList.add('text-gray-900', 'dark:text-white', 'font-semibold');
+    }
+  });
+</script>
