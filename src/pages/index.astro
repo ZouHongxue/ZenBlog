@@ -3,6 +3,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const isDev = import.meta.env.DEV;
+
+// 素材库（仅 dev）
+let ideas: Array<{date: string; text: string; context: string; tags: string[]}> = [];
+if (isDev) {
+  try {
+    const raw = await import('../data/ideas.json');
+    ideas = (raw.default ?? raw) as typeof ideas;
+  } catch {}
+}
+
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
 );
@@ -118,6 +128,36 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     </aside>
 
   </div>
+
+  {isDev && ideas.length > 0 && (
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-6">
+      <div class="border border-dashed border-violet-300 dark:border-violet-700/50 rounded-xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-xs font-semibold text-violet-600 dark:text-violet-400 tracking-wider uppercase">素材库 · 仅本地可见</p>
+          <a href="vscode://file{`${process.cwd()}`}/src/data/ideas.json"
+            class="text-xs text-violet-400 dark:text-violet-500 hover:text-violet-600 dark:hover:text-violet-300 transition-colors">
+            编辑 ↗
+          </a>
+        </div>
+        <div class="divide-y divide-violet-100 dark:divide-violet-900/30">
+          {ideas.map(idea => (
+            <div class="py-2.5">
+              <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{idea.text}</p>
+              {idea.context && (
+                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">{idea.context}</p>
+              )}
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-xs text-violet-300 dark:text-violet-600">{idea.date}</span>
+                {idea.tags.map(tag => (
+                  <span class="text-xs text-violet-400 dark:text-violet-500">#{tag}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
 
   {isDev && drafts.length > 0 && (
     <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-16">
