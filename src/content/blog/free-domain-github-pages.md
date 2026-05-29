@@ -1,5 +1,5 @@
 ---
-title: "免费域名 + GitHub Pages + Cloudflare 全套搭建 | Free Domain, GitHub Pages & Cloudflare Setup"
+title: "免费域名 + GitHub Pages + Cloudflare 全套免费建站 | Free Domain, GitHub Pages & Cloudflare Setup"
 description: "用 digitalplat.org 申请免费域名，配合 GitHub Pages 托管和 Cloudflare DNS 解析，顺带接入 Google Search Console——零成本搭一个有自定义域名的静态博客。"
 pubDate: "2026-05-29"
 author: "Zen"
