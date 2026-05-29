@@ -71,21 +71,32 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   const buttons = document.querySelectorAll<HTMLButtonElement>('.tag-btn');
   const cards = document.querySelectorAll<HTMLAnchorElement>('.post-card');
 
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tag = btn.dataset.tag!;
-      buttons.forEach(b => {
-        b.classList.remove('active', 'border-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-950/60', 'text-indigo-600', 'dark:text-indigo-400');
-        b.classList.add('border-gray-200', 'dark:border-white/10', 'text-gray-500', 'dark:text-gray-400');
-      });
-      btn.classList.add('active', 'border-indigo-400', 'bg-indigo-50', 'dark:bg-indigo-950/60', 'text-indigo-600', 'dark:text-indigo-400');
-      btn.classList.remove('border-gray-200', 'dark:border-white/10', 'text-gray-500', 'dark:text-gray-400');
-
-      cards.forEach(card => {
-        const cardTags = card.dataset.tags || '';
-        card.style.display = (tag === 'all' || cardTags.includes(tag)) ? '' : 'none';
-      });
+  function activateTag(tag: string) {
+    buttons.forEach(b => {
+      const isActive = b.dataset.tag === tag;
+      b.classList.toggle('active', isActive);
+      b.classList.toggle('border-indigo-400', isActive);
+      b.classList.toggle('bg-indigo-50', isActive);
+      b.classList.toggle('dark:bg-indigo-950/60', isActive);
+      b.classList.toggle('text-indigo-600', isActive);
+      b.classList.toggle('dark:text-indigo-400', isActive);
+      b.classList.toggle('border-gray-200', !isActive);
+      b.classList.toggle('dark:border-white/10', !isActive);
+      b.classList.toggle('text-gray-500', !isActive);
+      b.classList.toggle('dark:text-gray-400', !isActive);
     });
+    cards.forEach(card => {
+      const cardTags = card.dataset.tags || '';
+      card.style.display = (tag === 'all' || cardTags.includes(tag)) ? '' : 'none';
+    });
+  }
+
+  // 从 URL ?tag= 读取初始过滤
+  const urlTag = new URLSearchParams(window.location.search).get('tag') || 'all';
+  activateTag(urlTag);
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => activateTag(btn.dataset.tag!));
   });
 
   // Scroll reveal
