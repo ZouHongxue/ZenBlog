@@ -63,5 +63,11 @@ const siteName = 'Zen Blog';
     <slot />
   </main>
   <Footer />
+  <script is:inline>
+    // Strip trailing newline from code blocks (remark adds \n before closing ```)
+    document.querySelectorAll('pre code').forEach(el => {
+      el.textContent = el.textContent.replace(/\n$/, '');
+    });
+  </script>
 </body>
 </html>
