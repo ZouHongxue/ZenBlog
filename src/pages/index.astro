@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
+const isDev = import.meta.env.DEV;
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
 );
@@ -13,6 +14,12 @@ posts.forEach(p => (p.data.tags || []).forEach((t: string) => {
   tagMap[t] = (tagMap[t] || 0) + 1;
 }));
 const tags = Object.entries(tagMap).sort((a, b) => b[1] - a[1]);
+
+const drafts = isDev
+  ? (await getCollection('blog', ({ data }) => !!data.draft)).sort(
+      (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+    )
+  : [];
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
@@ -103,6 +110,28 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     </aside>
 
   </div>
+  {isDev && drafts.length > 0 && (
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-16">
+      <div class="border border-dashed border-amber-300 dark:border-amber-700/60 rounded-xl p-5">
+        <p class="text-xs font-semibold text-amber-600 dark:text-amber-500 tracking-wider uppercase mb-3">
+          草稿 · 仅本地可见
+        </p>
+        <div class="divide-y divide-amber-100 dark:divide-amber-900/30">
+          {drafts.map(post => (
+            <a href={`${base}blog/${post.slug}`}
+              class="flex items-center gap-4 py-2.5 group">
+              <span class="text-xs text-amber-400 dark:text-amber-600 shrink-0 tabular-nums">
+                {new Date(post.data.pubDate).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })}
+              </span>
+              <span class="text-sm text-gray-600 dark:text-gray-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                {post.data.title}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
 </BaseLayout>
 
 <script>
