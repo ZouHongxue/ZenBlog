@@ -26,8 +26,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
   <!-- Hero：全宽，独立于 grid -->
   <section class="relative max-w-4xl mx-auto px-4 sm:px-6 pt-16 pb-16 overflow-hidden">
-    <!-- Ambient glow -->
-    <div class="absolute -top-16 -left-16 w-80 h-80 bg-indigo-100 dark:bg-indigo-950/30 rounded-full blur-3xl opacity-50 dark:opacity-30 pointer-events-none"></div>
+    <!-- Ambient glow：推到左上角外面，更自然 -->
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-indigo-100 dark:bg-indigo-950/30 rounded-full blur-3xl opacity-40 dark:opacity-20 pointer-events-none"></div>
 
     <div class="relative reveal">
       <!-- Status badge -->
@@ -39,8 +39,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white leading-[1.15] tracking-tight mb-5">
         你好，我是 <span class="text-indigo-600 dark:text-indigo-400">Zen</span>
       </h1>
-      <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-9 max-w-sm">
-        记录想法，分享技术与生活。<br/>写下来的东西，才真正属于自己。
+      <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-9 max-w-md">
+        这里是我记录想法、分享技术与生活的地方。<br class="hidden sm:block"/>写下来的东西，才真正属于自己。
       </p>
       <div class="flex flex-wrap gap-3">
         <a href={`${base}blog`}
@@ -51,7 +51,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
           </svg>
         </a>
         <a href={`${base}about`}
-          class="inline-flex items-center px-5 py-2.5 rounded-full border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium text-sm transition-all duration-200">
+          class="inline-flex items-center px-5 py-2.5 rounded-full border border-gray-300 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 hover:border-gray-400 dark:hover:border-white/20 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium text-sm transition-all duration-200">
           关于我
         </a>
       </div>
@@ -80,7 +80,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
             <div class={`group relative flex items-center gap-4 py-3.5 -mx-2 px-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-all duration-150 reveal reveal-delay-${Math.min(i + 1, 5)}`}>
               <time class="text-xs text-gray-400 dark:text-gray-600 shrink-0 w-12 tabular-nums">{date}</time>
               <a href={url} class="flex-1 min-w-0">
-                <h3 class="text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-150 truncate">
+                <h3 class="text-[15px] font-medium text-gray-800 dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-150 truncate">
                   {post.data.title}
                 </h3>
                 <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5 line-clamp-1">{post.data.description}</p>
@@ -101,8 +101,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       </div>
     </div>
 
-    <!-- 右列：标签（现在和文章列表顶部对齐） -->
-    <aside class="sticky top-20 self-start reveal reveal-delay-2">
+    <!-- 右列：标签 -->
+    <aside class="sticky top-20 self-start reveal reveal-delay-2 border-l border-gray-100 dark:border-white/[0.06] pl-5">
       <h2 class="text-xs font-semibold text-gray-400 dark:text-gray-500 tracking-wider uppercase mb-3">标签</h2>
       <div class="flex flex-col">
         {tags.map(([tag, count]) => (
