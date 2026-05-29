@@ -29,16 +29,51 @@ const jsonLd = JSON.stringify({
 <BaseLayout title={frontmatter.title} description={frontmatter.description} type="article">
   <article class="max-w-4xl mx-auto px-4 sm:px-6 py-14">
 
-    <!-- Dev: edit button -->
+    <!-- Dev: inline editor -->
     {editUrl && (
-      <a href={editUrl}
-        class="fixed bottom-6 right-6 z-50 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-lg hover:opacity-80 active:scale-95 transition-all duration-150"
-        title="在 VS Code 中编辑">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-        </svg>
-        编辑
-      </a>
+      <>
+        <button
+          id="dev-edit-btn"
+          data-file={frontmatter.slug + '.md'}
+          class="fixed bottom-6 right-6 z-50 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-lg hover:opacity-75 active:scale-95 transition-all duration-150"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          编辑
+        </button>
+
+        <!-- Editor overlay -->
+        <div id="dev-editor-overlay" class="fixed inset-0 z-[100] hidden flex-col bg-white dark:bg-[#0f0f10]">
+          <!-- Toolbar -->
+          <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100 dark:border-white/[0.07] shrink-0">
+            <span class="text-xs font-mono text-gray-400 dark:text-gray-500" id="dev-editor-filename"></span>
+            <div class="flex items-center gap-2">
+              <span id="dev-save-status" class="text-xs text-gray-400 dark:text-gray-500"></span>
+              <button id="dev-save-btn"
+                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white transition-all duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                保存
+              </button>
+              <button id="dev-close-btn"
+                class="p-1.5 rounded-md text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <!-- Textarea -->
+          <textarea
+            id="dev-editor-textarea"
+            class="flex-1 w-full resize-none px-6 py-5 font-mono text-sm leading-relaxed text-gray-800 dark:text-gray-200 bg-transparent focus:outline-none"
+            spellcheck="false"
+            autocomplete="off"
+          ></textarea>
+        </div>
+      </>
     )}
 
     <!-- Back -->
@@ -162,6 +197,68 @@ const jsonLd = JSON.stringify({
   </div>
   <script type="application/ld+json" set:html={jsonLd} />
 </BaseLayout>
+
+<script>
+  const editBtn = document.getElementById('dev-edit-btn') as HTMLButtonElement | null;
+  if (editBtn) {
+    const file = editBtn.dataset.file!;
+    const overlay = document.getElementById('dev-editor-overlay')!;
+    const textarea = document.getElementById('dev-editor-textarea') as HTMLTextAreaElement;
+    const closeBtn = document.getElementById('dev-close-btn')!;
+    const saveBtn = document.getElementById('dev-save-btn')!;
+    const status = document.getElementById('dev-save-status')!;
+    const filenameEl = document.getElementById('dev-editor-filename')!;
+
+    filenameEl.textContent = `src/content/blog/${file}`;
+
+    async function openEditor() {
+      const res = await fetch(`/api/edit?file=${encodeURIComponent(file)}`);
+      if (!res.ok) { alert('无法读取文件'); return; }
+      textarea.value = await res.text();
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      textarea.focus();
+    }
+
+    async function save() {
+      status.textContent = '保存中…';
+      const res = await fetch(`/api/edit?file=${encodeURIComponent(file)}`, {
+        method: 'POST',
+        body: textarea.value,
+      });
+      if (res.ok) {
+        status.textContent = '已保存';
+        setTimeout(() => { status.textContent = ''; }, 2000);
+      } else {
+        status.textContent = '保存失败';
+      }
+    }
+
+    function closeEditor() {
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    editBtn.addEventListener('click', openEditor);
+    closeBtn.addEventListener('click', closeEditor);
+    saveBtn.addEventListener('click', save);
+
+    // Cmd/Ctrl+S to save
+    textarea.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        save();
+      }
+    });
+
+    // Esc to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !overlay.classList.contains('hidden')) closeEditor();
+    });
+  }
+</script>
 
 <script>
   const pageUrl = window.location.href;
