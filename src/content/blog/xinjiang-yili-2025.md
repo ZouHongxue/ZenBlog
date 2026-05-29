@@ -4,7 +4,7 @@ description: "赛里木湖的日出、喀拉峻的小黄花、那拉提的云雾
 pubDate: "2026-05-27"
 author: "Zen"
 tags: ["旅行", "新疆", "随笔"]
-draft: true
+draft: false
 ---
 
 <!-- DRAFT：照片待补充 -->
