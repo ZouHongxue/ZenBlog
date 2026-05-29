@@ -1,6 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-const { frontmatter } = Astro.props;
+const { frontmatter, editUrl } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const pubDate = new Date(frontmatter.pubDate).toLocaleDateString('zh-CN', {
   year: 'numeric', month: 'long', day: 'numeric'
@@ -28,6 +28,18 @@ const jsonLd = JSON.stringify({
 ---
 <BaseLayout title={frontmatter.title} description={frontmatter.description} type="article">
   <article class="max-w-4xl mx-auto px-4 sm:px-6 py-14">
+
+    <!-- Dev: edit button -->
+    {editUrl && (
+      <a href={editUrl}
+        class="fixed bottom-6 right-6 z-50 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-lg hover:opacity-80 active:scale-95 transition-all duration-150"
+        title="在 VS Code 中编辑">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        编辑
+      </a>
+    )}
 
     <!-- Back -->
     <a href={`${base}blog`} class="inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 mb-12 transition-colors group">

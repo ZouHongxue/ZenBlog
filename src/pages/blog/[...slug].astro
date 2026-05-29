@@ -13,7 +13,11 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+const isDev = import.meta.env.DEV;
+const editUrl = isDev
+  ? `vscode://file${process.cwd()}/src/content/blog/${post.id}`
+  : undefined;
 ---
-<PostLayout frontmatter={{ ...post.data, slug: post.slug }}>
+<PostLayout frontmatter={{ ...post.data, slug: post.slug }} editUrl={editUrl}>
   <Content />
 </PostLayout>
