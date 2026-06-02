@@ -3,7 +3,7 @@ title: "五月，伊犁 | Yili, Xinjiang in May"
 description: "赛里木湖的日出、喀拉峻的小黄花、那拉提的云雾、布隆沟深处的温泉——十天把伊犁走了个大概。"
 pubDate: "2026-05-27"
 author: "Zen"
-tags: ["旅行", "新疆", "随笔"]
+tags: ["旅行", "随笔"]
 draft: false
 ---
 
