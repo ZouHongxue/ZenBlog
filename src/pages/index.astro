@@ -69,8 +69,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <hr class="border-gray-100 dark:border-white/[0.06]" />
   </div>
 
-  <!-- 标签：固定浮动在视口右侧，只在宽屏显示 -->
-  <aside class="hidden xl:block fixed top-24 right-6 z-30 w-32">
+  <!-- 标签：固定浮动，JS 动态对齐内容区右边缘 -->
+  <aside id="tags-sidebar" class="hidden xl:block fixed top-24 z-30 w-32" style="left: -9999px">
     <h2 class="text-xs font-semibold text-gray-400 dark:text-gray-500 tracking-wider uppercase mb-3">标签</h2>
     <div class="flex flex-col">
       {tags.map(([tag, count]) => (
@@ -85,7 +85,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
   <!-- 文章列表：全宽卡片，无侧边栏束缚 -->
   <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-16 reveal">
-    <div class="border border-dashed border-indigo-200 dark:border-indigo-800/40 rounded-xl p-5">
+    <div class="article-card border border-dashed border-indigo-200 dark:border-indigo-800/40 rounded-xl p-5">
       <div class="flex items-center justify-between mb-4">
         <span class="text-xs font-semibold text-indigo-500 dark:text-indigo-400 tracking-wider uppercase">最新文章</span>
         <a href={`${base}blog`} class="text-xs text-gray-400 dark:text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">全部 →</a>
@@ -95,7 +95,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
           const date = new Date(post.data.pubDate).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
           const url = `${base}blog/${post.slug}`;
           return (
-            <div class={`group relative flex items-start gap-4 py-3 rounded-lg hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 transition-all duration-150 reveal reveal-delay-${Math.min(i + 1, 5)}`}>
+            <div class={`group relative flex items-start gap-4 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-all duration-150 reveal reveal-delay-${Math.min(i + 1, 5)}`}>
               <time class="text-xs text-indigo-400 dark:text-indigo-600 shrink-0 w-12 tabular-nums pt-0.5">{date}</time>
               <a href={url} class="flex-1 min-w-0">
                 <h3 class="text-[15px] font-medium text-gray-800 dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-150 truncate">
@@ -207,6 +207,22 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   });
 
   // Scroll reveal
+  // 标签侧边栏：对齐内容区右边缘 + 16px 间距
+  function positionTags() {
+    const sidebar = document.getElementById('tags-sidebar');
+    const card = document.querySelector('.article-card') as HTMLElement | null;
+    if (!sidebar || !card) return;
+    const rect = card.getBoundingClientRect();
+    const left = rect.right + 16;
+    if (left + 128 < window.innerWidth) {
+      sidebar.style.left = left + 'px';
+    } else {
+      sidebar.style.left = '-9999px'; // 放不下就隐藏
+    }
+  }
+  positionTags();
+  window.addEventListener('resize', positionTags);
+
   const observer = new IntersectionObserver(
     (entries) => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); observer.unobserve(e.target); } }),
     { threshold: 0.08 }
