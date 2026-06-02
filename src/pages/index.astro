@@ -35,8 +35,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 <BaseLayout title="首页">
 
   <!-- Hero -->
-  <section class="relative max-w-4xl mx-auto px-4 sm:px-6 pt-16 pb-16 overflow-hidden">
-    <div class="absolute -top-32 -left-32 w-96 h-96 bg-indigo-100 dark:bg-indigo-950/30 rounded-full blur-3xl opacity-40 dark:opacity-20 pointer-events-none"></div>
+  <section class="relative max-w-4xl mx-auto px-4 sm:px-6 pt-16 pb-10 overflow-hidden">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-100 dark:bg-indigo-950/30 rounded-full blur-[80px] opacity-30 dark:opacity-15 pointer-events-none"></div>
     <div class="relative reveal">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800/50 mb-7">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -45,7 +45,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white leading-[1.15] tracking-tight mb-5">
         你好，我是 <span class="text-indigo-600 dark:text-indigo-400">Zen</span>
       </h1>
-      <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-9 max-w-md">
+      <p class="text-lg text-gray-500 dark:text-gray-400 leading-snug mb-8 max-w-md">
         这里是我记录想法、分享技术与生活的地方。<br class="hidden sm:block"/>写下来的东西，才真正属于自己。
       </p>
       <div class="flex flex-wrap gap-3">
@@ -84,7 +84,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   </aside>
 
   <!-- 文章列表：全宽卡片，无侧边栏束缚 -->
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-10 pb-16 reveal">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-16 reveal">
     <div class="border border-dashed border-indigo-200 dark:border-indigo-800/40 rounded-xl p-5">
       <div class="flex items-center justify-between mb-4">
         <span class="text-xs font-semibold text-indigo-500 dark:text-indigo-400 tracking-wider uppercase">最新文章</span>
@@ -101,7 +101,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
                 <h3 class="text-[15px] font-medium text-gray-800 dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-150 truncate">
                   {post.data.title}
                 </h3>
-                <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5 line-clamp-1">{post.data.description}</p>
+                <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5 truncate">{post.data.description}</p>
               </a>
               <button
                 class="share-card-btn opacity-0 group-hover:opacity-100 absolute right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-950/40 transition-all duration-150"
