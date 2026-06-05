@@ -4,14 +4,9 @@ import { getCollection } from 'astro:content';
 
 const isDev = import.meta.env.DEV;
 
-// 素材库（仅 dev）
-let ideas: Array<{date: string; text: string; context: string; tags: string[]}> = [];
-if (isDev) {
-  try {
-    const raw = await import('../data/ideas.json');
-    ideas = (raw.default ?? raw) as typeof ideas;
-  } catch {}
-}
+// 闪念数据（始终加载，dev 下额外加载编辑器）
+import ideasData from '../data/ideas.json';
+const ideas = ideasData as Array<{date: string; text: string; context: string; tags: string[]}>;
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
