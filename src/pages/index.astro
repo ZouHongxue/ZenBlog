@@ -1,11 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import ideasData from '../data/ideas.json';
 
 const isDev = import.meta.env.DEV;
-
-// 闪念数据（始终加载，dev 下额外加载编辑器）
-import ideasData from '../data/ideas.json';
 const ideas = ideasData as Array<{date: string; text: string; context: string; tags: string[]}>;
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
