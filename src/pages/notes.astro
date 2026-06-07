@@ -2,11 +2,76 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ideas from '../data/ideas.json';
 
-const sorted = [...ideas].reverse(); // 最新在前
+const sorted = [...ideas].reverse();
 ---
 <BaseLayout title="闪念" description="路上冒出来的想法，随手记下。不一定成熟，但值得留着。">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
 
+  <!-- 卡片覆盖层 -->
+  <div id="card-overlay" class="fixed inset-0 z-50 hidden items-center justify-center p-6 bg-white/95 dark:bg-[#0f0f10]/97 backdrop-blur-sm">
+
+    <!-- 返回按钮 -->
+    <button id="card-back"
+      class="absolute top-6 left-6 inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors group">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+      返回列表
+    </button>
+
+    <!-- 计数 -->
+    <div id="card-counter" class="absolute top-6 right-6 text-xs text-gray-300 dark:text-gray-600 tabular-nums"></div>
+
+    <!-- 卡片主体 -->
+    <div class="w-full max-w-sm mx-auto">
+      <div id="card-body"
+        class="relative bg-white dark:bg-[#18181a] rounded-2xl shadow-xl border border-gray-100 dark:border-white/[0.06] overflow-hidden"
+        style="min-height: 480px; padding: 3rem 2.5rem;">
+
+        <!-- 竖排文字区域 -->
+        <div id="card-text-wrap"
+          class="flex justify-end"
+          style="writing-mode: vertical-rl; text-orientation: mixed; min-height: 320px;">
+          <p id="card-text"
+            class="font-serif text-2xl leading-[2.2] tracking-widest text-gray-800 dark:text-gray-100"
+            style="font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;">
+          </p>
+        </div>
+
+        <!-- 底部：来源 + 日期 -->
+        <div class="absolute bottom-8 left-8 flex flex-col gap-1">
+          <p id="card-context" class="text-xs text-gray-400 dark:text-gray-500"></p>
+          <p id="card-date" class="text-xs text-gray-300 dark:text-gray-600 tabular-nums"></p>
+        </div>
+
+        <!-- 印章装饰 -->
+        <div class="absolute bottom-8 right-8 w-8 h-8 border border-red-300 dark:border-red-800 rounded-sm flex items-center justify-center opacity-40">
+          <span class="text-[9px] text-red-400 dark:text-red-700 font-serif tracking-tight"
+            style="writing-mode: vertical-rl; font-family: serif;">念</span>
+        </div>
+      </div>
+
+      <!-- 上下导航 -->
+      <div class="flex items-center justify-between mt-5 px-1">
+        <button id="card-prev"
+          class="inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors disabled:opacity-20 disabled:cursor-not-allowed">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+          </svg>
+          上一条
+        </button>
+        <button id="card-next"
+          class="inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors disabled:opacity-20 disabled:cursor-not-allowed">
+          下一条
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 列表页 -->
+  <div id="notes-list" class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-12 reveal">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight mb-2">闪念</h1>
       <p class="text-sm text-gray-400 dark:text-gray-500">路上冒出来的想法，随手记下。不一定成熟，但值得留着。</p>
@@ -14,14 +79,19 @@ const sorted = [...ideas].reverse(); // 最新在前
 
     <div class="divide-y divide-gray-100 dark:divide-white/[0.06]">
       {sorted.map((idea, i) => (
-        <div class={`py-6 reveal reveal-delay-${Math.min(i + 1, 5)}`}>
-          <p class="text-base text-gray-800 dark:text-gray-100 leading-relaxed mb-3">
-            {idea.text}
-          </p>
-          <div class="flex items-center gap-3">
-            {idea.context && (
-              <span class="text-xs text-gray-400 dark:text-gray-500">{idea.context}</span>
-            )}
+        <button
+          class={`idea-row w-full text-left py-6 group cursor-pointer reveal reveal-delay-${Math.min(i + 1, 5)} hover:bg-gray-50/50 dark:hover:bg-white/[0.02] -mx-2 px-2 rounded-lg transition-colors`}
+          data-idx={i}>
+          <div class="flex items-start justify-between gap-4">
+            <p class="text-base text-gray-800 dark:text-gray-100 leading-relaxed flex-1">
+              {idea.text}
+            </p>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 dark:text-gray-700 group-hover:text-violet-400 dark:group-hover:text-violet-600 shrink-0 mt-1 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+          </div>
+          <div class="flex items-center gap-3 mt-2">
+            {idea.context && <span class="text-xs text-gray-400 dark:text-gray-500">{idea.context}</span>}
             {idea.context && <span class="text-gray-200 dark:text-gray-700">·</span>}
             <span class="text-xs text-violet-400 dark:text-violet-600 tabular-nums">
               {new Date(idea.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })}
@@ -30,18 +100,75 @@ const sorted = [...ideas].reverse(); // 最新在前
               <span class="text-xs text-violet-300 dark:text-violet-700">#{tag}</span>
             ))}
           </div>
-        </div>
+        </button>
       ))}
     </div>
-
   </div>
+
+  <!-- 预加载 Noto Serif SC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet" />
+
 </BaseLayout>
 
 <script>
+  // 数据（顺序与列表一致：最新在前）
+  const ideas: Array<{date: string; text: string; context: string; tags: string[]}> =
+    JSON.parse(document.getElementById('ideas-data')?.textContent || '[]');
+
+  // 直接从 DOM 读数据
+  const rows = Array.from(document.querySelectorAll<HTMLButtonElement>('.idea-row'));
+  const dataList = rows.map(row => ({
+    text: row.querySelector('p')?.textContent?.trim() || '',
+    context: (row.querySelectorAll('.text-xs')[0] as HTMLElement)?.textContent?.trim() || '',
+    date: (row.querySelectorAll('.text-xs')[1] as HTMLElement)?.textContent?.trim() || '',
+  }));
+
+  const overlay = document.getElementById('card-overlay')!;
+  const cardText = document.getElementById('card-text')!;
+  const cardContext = document.getElementById('card-context')!;
+  const cardDate = document.getElementById('card-date')!;
+  const cardCounter = document.getElementById('card-counter')!;
+  const backBtn = document.getElementById('card-back')!;
+  const prevBtn = document.getElementById('card-prev') as HTMLButtonElement;
+  const nextBtn = document.getElementById('card-next') as HTMLButtonElement;
+
+  let current = 0;
+
+  function show(idx: number) {
+    current = idx;
+    const d = dataList[idx];
+    cardText.textContent = d.text;
+    cardContext.textContent = d.context;
+    cardDate.textContent = d.date;
+    cardCounter.textContent = `${idx + 1} / ${dataList.length}`;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === dataList.length - 1;
+    overlay.classList.remove('hidden');
+    overlay.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    overlay.classList.add('hidden');
+    overlay.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  rows.forEach((row, i) => row.addEventListener('click', () => show(i)));
+  backBtn.addEventListener('click', close);
+  prevBtn.addEventListener('click', () => current > 0 && show(current - 1));
+  nextBtn.addEventListener('click', () => current < dataList.length - 1 && show(current + 1));
+  document.addEventListener('keydown', e => {
+    if (overlay.classList.contains('hidden')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') current > 0 && show(current - 1);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') current < dataList.length - 1 && show(current + 1);
+  });
+
+  // Scroll reveal
   const observer = new IntersectionObserver(
-    (entries) => entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('is-visible'); observer.unobserve(e.target); }
-    }),
+    entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); observer.unobserve(e.target); } }),
     { threshold: 0.05 }
   );
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
