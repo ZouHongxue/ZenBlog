@@ -162,10 +162,17 @@ const isDev = import.meta.env.DEV;
 
   let current = 0;
 
+  // 竖排时英文按空格断词会造成割裂，将英文词组空格替换为不换行空格
+  function processForVertical(text: string): string {
+    return text.replace(/([A-Za-z][A-Za-z,'.\-]*(?:\s[A-Za-z,'.\-]+)*)/g, (match) =>
+      match.replace(/ /g, ' ')
+    );
+  }
+
   function show(idx: number) {
     current = idx;
     const d = dataList[idx];
-    cardText.textContent = d.text;
+    cardText.textContent = processForVertical(d.text);
     cardContext.textContent = d.context;
     cardDate.textContent = d.date;
     cardCounter.textContent = `${idx + 1} / ${dataList.length}`;
