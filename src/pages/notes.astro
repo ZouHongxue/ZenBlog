@@ -3,15 +3,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ideas from '../data/ideas.json';
 
 const sorted = [...ideas].reverse();
+const isDev = import.meta.env.DEV;
 ---
 <BaseLayout title="闪念" description="路上冒出来的想法，随手记下。不一定成熟，但值得留着。">
 
   <!-- 卡片覆盖层 -->
-  <div id="card-overlay" class="fixed inset-0 z-50 hidden items-center justify-center p-6 bg-white/95 dark:bg-[#0f0f10]/97 backdrop-blur-sm">
+  <div id="card-overlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-white/95 dark:bg-[#0f0f10]/97 backdrop-blur-sm">
 
     <!-- 返回按钮 -->
     <button id="card-back"
-      class="absolute top-6 left-6 inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors group">
+      class="absolute top-6 left-6 inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors group z-10">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
       </svg>
@@ -19,21 +20,37 @@ const sorted = [...ideas].reverse();
     </button>
 
     <!-- 计数 -->
-    <div id="card-counter" class="absolute top-6 right-6 text-xs text-gray-300 dark:text-gray-600 tabular-nums"></div>
+    <div id="card-counter" class="absolute top-6 right-6 text-xs text-gray-300 dark:text-gray-600 tabular-nums z-10"></div>
+
+    <!-- 左侧上一条 -->
+    <button id="card-prev"
+      class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full text-gray-300 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-all disabled:opacity-20 disabled:cursor-not-allowed z-10">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+
+    <!-- 右侧下一条 -->
+    <button id="card-next"
+      class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full text-gray-300 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-all disabled:opacity-20 disabled:cursor-not-allowed z-10">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
 
     <!-- 卡片主体 -->
-    <div class="w-full max-w-sm mx-auto">
+    <div class="w-full max-w-sm mx-auto px-16">
       <div id="card-body"
         class="relative bg-white dark:bg-[#18181a] rounded-2xl shadow-xl border border-gray-100 dark:border-white/[0.06] overflow-hidden"
-        style="min-height: 480px; padding: 3rem 2.5rem;">
+        style="height: 480px; padding: 3rem 2.5rem;">
 
-        <!-- 竖排文字区域 -->
-        <div id="card-text-wrap"
-          class="flex justify-end"
-          style="writing-mode: vertical-rl; text-orientation: mixed; min-height: 320px;">
+        <!-- 竖排文字区域：固定高度，让长文自动换列 -->
+        <div
+          class="flex justify-end overflow-hidden"
+          style="writing-mode: vertical-rl; text-orientation: mixed; height: 320px;">
           <p id="card-text"
-            class="font-serif text-2xl leading-[2.2] tracking-widest text-gray-800 dark:text-gray-100"
-            style="font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;">
+            class="font-serif text-2xl leading-[2.4] tracking-[0.15em] text-gray-800 dark:text-gray-100"
+            style="font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif; word-break: keep-all; overflow-wrap: anywhere;">
           </p>
         </div>
 
@@ -49,24 +66,6 @@ const sorted = [...ideas].reverse();
             style="writing-mode: vertical-rl; font-family: serif;">念</span>
         </div>
       </div>
-
-      <!-- 上下导航 -->
-      <div class="flex items-center justify-between mt-5 px-1">
-        <button id="card-prev"
-          class="inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors disabled:opacity-20 disabled:cursor-not-allowed">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-          </svg>
-          上一条
-        </button>
-        <button id="card-next"
-          class="inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors disabled:opacity-20 disabled:cursor-not-allowed">
-          下一条
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-          </svg>
-        </button>
-      </div>
     </div>
   </div>
 
@@ -79,28 +78,52 @@ const sorted = [...ideas].reverse();
 
     <div class="divide-y divide-gray-100 dark:divide-white/[0.06]">
       {sorted.map((idea, i) => (
-        <button
-          class={`idea-row w-full text-left py-6 group cursor-pointer reveal reveal-delay-${Math.min(i + 1, 5)} hover:bg-gray-50/50 dark:hover:bg-white/[0.02] -mx-2 px-2 rounded-lg transition-colors`}
-          data-idx={i}>
-          <div class="flex items-start justify-between gap-4">
-            <p class="text-base text-gray-800 dark:text-gray-100 leading-relaxed flex-1">
-              {idea.text}
-            </p>
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 dark:text-gray-700 group-hover:text-violet-400 dark:group-hover:text-violet-600 shrink-0 mt-1 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-            </svg>
-          </div>
-          <div class="flex items-center gap-3 mt-2">
-            {idea.context && <span class="text-xs text-gray-400 dark:text-gray-500">{idea.context}</span>}
-            {idea.context && <span class="text-gray-200 dark:text-gray-700">·</span>}
-            <span class="text-xs text-violet-400 dark:text-violet-600 tabular-nums">
-              {new Date(idea.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })}
-            </span>
-            {idea.tags.map(tag => (
-              <span class="text-xs text-violet-300 dark:text-violet-700">#{tag}</span>
-            ))}
-          </div>
-        </button>
+        <div class="idea-row-wrap relative group">
+          <button
+            class={`idea-row w-full text-left py-6 cursor-pointer reveal reveal-delay-${Math.min(i + 1, 5)} hover:bg-gray-50/50 dark:hover:bg-white/[0.02] -mx-2 px-2 rounded-lg transition-colors`}
+            data-idx={i}>
+            <div class="flex items-start justify-between gap-4">
+              <p class="text-base text-gray-800 dark:text-gray-100 leading-relaxed flex-1">
+                {idea.text}
+              </p>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 dark:text-gray-700 group-hover:text-violet-400 dark:group-hover:text-violet-600 shrink-0 mt-1 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+            <div class="flex items-center gap-3 mt-2">
+              {idea.context && <span class="text-xs text-gray-400 dark:text-gray-500">{idea.context}</span>}
+              {idea.context && <span class="text-gray-200 dark:text-gray-700">·</span>}
+              <span class="text-xs text-violet-400 dark:text-violet-600 tabular-nums">
+                {new Date(idea.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </span>
+              {idea.tags.map(tag => (
+                <span class="text-xs text-violet-300 dark:text-violet-700">#{tag}</span>
+              ))}
+            </div>
+          </button>
+
+          {isDev && (
+            <div class="idea-edit-wrap hidden absolute right-0 top-1/2 -translate-y-1/2 flex gap-2 pr-2">
+              <button class="edit-btn text-xs text-gray-400 hover:text-indigo-500 transition-colors px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#18181a]" data-idx={i} title="编辑">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 11l6-6 3 3-6 6H9v-3z"/></svg>
+              </button>
+              <button class="delete-btn text-xs text-gray-400 hover:text-red-500 transition-colors px-2 py-1 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#18181a]" data-idx={i} title="删除">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+          )}
+
+          {isDev && (
+            <div class="edit-form hidden mt-2 mb-4 mx-2 p-4 border border-indigo-100 dark:border-indigo-900/30 rounded-lg bg-indigo-50/50 dark:bg-indigo-950/20">
+              <textarea class="edit-text w-full text-sm border border-gray-200 dark:border-gray-700 rounded p-2 bg-white dark:bg-[#18181a] text-gray-800 dark:text-gray-100 resize-none" rows={3}>{idea.text}</textarea>
+              <input class="edit-context w-full text-xs border border-gray-200 dark:border-gray-700 rounded p-2 mt-2 bg-white dark:bg-[#18181a] text-gray-600 dark:text-gray-400" placeholder="来源（可选）" value={idea.context} />
+              <div class="flex gap-2 mt-2">
+                <button class="save-btn text-xs px-3 py-1.5 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors">保存</button>
+                <button class="cancel-btn text-xs px-3 py-1.5 text-gray-500 hover:text-gray-700 transition-colors">取消</button>
+              </div>
+            </div>
+          )}
+        </div>
       ))}
     </div>
   </div>
@@ -112,16 +135,21 @@ const sorted = [...ideas].reverse();
 </BaseLayout>
 
 <script>
-  // 数据（顺序与列表一致：最新在前）
-  const ideas: Array<{date: string; text: string; context: string; tags: string[]}> =
-    JSON.parse(document.getElementById('ideas-data')?.textContent || '[]');
-
   // 直接从 DOM 读数据
   const rows = Array.from(document.querySelectorAll<HTMLButtonElement>('.idea-row'));
   const dataList = rows.map(row => ({
     text: row.querySelector('p')?.textContent?.trim() || '',
-    context: (row.querySelectorAll('.text-xs')[0] as HTMLElement)?.textContent?.trim() || '',
-    date: (row.querySelectorAll('.text-xs')[1] as HTMLElement)?.textContent?.trim() || '',
+    context: (() => {
+      const spans = row.querySelectorAll<HTMLElement>('.text-xs');
+      // context is the first span if idea.context exists, otherwise empty
+      // date is the violet span
+      const violetSpan = row.querySelector<HTMLElement>('.text-violet-400, .text-violet-600');
+      const allSmall = Array.from(row.querySelectorAll<HTMLElement>('.text-xs'));
+      const dateSpan = violetSpan;
+      const contextSpan = allSmall.find(s => s !== dateSpan && !s.textContent?.startsWith('#'));
+      return contextSpan?.textContent?.trim() || '';
+    })(),
+    date: row.querySelector<HTMLElement>('.text-violet-400, .text-violet-600')?.textContent?.trim() || '',
   }));
 
   const overlay = document.getElementById('card-overlay')!;
@@ -142,8 +170,8 @@ const sorted = [...ideas].reverse();
     cardContext.textContent = d.context;
     cardDate.textContent = d.date;
     cardCounter.textContent = `${idx + 1} / ${dataList.length}`;
-    prevBtn.disabled = idx === 0;
-    nextBtn.disabled = idx === dataList.length - 1;
+    (prevBtn as HTMLButtonElement).disabled = idx === 0;
+    (nextBtn as HTMLButtonElement).disabled = idx === dataList.length - 1;
     overlay.classList.remove('hidden');
     overlay.classList.add('flex');
     document.body.style.overflow = 'hidden';
@@ -164,6 +192,61 @@ const sorted = [...ideas].reverse();
     if (e.key === 'Escape') close();
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') current > 0 && show(current - 1);
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') current < dataList.length - 1 && show(current + 1);
+  });
+
+  // Dev: 编辑功能
+  const isDev = document.querySelector('[data-dev]') !== null;
+  const wraps = Array.from(document.querySelectorAll<HTMLElement>('.idea-row-wrap'));
+
+  wraps.forEach((wrap, i) => {
+    const editWrap = wrap.querySelector<HTMLElement>('.idea-edit-wrap');
+    const editForm = wrap.querySelector<HTMLElement>('.edit-form');
+    const editBtn = wrap.querySelector<HTMLElement>('.edit-btn');
+    const deleteBtn = wrap.querySelector<HTMLElement>('.delete-btn');
+    const saveBtn = wrap.querySelector<HTMLElement>('.save-btn');
+    const cancelBtn = wrap.querySelector<HTMLElement>('.cancel-btn');
+    const textarea = wrap.querySelector<HTMLTextAreaElement>('.edit-text');
+    const contextInput = wrap.querySelector<HTMLInputElement>('.edit-context');
+
+    if (!editWrap) return;
+
+    wrap.addEventListener('mouseenter', () => editWrap.classList.remove('hidden'));
+    wrap.addEventListener('mouseleave', () => editWrap.classList.add('hidden'));
+
+    editBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      editForm?.classList.toggle('hidden');
+    });
+
+    cancelBtn?.addEventListener('click', () => editForm?.classList.add('hidden'));
+
+    saveBtn?.addEventListener('click', async () => {
+      const newText = textarea?.value || '';
+      const newContext = contextInput?.value || '';
+      try {
+        const res = await fetch('/api/ideas', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'update', index: i, text: newText, context: newContext }),
+        });
+        if (res.ok) {
+          window.location.reload();
+        }
+      } catch(e) { console.error(e); }
+    });
+
+    deleteBtn?.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!confirm('确认删除这条闪念？')) return;
+      try {
+        const res = await fetch('/api/ideas', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'delete', index: i }),
+        });
+        if (res.ok) window.location.reload();
+      } catch(e) { console.error(e); }
+    });
   });
 
   // Scroll reveal

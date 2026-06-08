@@ -22,8 +22,28 @@ function devEditorPlugin() {
           let body = '';
           req.on('data', chunk => { body += chunk; });
           req.on('end', () => {
-            writeFileSync(fullPath, body, 'utf-8');
-            res.writeHead(200); res.end('OK');
+            try {
+              const payload = JSON.parse(body);
+              if (payload.action === 'update' || payload.action === 'delete') {
+                // 读取现有数据，操作后写回
+                const existing = JSON.parse(readFileSync(fullPath, 'utf-8'));
+                // sorted = [...ideas].reverse() 所以 index 在 sorted 里对应 existing[existing.length - 1 - index]
+                const realIdx = existing.length - 1 - payload.index;
+                if (payload.action === 'delete') {
+                  existing.splice(realIdx, 1);
+                } else {
+                  existing[realIdx].text = payload.text;
+                  existing[realIdx].context = payload.context;
+                }
+                writeFileSync(fullPath, JSON.stringify(existing, null, 2), 'utf-8');
+              } else {
+                // 兼容旧版：整体覆盖
+                writeFileSync(fullPath, body, 'utf-8');
+              }
+              res.writeHead(200); res.end('OK');
+            } catch {
+              res.writeHead(400); res.end('Bad request');
+            }
           });
         } else { res.writeHead(405); res.end(); }
       });
