@@ -249,6 +249,18 @@ const isDev = import.meta.env.DEV;
     });
   });
 
+  // 从 URL 参数自动打开卡片（从主页跳转过来）
+  const urlCard = new URLSearchParams(window.location.search).get('card');
+  if (urlCard !== null) {
+    const idx = parseInt(urlCard);
+    if (!isNaN(idx) && idx >= 0 && idx < dataList.length) {
+      // 等 DOM 稳定后打开
+      requestAnimationFrame(() => show(idx));
+    }
+    // 清除 URL 参数，避免刷新时重复打开
+    history.replaceState(null, '', window.location.pathname);
+  }
+
   // Scroll reveal
   const observer = new IntersectionObserver(
     entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); observer.unobserve(e.target); } }),

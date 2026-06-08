@@ -127,10 +127,10 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
           {[...ideas].reverse().slice(0, 3).map((idea, idx) => {
             const realIdx = ideas.length - 1 - idx;
             return (
-              <div class="idea-item py-2.5 group/idea" data-idx={realIdx}
+              <div class="idea-item py-2.5 group/idea" data-idx={realIdx} data-sorted-idx={idx}
                 data-text={idea.text} data-context={idea.context} data-tags={idea.tags.join(',')}>
-                <!-- 显示态 -->
-                <div class="idea-view flex items-start gap-3">
+                <!-- 显示态：点击跳转 /notes?card=N -->
+                <div class="idea-view flex items-start gap-3 cursor-pointer">
                   <div class="flex-1 min-w-0">
                     <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{idea.text}</p>
                     {idea.context && <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{idea.context}</p>}
@@ -283,9 +283,21 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       window.location.reload();
     });
 
+    // idea-view 点击：跳到 /notes?card=N
+    document.querySelectorAll<HTMLElement>('.idea-view').forEach(view => {
+      view.addEventListener('click', (e) => {
+        // 编辑/删除按钮不触发跳转
+        if ((e.target as HTMLElement).closest('button')) return;
+        const item = view.closest('.idea-item') as HTMLElement;
+        const sortedIdx = item.dataset.sortedIdx || '0';
+        window.location.href = `/notes?card=${sortedIdx}`;
+      });
+    });
+
     // Delete buttons
     document.querySelectorAll<HTMLButtonElement>('.idea-delete').forEach(btn => {
-      btn.addEventListener('click', async () => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
         const item = btn.closest('.idea-item') as HTMLElement;
         const idx = parseInt(item.dataset.idx!);
         const res = await fetch('/api/ideas');
@@ -298,7 +310,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
     // Edit buttons — inline edit
     document.querySelectorAll<HTMLButtonElement>('.idea-edit').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const item = btn.closest('.idea-item') as HTMLElement;
         item.querySelector('.idea-view')?.classList.add('hidden');
         item.querySelector('.idea-edit-form')?.classList.remove('hidden');
