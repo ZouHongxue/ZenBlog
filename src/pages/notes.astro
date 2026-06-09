@@ -38,13 +38,13 @@ const isDev = import.meta.env.DEV;
         class="flex-1 relative rounded-2xl overflow-hidden"
         style="height: min(520px, 72vh); background: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04); padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1.25rem, 4vw, 3.5rem) 3rem;">
 
-        <!-- 竖排文字区域：去掉 flex，让 vertical-rl 自然右对齐 -->
+        <!-- 竖排文字区域：flex justify-end 右对齐，writing-mode 在 p 上 -->
         <div
-          class="overflow-hidden"
           id="card-text-wrap"
-          style="writing-mode: vertical-rl; text-orientation: mixed; height: calc(min(520px, 72vh) - 8rem);">
+          class="overflow-hidden flex justify-end items-start"
+          style="height: calc(min(520px, 72vh) - 8rem);">
           <p id="card-text"
-            style="font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif; font-size: clamp(1.1rem, 3.5vw, 1.5rem); line-height: 2.6; letter-spacing: 0.18em; color: #1a1a1a; word-break: keep-all; overflow-wrap: anywhere;">
+            style="writing-mode: vertical-rl; text-orientation: mixed; font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif; font-size: clamp(1.1rem, 3.5vw, 1.5rem); line-height: 2.6; letter-spacing: 0.18em; color: #1a1a1a; word-break: keep-all; overflow-wrap: anywhere; max-height: 100%;">
           </p>
         </div>
 
