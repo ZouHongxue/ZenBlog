@@ -264,6 +264,16 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
   const contextEl = document.getElementById('ideas-context') as HTMLInputElement | null;
   const tagsEl = document.getElementById('ideas-tags') as HTMLInputElement | null;
 
+  // idea-view 点击：跳到 /notes?card=N（prod + dev 都需要）
+  document.querySelectorAll<HTMLElement>('.idea-view').forEach(view => {
+    view.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('button')) return;
+      const item = view.closest('.idea-item') as HTMLElement;
+      const sortedIdx = item.dataset.sortedIdx || '0';
+      window.location.href = `/notes?card=${sortedIdx}`;
+    });
+  });
+
   if (addBtn && form) {
     addBtn.addEventListener('click', () => { form.classList.toggle('hidden'); textEl?.focus(); });
     cancelBtn?.addEventListener('click', () => { form.classList.add('hidden'); if(textEl) textEl.value=''; if(contextEl) contextEl.value=''; if(tagsEl) tagsEl.value=''; });
@@ -281,17 +291,6 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
       await fetch('/api/ideas', { method: 'POST', body: JSON.stringify(current, null, 2) });
       window.location.reload();
-    });
-
-    // idea-view 点击：跳到 /notes?card=N
-    document.querySelectorAll<HTMLElement>('.idea-view').forEach(view => {
-      view.addEventListener('click', (e) => {
-        // 编辑/删除按钮不触发跳转
-        if ((e.target as HTMLElement).closest('button')) return;
-        const item = view.closest('.idea-item') as HTMLElement;
-        const sortedIdx = item.dataset.sortedIdx || '0';
-        window.location.href = `/notes?card=${sortedIdx}`;
-      });
     });
 
     // Delete buttons

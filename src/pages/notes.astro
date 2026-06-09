@@ -33,28 +33,29 @@ const isDev = import.meta.env.DEV;
         </svg>
       </button>
 
-      <!-- 卡片主体 -->
+      <!-- 卡片主体：高度响应视口，手机端自适应 -->
       <div id="card-body"
         class="flex-1 relative rounded-2xl overflow-hidden"
-        style="height: 520px; background: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04); padding: 3.5rem 3.5rem 3rem;">
+        style="height: min(520px, 72vh); background: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04); padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1.25rem, 4vw, 3.5rem) 3rem;">
 
-        <!-- 竖排文字区域 -->
+        <!-- 竖排文字区域：去掉 flex，让 vertical-rl 自然右对齐 -->
         <div
-          class="flex justify-end overflow-hidden"
-          style="writing-mode: vertical-rl; text-orientation: mixed; height: 370px;">
+          class="overflow-hidden"
+          id="card-text-wrap"
+          style="writing-mode: vertical-rl; text-orientation: mixed; height: calc(min(520px, 72vh) - 8rem);">
           <p id="card-text"
-            style="font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif; font-size: 1.5rem; line-height: 2.6; letter-spacing: 0.18em; color: #1a1a1a; word-break: keep-all; overflow-wrap: anywhere;">
+            style="font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif; font-size: clamp(1.1rem, 3.5vw, 1.5rem); line-height: 2.6; letter-spacing: 0.18em; color: #1a1a1a; word-break: keep-all; overflow-wrap: anywhere;">
           </p>
         </div>
 
         <!-- 底部：来源 + 日期 -->
-        <div class="absolute bottom-9 left-10 flex flex-col gap-1">
+        <div class="absolute bottom-6 left-6 sm:bottom-9 sm:left-10 flex flex-col gap-1">
           <p id="card-context" class="text-xs text-gray-400" style="font-family: 'Noto Serif SC', serif;"></p>
           <p id="card-date" class="text-xs text-gray-300 tabular-nums"></p>
         </div>
 
         <!-- 印章 -->
-        <div class="absolute bottom-9 right-10 w-9 h-9 border border-red-300 rounded-sm flex items-center justify-center" style="opacity: 0.3;">
+        <div class="absolute bottom-6 right-6 sm:bottom-9 sm:right-10 w-8 h-8 sm:w-9 sm:h-9 border border-red-300 rounded-sm flex items-center justify-center" style="opacity: 0.3;">
           <span class="text-[10px] text-red-400" style="writing-mode: vertical-rl; font-family: 'Noto Serif SC', serif; letter-spacing: 0.05em;">念</span>
         </div>
       </div>
