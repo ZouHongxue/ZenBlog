@@ -55,8 +55,51 @@ const songs = songsData as Array<{
           </svg>
         </button>
       </div>
+      {import.meta.env.DEV && (
+        <button id="lrc-edit-toggle"
+          title="调整歌词时间轴"
+          class="mt-1 text-xs text-gray-700 hover:text-violet-400 transition-colors flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
+          </svg>
+          调时间轴
+        </button>
+      )}
     </div>
   </div>
+
+  {import.meta.env.DEV && (
+    <!-- LRC 编辑面板：固定在覆盖层右侧 -->
+    <div id="lrc-dev-panel" style="
+      position:fixed; top:0; right:0; bottom:0; width:320px; z-index:60;
+      background:rgba(10,10,12,0.97); border-left:1px solid rgba(255,255,255,0.08);
+      display:none; flex-direction:column; backdrop-filter:blur(10px);
+    ">
+      <!-- 面板头 -->
+      <div style="padding:12px 14px; border-bottom:1px solid rgba(255,255,255,0.07); display:flex; align-items:center; gap:10px; flex-shrink:0;">
+        <span style="font-size:10px;font-weight:700;color:#555;letter-spacing:.1em;text-transform:uppercase;">LRC 校对</span>
+        <span id="lrc-song-label" style="font-size:12px;color:#888;flex:1;"></span>
+        <span id="lrc-time-now" style="font-family:monospace;font-size:13px;font-weight:600;color:#a78bfa;min-width:72px;text-align:right;">0:00.0</span>
+      </div>
+      <!-- 偏移 -->
+      <div style="padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.07); display:flex; align-items:center; gap:6px; flex-shrink:0;">
+        <span style="font-size:11px;color:#555;">整体偏移</span>
+        <button id="lrc-off-minus" style="width:22px;height:22px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);background:none;color:#888;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+        <input id="lrc-offset" type="number" value="0" step="0.1"
+          style="width:60px;padding:3px 6px;background:#1a1a1e;border:1px solid rgba(255,255,255,0.1);border-radius:5px;color:#e8e8ea;font-size:12px;font-family:monospace;text-align:center;" />
+        <button id="lrc-off-plus" style="width:22px;height:22px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);background:none;color:#888;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+        <button id="lrc-apply-offset" style="flex:1;padding:3px 8px;border-radius:5px;border:1px solid rgba(255,255,255,0.1);background:none;color:#a78bfa;font-size:11px;cursor:pointer;">应用</button>
+      </div>
+      <!-- 歌词列表 -->
+      <div id="lrc-lines" style="flex:1;overflow-y:auto;padding:4px 0;"></div>
+      <!-- 底部操作 -->
+      <div style="padding:10px 12px; border-top:1px solid rgba(255,255,255,0.07); display:flex; gap:8px; flex-shrink:0;">
+        <span style="font-size:10px;color:#444;flex:1;line-height:1.5;">Enter 定位此行<br>↑↓ 切换行</span>
+        <button id="lrc-save-btn" style="padding:7px 18px;border-radius:7px;background:#a78bfa;border:none;color:#0d0d0f;font-size:12px;font-weight:700;cursor:pointer;">保存</button>
+      </div>
+    </div>
+  )}
+
 
   <!-- 列表页 -->
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
@@ -218,8 +261,14 @@ const songs = songsData as Array<{
     if (syncTimer) clearInterval(syncTimer);
     syncTimer = setInterval(() => {
       if (!ytPlayer?.getCurrentTime) return;
-      highlightLine(findCurrentLine(curLines, ytPlayer.getCurrentTime()));
-    }, 200);
+      const t = ytPlayer.getCurrentTime();
+      highlightLine(findCurrentLine(curLines, t));
+      // dev panel 时间显示
+      if (import.meta.env.DEV) devUpdateTime(t);
+    }, 100);
+
+    // dev panel
+    if (import.meta.env.DEV) devOpenSong(song.title, curLines);
   }
 
   function closeOverlay() {
@@ -228,6 +277,7 @@ const songs = songsData as Array<{
     document.body.style.overflow = '';
     if (syncTimer) clearInterval(syncTimer);
     ytPlayer?.pauseVideo?.();
+    if (import.meta.env.DEV) devClosePanel();
   }
 
   // ---- 事件绑定 ----
@@ -248,4 +298,188 @@ const songs = songsData as Array<{
     { threshold: 0.05 }
   );
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // ---- DEV: LRC 校对面板 ----
+  if (import.meta.env.DEV) {
+    const devPanel    = document.getElementById('lrc-dev-panel') as HTMLElement | null;
+    const devTimeEl   = document.getElementById('lrc-time-now') as HTMLElement | null;
+    const devLabel    = document.getElementById('lrc-song-label') as HTMLElement | null;
+    const devLines    = document.getElementById('lrc-lines') as HTMLElement | null;
+    const devOffInput = document.getElementById('lrc-offset') as HTMLInputElement | null;
+    const devToggle   = document.getElementById('lrc-edit-toggle') as HTMLButtonElement | null;
+    const devSaveBtn  = document.getElementById('lrc-save-btn') as HTMLButtonElement | null;
+
+    let devActiveRow = -1;
+    let devPanelOpen = false;
+
+    function devFmt(t: number) {
+      const m = Math.floor(t / 60);
+      const s = t % 60;
+      return `${m}:${s.toFixed(1).padStart(4,'0')}`;
+    }
+    function devFmtFull(t: number) {
+      const m = Math.floor(t / 60);
+      const s = t % 60;
+      return `${String(m).padStart(2,'0')}:${s.toFixed(2).padStart(5,'0')}`;
+    }
+
+    function devBuildLines() {
+      if (!devLines) return;
+      devLines.innerHTML = curLines.map((l, i) =>
+        `<div class="dev-row" data-i="${i}" style="
+          display:flex;align-items:center;gap:0;padding:0 8px 0 12px;
+          height:36px;cursor:pointer;border-left:3px solid transparent;
+          transition:background .1s;
+        ">
+          <span class="dev-ts" data-i="${i}" style="
+            font-family:monospace;font-size:10px;color:#555;width:60px;
+            flex-shrink:0;cursor:pointer;padding:2px 4px;border-radius:3px;
+          ">[${devFmtFull(l.time)}]</span>
+          <span style="flex:1;font-size:12px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px;">${l.text || '·'}</span>
+          <button class="dev-set" data-i="${i}" style="
+            font-size:10px;padding:2px 6px;border-radius:4px;
+            border:1px solid rgba(255,255,255,0.1);background:none;
+            color:#555;cursor:pointer;white-space:nowrap;flex-shrink:0;
+          ">↩</button>
+        </div>`
+      ).join('');
+
+      devLines.querySelectorAll<HTMLElement>('.dev-row').forEach(row => {
+        row.addEventListener('click', () => devSetActive(parseInt(row.dataset.i!)));
+      });
+      devLines.querySelectorAll<HTMLElement>('.dev-ts').forEach(ts => {
+        ts.addEventListener('click', e => {
+          e.stopPropagation();
+          ytPlayer?.seekTo?.(curLines[parseInt(ts.dataset.i!)].time, true);
+        });
+      });
+      devLines.querySelectorAll<HTMLElement>('.dev-set').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          devSetTimestamp(parseInt(btn.dataset.i!));
+        });
+      });
+    }
+
+    function devSetActive(i: number) {
+      if (devActiveRow >= 0) {
+        const prev = devLines?.querySelector<HTMLElement>(`.dev-row[data-i="${devActiveRow}"]`);
+        if (prev) { prev.style.background = ''; prev.style.borderLeftColor = 'transparent'; }
+      }
+      devActiveRow = i;
+      const el = devLines?.querySelector<HTMLElement>(`.dev-row[data-i="${i}"]`);
+      if (el) {
+        el.style.background = 'rgba(167,139,250,0.08)';
+        el.style.borderLeftColor = '#a78bfa';
+        el.scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    function devSetTimestamp(i: number) {
+      const t = ytPlayer?.getCurrentTime?.() ?? 0;
+      curLines[i].time = Math.round(t * 100) / 100;
+      const ts = devLines?.querySelector<HTMLElement>(`.dev-ts[data-i="${i}"]`);
+      if (ts) ts.textContent = `[${devFmtFull(curLines[i].time)}]`;
+    }
+
+    function devUpdateTime(t: number) {
+      if (devTimeEl) devTimeEl.textContent = devFmt(t);
+      // also keep dev active row in sync with playback
+      const i = findCurrentLine(curLines, t);
+      if (i !== devActiveRow) devSetActive(i);
+    }
+
+    function devOpenSong(title: string, lines: Array<{time:number;text:string}>) {
+      if (devLabel) devLabel.textContent = title;
+      devBuildLines();
+      if (devPanelOpen && devPanel) devPanel.style.display = 'flex';
+    }
+
+    function devClosePanel() {
+      if (devPanel) devPanel.style.display = 'none';
+      devPanelOpen = false;
+      if (devToggle) devToggle.style.color = '';
+    }
+
+    // toggle button
+    devToggle?.addEventListener('click', () => {
+      devPanelOpen = !devPanelOpen;
+      if (devPanel) devPanel.style.display = devPanelOpen ? 'flex' : 'none';
+      if (devToggle) devToggle.style.color = devPanelOpen ? '#a78bfa' : '';
+      if (devPanelOpen) devBuildLines();
+    });
+
+    // offset controls
+    document.getElementById('lrc-off-minus')?.addEventListener('click', () => {
+      if (devOffInput) devOffInput.value = (parseFloat(devOffInput.value) - 0.5).toFixed(1);
+    });
+    document.getElementById('lrc-off-plus')?.addEventListener('click', () => {
+      if (devOffInput) devOffInput.value = (parseFloat(devOffInput.value) + 0.5).toFixed(1);
+    });
+    document.getElementById('lrc-apply-offset')?.addEventListener('click', () => {
+      const off = parseFloat(devOffInput?.value ?? '0') || 0;
+      if (off === 0) return;
+      curLines.forEach(l => l.time = Math.max(0, Math.round((l.time + off) * 100) / 100));
+      if (devOffInput) devOffInput.value = '0';
+      devBuildLines();
+      // also re-render main lyrics display
+      renderLyrics(curLines);
+    });
+
+    // save
+    devSaveBtn?.addEventListener('click', async () => {
+      const song = window.__songsData__[curIdx];
+      if (!song) return;
+      const lrc = curLines.map(l => {
+        const m = Math.floor(l.time / 60);
+        const s = l.time % 60;
+        return `[${String(m).padStart(2,'0')}:${s.toFixed(2).padStart(5,'0')}]${l.text}`;
+      }).join('\n');
+      devSaveBtn.textContent = '保存中…';
+      devSaveBtn.style.opacity = '0.6';
+      try {
+        const r = await fetch('/api/lyrics', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ songId: song.id, lyrics: lrc }),
+        });
+        devSaveBtn.textContent = r.ok ? '已保存 ✓' : '失败';
+        devSaveBtn.style.background = r.ok ? '#34d399' : '#f87171';
+      } catch { devSaveBtn.textContent = '出错了'; }
+      setTimeout(() => {
+        devSaveBtn.textContent = '保存';
+        devSaveBtn.style.opacity = '1';
+        devSaveBtn.style.background = '#a78bfa';
+      }, 2000);
+    });
+
+    // keyboard shortcuts in dev panel
+    document.addEventListener('keydown', e => {
+      if (!devPanelOpen || overlay.classList.contains('hidden')) return;
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT') return;
+
+      if (e.code === 'ArrowUp') {
+        e.preventDefault();
+        const i = Math.max(0, devActiveRow - 1);
+        devSetActive(i);
+        ytPlayer?.seekTo?.(curLines[i].time, true);
+      }
+      if (e.code === 'ArrowDown') {
+        e.preventDefault();
+        const i = Math.min(curLines.length - 1, devActiveRow + 1);
+        devSetActive(i);
+        ytPlayer?.seekTo?.(curLines[i].time, true);
+      }
+      if (e.code === 'Enter') {
+        e.preventDefault();
+        if (devActiveRow >= 0) {
+          devSetTimestamp(devActiveRow);
+          const next = Math.min(curLines.length - 1, devActiveRow + 1);
+          devSetActive(next);
+        }
+      }
+    });
+  }
+
 </script>

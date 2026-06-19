@@ -48,6 +48,31 @@ function devEditorPlugin() {
         } else { res.writeHead(405); res.end(); }
       });
 
+      // songs.json lyrics 编辑端点
+      server.middlewares.use('/api/lyrics', (req, res) => {
+        const fullPath = join(process.cwd(), 'src/data/songs.json');
+        if (req.method === 'GET') {
+          try {
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(readFileSync(fullPath, 'utf-8'));
+          } catch { res.writeHead(404); res.end('[]'); }
+        } else if (req.method === 'POST') {
+          let body = '';
+          req.on('data', chunk => { body += chunk; });
+          req.on('end', () => {
+            try {
+              const { songId, lyrics } = JSON.parse(body);
+              const songs = JSON.parse(readFileSync(fullPath, 'utf-8'));
+              const idx = songs.findIndex(s => s.id === songId);
+              if (idx < 0) { res.writeHead(404); res.end('Song not found'); return; }
+              songs[idx].lyrics = lyrics;
+              writeFileSync(fullPath, JSON.stringify(songs, null, 2), 'utf-8');
+              res.writeHead(200); res.end('OK');
+            } catch { res.writeHead(400); res.end('Bad request'); }
+          });
+        } else { res.writeHead(405); res.end(); }
+      });
+
       server.middlewares.use('/api/edit', (req, res) => {
         const url = new URL(req.url, 'http://localhost');
         const file = url.searchParams.get('file') || '';
