@@ -1,0 +1,251 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import songsData from '../data/songs.json';
+const songs = songsData as Array<{
+  id: string; title: string; artist: string; album: string; year: string;
+  youtubeId: string; note: string; lyrics: string;
+}>;
+---
+
+<BaseLayout title="在听" description="最近在循环的一些歌。">
+
+  <!-- 播放器覆盖层 -->
+  <div id="music-overlay"
+    class="fixed inset-0 z-50 hidden flex-col items-center justify-center"
+    style="background: rgba(12,12,14,0.97); backdrop-filter: blur(20px);">
+
+    <!-- 返回 -->
+    <button id="overlay-close"
+      class="absolute top-6 left-6 inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-300 transition-colors group">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+      返回列表
+    </button>
+
+    <!-- 歌曲信息 -->
+    <div class="absolute top-5 right-6 text-right">
+      <p id="overlay-title" class="text-sm font-medium text-white/80"></p>
+      <p id="overlay-artist" class="text-xs text-gray-600 mt-0.5"></p>
+    </div>
+
+    <!-- 歌词滚动窗口 -->
+    <div id="lyrics-window"
+      class="w-full overflow-hidden"
+      style="max-width: 480px; height: 320px; mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);">
+      <div id="lyrics-inner" style="transition: transform 0.45s cubic-bezier(0.4,0,0.2,1); padding-top: 140px; padding-bottom: 140px;">
+        <!-- 歌词行由 JS 注入 -->
+      </div>
+    </div>
+
+    <!-- YouTube 播放器 + 翻页 -->
+    <div class="mt-6 flex flex-col items-center gap-3">
+      <div class="rounded-xl overflow-hidden" style="width: 280px; height: 158px; background: #000;">
+        <div id="yt-player"></div>
+      </div>
+      <div class="flex items-center gap-5 mt-1">
+        <button id="prev-song" class="text-gray-600 hover:text-gray-300 transition-colors disabled:opacity-20 disabled:cursor-not-allowed">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7M5 19V5"/>
+          </svg>
+        </button>
+        <button id="next-song" class="text-gray-600 hover:text-gray-300 transition-colors disabled:opacity-20 disabled:cursor-not-allowed">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7M19 5v14"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 列表页 -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+    <div class="mb-12 reveal">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight mb-2">在听</h1>
+      <p class="text-sm text-gray-400 dark:text-gray-500">最近在循环的歌。点开听，歌词会跟上来。</p>
+    </div>
+
+    <div class="divide-y divide-gray-100 dark:divide-white/[0.06]">
+      {songs.map((song, i) => (
+        <button
+          class={`song-row w-full text-left py-5 group cursor-pointer reveal reveal-delay-${Math.min(i+1,5)} hover:bg-gray-50/50 dark:hover:bg-white/[0.02] -mx-2 px-2 rounded-lg transition-colors`}
+          data-idx={i}>
+          <div class="flex items-center gap-4">
+            <div class="shrink-0 w-12 h-12 rounded-lg overflow-hidden bg-gray-100 dark:bg-white/[0.06] flex items-center justify-center">
+              {song.youtubeId !== 'FILL_IN_YOUTUBE_ID'
+                ? <img src={`https://i.ytimg.com/vi/${song.youtubeId}/hqdefault.jpg`} alt={song.title} class="w-full h-full object-cover" loading="lazy" />
+                : <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/>
+                  </svg>
+              }
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-base font-medium text-gray-900 dark:text-white leading-snug">{song.title}</p>
+              <p class="text-sm text-gray-400 dark:text-gray-500 mt-0.5">{song.artist} · {song.year}</p>
+              {song.note && <p class="text-xs text-gray-400 dark:text-gray-600 mt-1.5 italic">"{song.note}"</p>}
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 dark:text-gray-700 group-hover:text-violet-400 dark:group-hover:text-violet-600 shrink-0 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </button>
+      ))}
+    </div>
+  </div>
+
+</BaseLayout>
+
+<!-- 把歌曲数据注入 window -->
+<script define:vars={{ songsData: songs }}>
+  window.__songsData__ = songsData;
+</script>
+
+<!-- YouTube IFrame API -->
+<script is:inline>
+  (function(){
+    var s = document.createElement('script');
+    s.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(s);
+  })();
+</script>
+
+<script>
+  // ---- 类型声明 ----
+  declare const window: Window & {
+    __songsData__: Array<{id:string;title:string;artist:string;youtubeId:string;lyrics:string}>;
+    onYouTubeIframeAPIReady: () => void;
+    YT: any;
+  };
+
+  // ---- LRC 解析 ----
+  function parseLRC(lrc: string) {
+    return lrc.split('\n').map(line => {
+      const m = line.match(/^\[(\d+):(\d+\.\d+)\](.*)/);
+      if (!m) return null;
+      return { time: parseInt(m[1]) * 60 + parseFloat(m[2]), text: m[3].trim() };
+    }).filter(Boolean) as Array<{time:number; text:string}>;
+  }
+
+  function findCurrentLine(lines: Array<{time:number;text:string}>, t: number) {
+    let idx = 0;
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].time <= t) idx = i;
+      else break;
+    }
+    return idx;
+  }
+
+  // ---- DOM ----
+  const overlay     = document.getElementById('music-overlay')!;
+  const lyricsInner = document.getElementById('lyrics-inner')!;
+  const titleEl     = document.getElementById('overlay-title')!;
+  const artistEl    = document.getElementById('overlay-artist')!;
+  const closeBtn    = document.getElementById('overlay-close')!;
+  const prevBtn     = document.getElementById('prev-song') as HTMLButtonElement;
+  const nextBtn     = document.getElementById('next-song') as HTMLButtonElement;
+
+  // ---- YouTube ----
+  let ytPlayer: any = null;
+  let ytReady = false;
+  let pendingIdx = -1;
+
+  window.onYouTubeIframeAPIReady = () => {
+    ytReady = true;
+    ytPlayer = new window.YT.Player('yt-player', {
+      width: '280', height: '158',
+      playerVars: { autoplay: 0, controls: 1, rel: 0, modestbranding: 1 },
+    });
+    if (pendingIdx >= 0) loadVideo(pendingIdx);
+  };
+
+  function loadVideo(idx: number) {
+    const song = window.__songsData__[idx];
+    if (!song || song.youtubeId === 'FILL_IN_YOUTUBE_ID') return;
+    if (ytPlayer?.loadVideoById) ytPlayer.loadVideoById(song.youtubeId);
+    else pendingIdx = idx;
+  }
+
+  // ---- 歌词 ----
+  let syncTimer: ReturnType<typeof setInterval> | null = null;
+  let curIdx = -1;
+  let curLineIdx = -1;
+  let curLines: Array<{time:number;text:string}> = [];
+
+  const LINE_H = 42; // px，与下面的 padding/font 对应
+
+  function renderLyrics(lines: Array<{time:number;text:string}>) {
+    lyricsInner.innerHTML = lines.map((l, i) =>
+      `<div class="ly" data-i="${i}" style="text-align:center;padding:9px 28px;font-size:1rem;line-height:1.6;color:rgba(255,255,255,0.2);transition:color .3s,font-size .3s,font-weight .3s;">${l.text || '·'}</div>`
+    ).join('');
+    curLineIdx = -1;
+    lyricsInner.style.transform = 'translateY(0)';
+  }
+
+  function highlightLine(idx: number) {
+    if (idx === curLineIdx) return;
+    curLineIdx = idx;
+    lyricsInner.querySelectorAll<HTMLElement>('.ly').forEach((el, i) => {
+      const d = Math.abs(i - idx);
+      el.style.color = d === 0 ? 'rgba(255,255,255,1)' : d === 1 ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.15)';
+      el.style.fontSize = d === 0 ? '1.0625rem' : '1rem';
+      el.style.fontWeight = d === 0 ? '500' : '400';
+    });
+    // 当前行居中
+    lyricsInner.style.transform = `translateY(${-idx * LINE_H}px)`;
+  }
+
+  // ---- 打开/关闭 ----
+  function openSong(idx: number) {
+    const all = window.__songsData__;
+    const song = all[idx];
+    if (!song) return;
+    curIdx = idx;
+
+    titleEl.textContent = song.title;
+    artistEl.textContent = song.artist;
+    curLines = parseLRC(song.lyrics);
+    renderLyrics(curLines);
+
+    overlay.classList.remove('hidden');
+    overlay.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === all.length - 1;
+
+    loadVideo(idx);
+
+    // 同步歌词
+    if (syncTimer) clearInterval(syncTimer);
+    syncTimer = setInterval(() => {
+      if (!ytPlayer?.getCurrentTime) return;
+      highlightLine(findCurrentLine(curLines, ytPlayer.getCurrentTime()));
+    }, 200);
+  }
+
+  function closeOverlay() {
+    overlay.classList.add('hidden');
+    overlay.classList.remove('flex');
+    document.body.style.overflow = '';
+    if (syncTimer) clearInterval(syncTimer);
+    ytPlayer?.pauseVideo?.();
+  }
+
+  // ---- 事件绑定 ----
+  document.querySelectorAll<HTMLButtonElement>('.song-row').forEach((row, i) => {
+    row.addEventListener('click', () => openSong(i));
+  });
+  closeBtn.addEventListener('click', closeOverlay);
+  prevBtn.addEventListener('click', () => openSong(curIdx - 1));
+  nextBtn.addEventListener('click', () => openSong(curIdx + 1));
+  document.addEventListener('keydown', e => {
+    if (overlay.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeOverlay();
+  });
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(
+    es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } }),
+    { threshold: 0.05 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
