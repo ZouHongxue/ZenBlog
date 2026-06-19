@@ -82,19 +82,29 @@ const songs = songsData as Array<{
         <span id="lrc-time-now" style="font-family:monospace;font-size:13px;font-weight:600;color:#a78bfa;min-width:72px;text-align:right;">0:00.0</span>
       </div>
       <!-- 偏移 -->
-      <div style="padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.07); display:flex; align-items:center; gap:6px; flex-shrink:0;">
-        <span style="font-size:11px;color:#555;">整体偏移</span>
-        <button id="lrc-off-minus" style="width:22px;height:22px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);background:none;color:#888;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
-        <input id="lrc-offset" type="number" value="0" step="0.1"
-          style="width:60px;padding:3px 6px;background:#1a1a1e;border:1px solid rgba(255,255,255,0.1);border-radius:5px;color:#e8e8ea;font-size:12px;font-family:monospace;text-align:center;" />
-        <button id="lrc-off-plus" style="width:22px;height:22px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);background:none;color:#888;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
-        <button id="lrc-apply-offset" style="flex:1;padding:3px 8px;border-radius:5px;border:1px solid rgba(255,255,255,0.1);background:none;color:#a78bfa;font-size:11px;cursor:pointer;">应用</button>
+      <div style="padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.07); display:flex; flex-direction:column; gap:6px; flex-shrink:0;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:10px;color:#444;width:52px;flex-shrink:0;">全部</span>
+          <button id="lrc-off-minus" style="width:22px;height:22px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);background:none;color:#888;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+          <input id="lrc-offset" type="number" value="0" step="0.1"
+            style="width:60px;padding:3px 6px;background:#1a1a1e;border:1px solid rgba(255,255,255,0.1);border-radius:5px;color:#e8e8ea;font-size:12px;font-family:monospace;text-align:center;" />
+          <button id="lrc-off-plus" style="width:22px;height:22px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);background:none;color:#888;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+          <button id="lrc-apply-offset" style="flex:1;padding:3px 8px;border-radius:5px;border:1px solid rgba(255,255,255,0.1);background:none;color:#a78bfa;font-size:11px;cursor:pointer;">应用</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span id="lrc-from-label" style="font-size:10px;color:#444;width:52px;flex-shrink:0;">从此行↓</span>
+          <button id="lrc-from-minus" style="width:22px;height:22px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);background:none;color:#888;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+          <input id="lrc-from-offset" type="number" value="0" step="0.1"
+            style="width:60px;padding:3px 6px;background:#1a1a1e;border:1px solid rgba(255,255,255,0.1);border-radius:5px;color:#e8e8ea;font-size:12px;font-family:monospace;text-align:center;" />
+          <button id="lrc-from-plus" style="width:22px;height:22px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);background:none;color:#888;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+          <button id="lrc-apply-from" style="flex:1;padding:3px 8px;border-radius:5px;border:1px solid rgba(255,255,255,0.1);background:none;color:#34d399;font-size:11px;cursor:pointer;">应用</button>
+        </div>
       </div>
       <!-- 歌词列表 -->
       <div id="lrc-lines" style="flex:1;overflow-y:auto;padding:4px 0;"></div>
       <!-- 底部操作 -->
       <div style="padding:10px 12px; border-top:1px solid rgba(255,255,255,0.07); display:flex; gap:8px; flex-shrink:0;">
-        <span style="font-size:10px;color:#444;flex:1;line-height:1.6;">Enter 定位此行 · ↑↓ 切换行<br>, / . 微调 ±0.1s · Shift 则 ±0.5s<br>双击时间戳 直接输入 · 滚轮 微调</span>
+        <span style="font-size:10px;color:#444;flex:1;line-height:1.6;">Enter 定位此行 · ↑↓ 切换行<br>, / . 单行 ±0.1s · Shift ±0.5s<br>⌘, / ⌘. 从此行起 ±0.1s<br>双击时间戳 输入 · 滚轮 微调</span>
         <button id="lrc-save-btn" style="padding:7px 18px;border-radius:7px;background:#a78bfa;border:none;color:#0d0d0f;font-size:12px;font-weight:700;cursor:pointer;">保存</button>
       </div>
     </div>
@@ -373,6 +383,7 @@ const songs = songsData as Array<{
         el.style.borderLeftColor = '#a78bfa';
         el.scrollIntoView({ block: 'nearest' });
       }
+      if (devFromLabel) devFromLabel.textContent = i >= 0 ? `第${i+1}行↓` : '从此行↓';
     }
 
     function devSetTimestamp(i: number) {
@@ -457,8 +468,47 @@ const songs = songsData as Array<{
       curLines.forEach(l => l.time = Math.max(0, Math.round((l.time + off) * 100) / 100));
       if (devOffInput) devOffInput.value = '0';
       devBuildLines();
-      // also re-render main lyrics display
       renderLyrics(curLines);
+    });
+
+    // 从选中行起偏移
+    const devFromInput = document.getElementById('lrc-from-offset') as HTMLInputElement | null;
+    const devFromLabel = document.getElementById('lrc-from-label') as HTMLElement | null;
+
+    document.getElementById('lrc-from-minus')?.addEventListener('click', () => {
+      if (devFromInput) devFromInput.value = (parseFloat(devFromInput.value) - 0.5).toFixed(1);
+    });
+    document.getElementById('lrc-from-plus')?.addEventListener('click', () => {
+      if (devFromInput) devFromInput.value = (parseFloat(devFromInput.value) + 0.5).toFixed(1);
+    });
+    document.getElementById('lrc-apply-from')?.addEventListener('click', () => {
+      const off = parseFloat(devFromInput?.value ?? '0') || 0;
+      if (off === 0 || devActiveRow < 0) return;
+      for (let i = devActiveRow; i < curLines.length; i++) {
+        curLines[i].time = Math.max(0, Math.round((curLines[i].time + off) * 100) / 100);
+      }
+      if (devFromInput) devFromInput.value = '0';
+      devBuildLines();
+      devSetActive(devActiveRow);
+      renderLyrics(curLines);
+    });
+
+    // Ctrl+, / Ctrl+. = 从当前行起 ±0.1s（按住 Shift 则 ±0.5s）
+    // （在原有 keydown 外再加一个监听，避免影响已有逻辑）
+    document.addEventListener('keydown', e => {
+      if (!devPanelOpen || overlay.classList.contains('hidden')) return;
+      if ((e.target as HTMLElement).tagName === 'INPUT') return;
+      if (!e.ctrlKey && !e.metaKey) return;
+      if (e.code === 'Comma' && devActiveRow >= 0) {
+        e.preventDefault();
+        const delta = e.shiftKey ? -0.5 : -0.1;
+        for (let i = devActiveRow; i < curLines.length; i++) devNudge(i, delta);
+      }
+      if (e.code === 'Period' && devActiveRow >= 0) {
+        e.preventDefault();
+        const delta = e.shiftKey ? 0.5 : 0.1;
+        for (let i = devActiveRow; i < curLines.length; i++) devNudge(i, delta);
+      }
     });
 
     // save
