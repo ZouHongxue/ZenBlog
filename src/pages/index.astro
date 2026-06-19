@@ -33,10 +33,11 @@ try {
   if (zbFiles.length > 0) {
     const date = zbFiles[0].replace('.html', '');
     const html = readFileSync(join(zaobaoDir, zbFiles[0]), 'utf-8');
+    const dec = (s: string) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
     const sections = [...html.matchAll(/<div class="section-title">(.*?)<\/div>/gs)]
-      .map(m => m[1].replace(/<[^>]*>/g, '').trim());
+      .map(m => dec(m[1].replace(/<[^>]*>/g, '').trim()));
     const headlines = [...html.matchAll(/class="item-title">\s*(?:<a[^>]*>)?(.*?)(?:<\/a>)?\s*(?:<span[^>]*>.*?<\/span>)?\s*<\/div>/gs)]
-      .map(m => m[1].replace(/<[^>]*>/g, '').trim()).filter(Boolean).slice(0, 5);
+      .map(m => dec(m[1].replace(/<[^>]*>/g, '').trim())).filter(Boolean).slice(0, 5);
     latestZaobao = { date, headlines, sections };
   }
 } catch {}

@@ -8,15 +8,17 @@ const files = readdirSync(zaobaoDir)
   .filter(f => f.endsWith('.html'))
   .sort().reverse();
 
+function decodeHtml(s: string) {
+  return s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+}
+
 function parsePreview(date: string) {
   try {
     const html = readFileSync(join(zaobaoDir, `${date}.html`), 'utf-8');
-    // 提取各 section 标题
     const sections = [...html.matchAll(/<div class="section-title">(.*?)<\/div>/gs)]
-      .map(m => m[1].replace(/<[^>]*>/g, '').trim());
-    // 提取前 4 条新闻标题
+      .map(m => decodeHtml(m[1].replace(/<[^>]*>/g, '').trim()));
     const headlines = [...html.matchAll(/class="item-title">\s*(?:<a[^>]*>)?(.*?)(?:<\/a>)?\s*(?:<span[^>]*>.*?<\/span>)?\s*<\/div>/gs)]
-      .map(m => m[1].replace(/<[^>]*>/g, '').trim())
+      .map(m => decodeHtml(m[1].replace(/<[^>]*>/g, '').trim()))
       .filter(Boolean)
       .slice(0, 4);
     return { sections, headlines };
