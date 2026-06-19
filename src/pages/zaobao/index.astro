@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+
+const zaobaoDir = join(process.cwd(), 'src/data/zaobao');
+const files = readdirSync(zaobaoDir)
+  .filter(f => f.endsWith('.html'))
+  .sort().reverse();
+
+function parsePreview(date: string) {
+  try {
+    const html = readFileSync(join(zaobaoDir, `${date}.html`), 'utf-8');
+    // 提取各 section 标题
+    const sections = [...html.matchAll(/<div class="section-title">(.*?)<\/div>/gs)]
+      .map(m => m[1].replace(/<[^>]*>/g, '').trim());
+    // 提取前 4 条新闻标题
+    const headlines = [...html.matchAll(/class="item-title">\s*(?:<a[^>]*>)?(.*?)(?:<\/a>)?\s*(?:<span[^>]*>.*?<\/span>)?\s*<\/div>/gs)]
+      .map(m => m[1].replace(/<[^>]*>/g, '').trim())
+      .filter(Boolean)
+      .slice(0, 4);
+    return { sections, headlines };
+  } catch { return { sections: [], headlines: [] }; }
+}
+
+const briefs = files.map(f => {
+  const date = f.replace('.html', '');
+  const { sections, headlines } = parsePreview(date);
+  return { date, sections, headlines };
+});
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<BaseLayout title="早报" description="每日财经与 AI 摘要。">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-14">
+
+    <div class="mb-10 reveal">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-xs font-semibold text-amber-500 tracking-wider uppercase">Daily Brief</span>
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight mb-2">早报</h1>
+      <p class="text-sm text-gray-400 dark:text-gray-500">AI、科技股、宏观、红利资产每日摘要。</p>
+    </div>
+
+    <div class="divide-y divide-gray-100 dark:divide-white/[0.06]">
+      {briefs.map((b, i) => {
+        const d = new Date(b.date);
+        const dateStr = d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+        const weekday = d.toLocaleDateString('zh-CN', { weekday: 'long' });
+        return (
+          <a
+            href={`${base}zaobao/${b.date}`}
+            class={`group flex items-start gap-5 py-6 hover:bg-amber-50/50 dark:hover:bg-amber-950/10 -mx-3 px-3 rounded-xl transition-colors reveal reveal-delay-${Math.min(i+1,5)}`}>
+
+            <!-- 日期 -->
+            <div class="shrink-0 w-14 text-center pt-0.5">
+              <div class="text-2xl font-bold text-amber-500 tabular-nums leading-none">{d.getDate()}</div>
+              <div class="text-xs text-gray-400 dark:text-gray-600 mt-0.5">{d.toLocaleDateString('zh-CN', { month: 'short' })}</div>
+              <div class="text-xs text-gray-300 dark:text-gray-700 mt-0.5">{weekday.replace('星期', '')}</div>
+            </div>
+
+            <!-- 内容 -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-2">
+                <h2 class="text-base font-semibold text-gray-800 dark:text-gray-200 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                  财经早报 · {dateStr}
+                </h2>
+              </div>
+              {b.sections.length > 0 && (
+                <div class="flex flex-wrap gap-1.5 mb-2">
+                  {b.sections.map(s => (
+                    <span class="text-xs text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-950/30 px-2 py-0.5 rounded-full">{s}</span>
+                  ))}
+                </div>
+              )}
+              {b.headlines.length > 0 && (
+                <ul class="space-y-0.5">
+                  {b.headlines.map(h => (
+                    <li class="text-xs text-gray-500 dark:text-gray-500 truncate before:content-['·'] before:mr-1.5 before:text-amber-400">{h}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 dark:text-gray-700 group-hover:text-amber-400 shrink-0 mt-1 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        );
+      })}
+    </div>
+
+    {briefs.length === 0 && (
+      <div class="text-center py-20 text-gray-400 dark:text-gray-600 text-sm">暂无早报</div>
+    )}
+  </div>
+</BaseLayout>
+
+<script>
+  const obs = new IntersectionObserver(
+    es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } }),
+    { threshold: 0.05 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>

@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+
+export async function getStaticPaths() {
+  const zaobaoDir = join(process.cwd(), 'src/data/zaobao');
+  const files = readdirSync(zaobaoDir).filter(f => f.endsWith('.html'));
+  return files.map(f => ({ params: { date: f.replace('.html', '') } }));
+}
+
+const { date } = Astro.params;
+const zaobaoDir = join(process.cwd(), 'src/data/zaobao');
+const rawHtml = readFileSync(join(zaobaoDir, `${date}.html`), 'utf-8');
+
+// 提取 <body> 内容，去掉 html/head/style wrapper
+const bodyMatch = rawHtml.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+const bodyContent = bodyMatch ? bodyMatch[1] : rawHtml;
+
+// 提取原始 CSS（只提取 body 内 style 之外的部分，已在 BaseLayout 注入）
+const styleMatch = rawHtml.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+const inlineStyle = styleMatch ? styleMatch[1] : '';
+
+const d = new Date(date);
+const dateStr = d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<BaseLayout title={`早报 ${date}`} description={`财经早报 ${dateStr}`}>
+
+  <!-- 顶部导航 -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-2 flex items-center gap-3">
+    <a href={`${base}zaobao`}
+      class="inline-flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-600 hover:text-amber-500 transition-colors group">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+      早报列表
+    </a>
+    <span class="text-gray-200 dark:text-gray-800">·</span>
+    <span class="text-xs text-gray-400 dark:text-gray-600">{dateStr}</span>
+  </div>
+
+  <!-- 早报正文：用浅色卡片包裹，隔离样式 -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6">
+    <div class="zaobao-wrap rounded-2xl overflow-hidden border border-gray-100 dark:border-white/[0.06] shadow-sm">
+      <style set:html={`
+        .zaobao-wrap {
+          background: #fff;
+          color: #111;
+        }
+        .dark .zaobao-wrap {
+          background: #18181c;
+          color: #e8e8ea;
+        }
+        .zaobao-inner {
+          padding: 28px 24px 48px;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+          line-height: 1.6;
+        }
+        ${inlineStyle
+          .replace(/body\s*\{[^}]*\}/g, '')           /* 去掉 body 样式 */
+          .replace(/max-width:[^;]+;/g, '')            /* 去掉最大宽度 */
+          .replace(/margin:[^;]+auto[^;]*;/g, '')      /* 去掉居中 margin */
+          .replace(/padding:[^;]+;/g, '')              /* 去掉 padding（由 zaobao-inner 控制） */
+        }
+        .dark .zaobao-wrap header { border-color: rgba(255,255,255,0.12); }
+        .dark .zaobao-wrap .section-title { border-color: rgba(255,255,255,0.2); color: #e8e8ea; }
+        .dark .zaobao-wrap .item { border-color: rgba(255,255,255,0.06); }
+        .dark .zaobao-wrap .item-title a { color: #e8e8ea; }
+        .dark .zaobao-wrap .item-desc { color: #9ca3af; }
+        .dark .zaobao-wrap .item-source { color: #6b7280; }
+        .dark .zaobao-wrap .stock-table th { background: rgba(255,255,255,0.05); color: #9ca3af; }
+        .dark .zaobao-wrap .stock-table td { border-color: rgba(255,255,255,0.06); }
+        .dark .zaobao-wrap footer { border-color: rgba(255,255,255,0.08); color: #6b7280; }
+        .dark .zaobao-wrap .tag-ai   { background: rgba(34,85,204,0.15); color: #7ba7f7; }
+        .dark .zaobao-wrap .tag-macro{ background: rgba(179,92,0,0.15);  color: #f5a050; }
+        .dark .zaobao-wrap .tag-reit { background: rgba(26,122,58,0.15);  color: #6ee09c; }
+      `} />
+      <div class="zaobao-inner" set:html={bodyContent} />
+    </div>
+  </div>
+
+</BaseLayout>
