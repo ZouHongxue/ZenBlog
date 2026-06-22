@@ -128,7 +128,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       const data = await r.json();
       if (data.ok) {
         syncBtn.textContent = data.copied.length > 0
-          ? `已同步 ${data.copied.length} 份 ✓`
+          ? `已同步并提交 ${data.copied.length} 份 — 记得 push ✓`
           : '已是最新 ✓';
         syncBtn.style.color = '#16a34a';
         syncBtn.style.borderColor = '#16a34a';

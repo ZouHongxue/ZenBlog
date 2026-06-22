@@ -5,6 +5,7 @@ import mdx from '@astrojs/mdx';
 import { readFileSync, writeFileSync, readdirSync, copyFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
+import { execSync } from 'child_process';
 
 function devEditorPlugin() {
   return {
@@ -61,6 +62,13 @@ function devEditorPlugin() {
           for (const f of files) {
             copyFileSync(join(src, f), join(dest, f));
             copied.push(f);
+          }
+          // git add + commit（有新文件才提交）
+          if (copied.length > 0) {
+            const cwd = process.cwd();
+            execSync('git add src/data/zaobao/', { cwd });
+            const dates = copied.map(f => f.replace('.html', '')).join(', ');
+            execSync(`git commit -m "content: 同步早报 ${dates}"`, { cwd });
           }
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ ok: true, copied }));
