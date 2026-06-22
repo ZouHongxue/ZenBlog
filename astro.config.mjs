@@ -2,8 +2,9 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync, copyFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
+import { homedir } from 'os';
 
 function devEditorPlugin() {
   return {
@@ -46,6 +47,27 @@ function devEditorPlugin() {
             }
           });
         } else { res.writeHead(405); res.end(); }
+      });
+
+      // 早报同步端点：把 ~/Desktop/早报/*.html 复制到 src/data/zaobao/
+      server.middlewares.use('/api/sync-zaobao', (req, res) => {
+        if (req.method !== 'POST') { res.writeHead(405); res.end(); return; }
+        try {
+          const src  = join(homedir(), 'Desktop', '早报');
+          const dest = join(process.cwd(), 'src/data/zaobao');
+          if (!existsSync(dest)) mkdirSync(dest, { recursive: true });
+          const files = readdirSync(src).filter(f => f.endsWith('.html'));
+          const copied = [];
+          for (const f of files) {
+            copyFileSync(join(src, f), join(dest, f));
+            copied.push(f);
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, copied }));
+        } catch (e) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: false, error: String(e) }));
+        }
       });
 
       // songs.json lyrics 编辑端点
