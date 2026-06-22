@@ -1,23 +1,23 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
   const isDev = import.meta.env.DEV;
   const posts = await getCollection('blog', ({ data }) => isDev || !data.draft);
   return posts.map(post => ({
-    params: { slug: post.slug },
+    params: { slug: post.id },
     props: { post },
   }));
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 const isDev = import.meta.env.DEV;
 const editUrl = isDev
-  ? `vscode://file${process.cwd()}/src/content/blog/${post.id}`
+  ? `vscode://file${process.cwd()}/src/content/blog/${post.id}.md`
   : undefined;
 ---
-<PostLayout frontmatter={{ ...post.data, slug: post.slug }} editUrl={editUrl}>
+<PostLayout frontmatter={{ ...post.data, slug: post.id }} editUrl={editUrl}>
   <Content />
 </PostLayout>

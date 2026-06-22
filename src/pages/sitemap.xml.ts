@@ -9,7 +9,7 @@ export async function GET() {
     { url: `${base}/blog/`, lastmod: new Date().toISOString() },
     { url: `${base}/about/`, lastmod: new Date().toISOString() },
     ...posts.map(post => ({
-      url: `${base}/blog/${post.slug}/`,
+      url: `${base}/blog/${post.id}/`,
       lastmod: new Date(post.data.pubDate).toISOString(),
     })),
   ];

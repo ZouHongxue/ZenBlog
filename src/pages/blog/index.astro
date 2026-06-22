@@ -40,7 +40,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
         const tags = post.data.tags?.join(',') || '';
         const delayClass = `reveal-delay-${Math.min(i + 1, 5)}`;
         return (
-          <a href={`${base}blog/${post.slug}`}
+          <a href={`${base}blog/${post.id}`}
             data-tags={tags}
             class={`post-card group flex items-start gap-5 py-5 transition-colors duration-150 reveal ${delayClass}`}>
             <time class="text-xs text-gray-400 dark:text-gray-600 shrink-0 mt-1 w-28 tabular-nums">{date}</time>

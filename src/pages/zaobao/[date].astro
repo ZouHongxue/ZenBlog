@@ -13,24 +13,105 @@ const { date } = Astro.params;
 const zaobaoDir = join(process.cwd(), 'src/data/zaobao');
 const rawHtml = readFileSync(join(zaobaoDir, `${date}.html`), 'utf-8');
 
-// 提取 <body> 内容，去掉 html/head/style wrapper
-const bodyMatch = rawHtml.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-const bodyContent = bodyMatch ? bodyMatch[1] : rawHtml;
+// ── 解析 header 信息 ─────────────────────────────────────────────────────────
+const headerMatch = rawHtml.match(/<header[^>]*>([\s\S]*?)<\/header>/i);
+const headerHtml = headerMatch ? headerMatch[1] : '';
+const h1Match = headerHtml.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+const headerTitle = h1Match ? h1Match[1].replace(/<[^>]+>/g, '').trim() : '财经早报';
+const headerPMatch = headerHtml.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+const headerSub = headerPMatch ? headerPMatch[1].replace(/<[^>]+>/g, '').trim() : '';
 
-// 提取原始 CSS（只提取 body 内 style 之外的部分，已在 BaseLayout 注入）
-const styleMatch = rawHtml.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
-const inlineStyle = styleMatch ? styleMatch[1] : '';
+// ── 解析 sections ─────────────────────────────────────────────────────────────
+interface ZaobaoItem {
+  title: string;
+  href?: string;
+  summary?: string;
+  tags: string[];
+  meta: string;
+  isStockRow?: boolean;
+  stockChange?: string;
+  stockUp?: boolean;
+}
+interface ZaobaoSection {
+  heading: string;
+  items: ZaobaoItem[];
+}
 
+function parseItems(ulHtml: string): ZaobaoItem[] {
+  const items: ZaobaoItem[] = [];
+  const liMatches = ulHtml.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
+  for (const li of liMatches) {
+    const inner = li.replace(/^<li[^>]*>|<\/li>$/gi, '');
+
+    // item-title
+    const titleDivMatch = inner.match(/<div[^>]*class="[^"]*item-title[^"]*"[^>]*>([\s\S]*?)<\/div>/i);
+    const titleHtml = titleDivMatch ? titleDivMatch[1] : '';
+    const aMatch = titleHtml.match(/<a[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/i);
+    const href = aMatch ? aMatch[1] : undefined;
+    const title = titleHtml.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
+
+    // item-summary
+    const sumMatch = inner.match(/<div[^>]*class="[^"]*item-summary[^"]*"[^>]*>([\s\S]*?)<\/div>/i);
+    const summary = sumMatch ? sumMatch[1].replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').trim() : undefined;
+
+    // item-meta: extract tags + remaining text
+    const metaMatch = inner.match(/<div[^>]*class="[^"]*item-meta[^"]*"[^>]*>([\s\S]*?)<\/div>/i);
+    const metaHtml = metaMatch ? metaMatch[1] : '';
+    const tagMatches = metaHtml.match(/<span[^>]*class="[^"]*tag[^"]*"[^>]*>([\s\S]*?)<\/span>/gi) || [];
+    const tags = tagMatches.map(t => t.replace(/<[^>]+>/g, '').trim());
+    const metaText = metaHtml.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+
+    // up/down 颜色标记（热股行情）
+    const upMatch = inner.match(/<span[^>]*class="[^"]*up[^"]*"[^>]*>([\s\S]*?)<\/span>/i);
+    const downMatch = inner.match(/<span[^>]*class="[^"]*down[^"]*"[^>]*>([\s\S]*?)<\/span>/i);
+    const stockChange = upMatch ? upMatch[1].trim() : downMatch ? downMatch[1].trim() : undefined;
+    const stockUp = upMatch ? true : downMatch ? false : undefined;
+
+    if (title) {
+      items.push({ title, href, summary, tags, meta: metaText, stockChange, stockUp, isStockRow: !!stockChange && !summary });
+    }
+  }
+  return items;
+}
+
+const sectionMatches = rawHtml.match(/<section[^>]*>([\s\S]*?)<\/section>/gi) || [];
+const sections: ZaobaoSection[] = sectionMatches.map(sec => {
+  const h2Match = sec.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
+  const heading = h2Match ? h2Match[1].replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').trim() : '';
+  const ulMatches = sec.match(/<ul[^>]*>([\s\S]*?)<\/ul>/gi) || [];
+  const items: ZaobaoItem[] = [];
+  for (const ul of ulMatches) {
+    items.push(...parseItems(ul));
+  }
+  return { heading, items };
+});
+
+// ── 解析 footer ───────────────────────────────────────────────────────────────
+const footerMatch = rawHtml.match(/<footer[^>]*>([\s\S]*?)<\/footer>/i);
+const footerText = footerMatch ? footerMatch[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : '';
+
+// ── 日期格式 ──────────────────────────────────────────────────────────────────
 const d = new Date(date);
 const dateStr = d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+
+// tag → 颜色方案
+const tagColor: Record<string, string> = {
+  'Twitter': 'bg-sky-50 text-sky-600 dark:bg-sky-900/30 dark:text-sky-400',
+  'Reddit':  'bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
+  'B站':     'bg-pink-50 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400',
+  '雪球':    'bg-teal-50 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400',
+};
+function tagCls(t: string) {
+  return tagColor[t] ?? 'bg-gray-100 text-gray-500 dark:bg-white/[0.06] dark:text-gray-400';
+}
 ---
 
 <BaseLayout title={`早报 ${date}`} description={`财经早报 ${dateStr}`}>
 
-  <!-- 顶部导航 -->
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-2 flex items-center gap-3">
+  <!-- 顶部面包屑 -->
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 pt-6 pb-2 flex items-center gap-3">
     <a href={`${base}zaobao`}
       class="inline-flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-600 hover:text-amber-500 transition-colors group">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -42,44 +123,94 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <span class="text-xs text-gray-400 dark:text-gray-600">{dateStr}</span>
   </div>
 
-  <!-- 早报正文：用浅色卡片包裹，隔离样式 -->
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6">
-    <div class="zaobao-wrap rounded-2xl overflow-hidden border border-gray-100 dark:border-white/[0.06] shadow-sm">
-      <style set:html={`
-        .zaobao-wrap {
-          background: #fff;
-          color: #111;
-        }
-        .dark .zaobao-wrap {
-          background: #18181c;
-          color: #e8e8ea;
-        }
-        .zaobao-inner {
-          padding: 28px 24px 48px;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-          line-height: 1.6;
-        }
-        ${inlineStyle
-          .replace(/body\s*\{[^}]*\}/g, '')           /* 去掉 body 样式 */
-          .replace(/max-width:[^;]+;/g, '')            /* 去掉最大宽度 */
-          .replace(/margin:[^;]+auto[^;]*;/g, '')      /* 去掉居中 margin */
-          .replace(/padding:[^;]+;/g, '')              /* 去掉 padding（由 zaobao-inner 控制） */
-        }
-        .dark .zaobao-wrap header { border-color: rgba(255,255,255,0.12); }
-        .dark .zaobao-wrap .section-title { border-color: rgba(255,255,255,0.2); color: #e8e8ea; }
-        .dark .zaobao-wrap .item { border-color: rgba(255,255,255,0.06); }
-        .dark .zaobao-wrap .item-title a { color: #e8e8ea; }
-        .dark .zaobao-wrap .item-desc { color: #9ca3af; }
-        .dark .zaobao-wrap .item-source { color: #6b7280; }
-        .dark .zaobao-wrap .stock-table th { background: rgba(255,255,255,0.05); color: #9ca3af; }
-        .dark .zaobao-wrap .stock-table td { border-color: rgba(255,255,255,0.06); }
-        .dark .zaobao-wrap footer { border-color: rgba(255,255,255,0.08); color: #6b7280; }
-        .dark .zaobao-wrap .tag-ai   { background: rgba(34,85,204,0.15); color: #7ba7f7; }
-        .dark .zaobao-wrap .tag-macro{ background: rgba(179,92,0,0.15);  color: #f5a050; }
-        .dark .zaobao-wrap .tag-reit { background: rgba(26,122,58,0.15);  color: #6ee09c; }
-      `} />
-      <div class="zaobao-inner" set:html={bodyContent} />
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 pb-16 space-y-5">
+
+    <!-- 大标题卡片 -->
+    <div class="rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30 px-6 py-5">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">{headerTitle}</h1>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-500 leading-relaxed">{headerSub}</p>
+        </div>
+        <span class="shrink-0 text-2xl select-none">📰</span>
+      </div>
     </div>
+
+    <!-- Sections -->
+    {sections.map(sec => (
+      <section class="rounded-2xl bg-white dark:bg-white/[0.03] border border-gray-100 dark:border-white/[0.06] overflow-hidden">
+
+        <!-- Section 标题 -->
+        <div class="px-5 py-3.5 border-b border-gray-100 dark:border-white/[0.06] flex items-center gap-2.5">
+          <h2 class="text-sm font-semibold text-gray-800 dark:text-gray-200 tracking-tight">{sec.heading}</h2>
+          <span class="ml-auto text-xs text-gray-400 dark:text-gray-600">{sec.items.length} 条</span>
+        </div>
+
+        <!-- 条目列表 -->
+        <ul class="divide-y divide-gray-50 dark:divide-white/[0.04]">
+          {sec.items.map(item => (
+            item.isStockRow ? (
+              /* 热股行情行 */
+              <li class="px-5 py-3 flex items-center gap-3">
+                <span class="text-sm text-gray-700 dark:text-gray-300 flex-1 min-w-0 truncate">{item.title}</span>
+                {item.stockChange && (
+                  <span class={`text-sm font-semibold tabular-nums shrink-0 ${item.stockUp ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
+                    {item.stockChange}
+                  </span>
+                )}
+                {/* meta without the change */}
+                <span class="text-xs text-gray-400 dark:text-gray-600 shrink-0 hidden sm:block max-w-[160px] truncate">
+                  {item.meta.replace(item.stockChange ?? '', '').replace(/^[\s·]+|[\s·]+$/g, '')}
+                </span>
+              </li>
+            ) : (
+              /* 普通内容条目 */
+              <li class="px-5 py-4 group">
+                <div class="flex items-start gap-1.5 mb-1">
+                  {/* 标签 */}
+                  {item.tags.length > 0 && (
+                    <div class="flex items-center gap-1 shrink-0 mt-0.5">
+                      {item.tags.map(tag => (
+                        <span class={`inline-block text-[10px] font-medium px-1.5 py-0.5 rounded leading-none ${tagCls(tag)}`}>{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                  {/* 标题 */}
+                  {item.href ? (
+                    <a href={item.href} target="_blank" rel="noopener noreferrer"
+                      class="text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors leading-snug">
+                      {item.title}
+                    </a>
+                  ) : (
+                    <span class="text-sm font-medium text-gray-800 dark:text-gray-200 leading-snug">{item.title}</span>
+                  )}
+                </div>
+
+                {item.summary && (
+                  <p class="text-[13px] text-gray-500 dark:text-gray-500 leading-relaxed mt-1.5 mb-2">{item.summary}</p>
+                )}
+
+                {/* meta 行（去掉已显示的 tag 文本） */}
+                {(() => {
+                  const metaClean = item.tags.reduce((s, t) => s.replace(t, '').replace(/^[\s·]+|[\s·]+$/g, ''), item.meta).trim();
+                  return metaClean ? (
+                    <p class="text-[11px] text-gray-400 dark:text-gray-600 leading-none">{metaClean}</p>
+                  ) : null;
+                })()}
+              </li>
+            )
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <!-- Footer -->
+    {footerText && (
+      <p class="text-[11px] text-gray-400 dark:text-gray-600 text-center leading-relaxed px-4">
+        {footerText}
+      </p>
+    )}
+
   </div>
 
 </BaseLayout>

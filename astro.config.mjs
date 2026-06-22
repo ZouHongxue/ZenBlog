@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
+import tailwindcss from '@tailwindcss/vite';
 
 import { readFileSync, writeFileSync, readdirSync, copyFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
@@ -54,24 +54,46 @@ function devEditorPlugin() {
       server.middlewares.use('/api/sync-zaobao', (req, res) => {
         if (req.method !== 'POST') { res.writeHead(405); res.end(); return; }
         try {
-          const src  = join(homedir(), 'Desktop', '早报');
+          // 支持多个候选路径（macOS 中英文桌面名均可）
+          const srcCandidates = [
+            join(homedir(), 'Desktop', '早报'),
+            join(homedir(), '桌面', '早报'),
+          ];
+          const src = srcCandidates.find(p => existsSync(p));
+          if (!src) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: false, error: `未找到桌面早报文件夹，请确认 ~/Desktop/早报 存在。已检查路径：${srcCandidates.join(', ')}` }));
+            return;
+          }
           const dest = join(process.cwd(), 'src/data/zaobao');
           if (!existsSync(dest)) mkdirSync(dest, { recursive: true });
-          const files = readdirSync(src).filter(f => f.endsWith('.html'));
+          const srcFiles = readdirSync(src).filter(f => f.endsWith('.html'));
           const copied = [];
-          for (const f of files) {
-            copyFileSync(join(src, f), join(dest, f));
-            copied.push(f);
+          const skipped = [];
+          for (const f of srcFiles) {
+            const destPath = join(dest, f);
+            // 仅复制新文件（旧文件跳过，避免无谓 commit）
+            if (!existsSync(destPath)) {
+              copyFileSync(join(src, f), destPath);
+              copied.push(f);
+            } else {
+              skipped.push(f);
+            }
           }
           // git add + commit（有新文件才提交）
           if (copied.length > 0) {
             const cwd = process.cwd();
-            execSync('git add src/data/zaobao/', { cwd });
-            const dates = copied.map(f => f.replace('.html', '')).join(', ');
-            execSync(`git commit -m "content: 同步早报 ${dates}"`, { cwd });
+            try {
+              execSync('git add src/data/zaobao/', { cwd });
+              const dates = copied.map(f => f.replace('.html', '')).join(', ');
+              execSync(`git commit -m "content: 同步早报 ${dates}"`, { cwd });
+            } catch (gitErr) {
+              // git commit 失败不影响同步成功（文件已复制）
+              console.warn('[sync-zaobao] git commit 失败（可能无变更）:', String(gitErr).split('\n')[0]);
+            }
           }
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ ok: true, copied }));
+          res.end(JSON.stringify({ ok: true, copied, skipped }));
         } catch (e) {
           res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ ok: false, error: String(e) }));
@@ -133,6 +155,11 @@ function devEditorPlugin() {
 
 export default defineConfig({
   site: 'https://zenhome.qzz.io',
-  integrations: [tailwind(), mdx()],
-  vite: { plugins: [devEditorPlugin()] },
+  integrations: [mdx()],
+  vite: {
+    plugins: [
+      tailwindcss(),
+      devEditorPlugin(),
+    ],
+  },
 });
