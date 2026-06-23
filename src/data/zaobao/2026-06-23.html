@@ -61,6 +61,25 @@
     padding-top: 14px;
   }
 
+  /* ── Index Bar ── */
+  .index-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .index-chip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    flex: 1;
+    min-width: 130px;
+  }
+  .index-chip .idx-name { font-size: 11px; color: var(--muted); }
+  .index-chip .idx-val { font-size: 15px; font-weight: 700; margin: 2px 0; }
+  .index-chip .idx-chg { font-size: 12px; font-weight: 600; }
+
   /* ── Cards ── */
   .card {
     background: var(--card);
@@ -240,92 +259,152 @@
       <h1>📰 财经早报</h1>
       <div class="date">2026-06-23 · CN / SG / US</div>
     </div>
-    <span class="market-state">⚠️ Risk-Off — 科技板块回调日</span>
+    <span class="market-state">⚠️ Risk-Off · 科技承压 · 板块高度分化</span>
   </div>
   <div class="summary">
-    纳指今日跌超1%，SpaceX三连跌累计回吐大部分IPO涨幅，拖累科技板块整体承压；美光（MU）逆市创历史新高，AI存储主线仍强，本周财报将是关键验证。新任美联储主席Warsh首次议息后维持利率于3.5%–3.75%不变，但接近半数FOMC委员倾向年内加息，利率"不降反升"叙事压制高估值成长股。资金呈现分化迹象：AI算力硬件/存储持续流入，而大市值科技股头寸出现减仓，防御性资产暂无明显异动。
+    美联储加息预期重燃——美银、德银双双改口预测 9 月或重启加息，美股纳指随即重挫 1.32%，美国 10 年期国债收益率升至 4.51%，成长股估值体系系统性承压；SpaceX（SPCX）连续三日暴跌累计 -23%，成今日最大情绪拖累，而超微电脑（SMCI）+15.66% 独秀，AI 板块内部高度分化。A 股科技/成长同步承压（创业板 -2.27%），但医药板块大涨 4%+、证券板块 +2.12%，两市成交额突破 2 万亿，资金呈明显轮动态势——从高估值科技切向防御性医药、政策驱动型资产及价值蓝筹。
+  </div>
+</div>
+
+<!-- ══ 指数速览 ══ -->
+<div class="index-bar">
+  <div class="index-chip">
+    <div class="idx-name">S&amp;P 500</div>
+    <div class="idx-val">7,472.79</div>
+    <div class="idx-chg down">▼ -0.37%</div>
+  </div>
+  <div class="index-chip">
+    <div class="idx-name">纳斯达克</div>
+    <div class="idx-val">26,166.60</div>
+    <div class="idx-chg down">▼ -1.32%</div>
+  </div>
+  <div class="index-chip">
+    <div class="idx-name">道琼斯</div>
+    <div class="idx-val">51,712.71</div>
+    <div class="idx-chg up">▲ +0.29%</div>
+  </div>
+  <div class="index-chip">
+    <div class="idx-name">恒生指数</div>
+    <div class="idx-val">23,449.50</div>
+    <div class="idx-chg down">▼ -1.34%</div>
+  </div>
+  <div class="index-chip">
+    <div class="idx-name">A股 创业板</div>
+    <div class="idx-val">（盘中）</div>
+    <div class="idx-chg down">▼ -2.27%（午盘）</div>
+  </div>
+  <div class="index-chip">
+    <div class="idx-name">STI（新加坡）</div>
+    <div class="idx-val">5,218.94</div>
+    <div class="idx-chg up">▲ +0.29%</div>
+  </div>
+  <div class="index-chip">
+    <div class="idx-name">黄金 XAU/USD</div>
+    <div class="idx-val">$4,154.70</div>
+    <div class="idx-chg down">▼ -1.14%</div>
+  </div>
+  <div class="index-chip">
+    <div class="idx-name">WTI 原油</div>
+    <div class="idx-val">$73.77</div>
+    <div class="idx-chg down">▼ -0.12%</div>
   </div>
 </div>
 
 <!-- ══ AI & 科技股 ══ -->
 <div class="card">
-  <div class="card-title">📈 AI &amp; 科技股 <span class="count">15条</span></div>
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">15 条</span></div>
   <ul class="news">
+
     <li>
-      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/article/micron-stock-surges-to-new-high-amid-ai-memory-trade-boom-anthropic-deal-125205263.html">美光科技（MU）创历史新高：AI存储需求爆发 + Anthropic供应协议，本周财报即将公布</a></div>
-      <div class="item-summary">MU股价在AI内存交易热潮和与Anthropic达成供应协议双重催化下，单日突破历史高位，涨幅约300%（从2025年低点累计）。本周财报是对AI存储需求实际落地的关键验证。</div>
-      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-23</div>
+      <div class="item-title">SpaceX（SPCX）连续第三日大跌，三日累计暴跌 23%</div>
+      <div class="item-summary">SPCX 今日再跌 16.43%，报 $154.60，成交量 1.58 亿股（今日全市第二活跃）。连续三日无明显利空催化，市场将此次下跌归因于前期融资稀释预期及估值过高问题，成为今日全市最大情绪拖累。</div>
+      <div class="item-meta"><span class="tag risk">重大利空</span><span class="tag">Yahoo Finance</span>· SPCX $154.60 <span class="down">▼ -16.43%</span></div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://x.com/i/status/2052722049622434162">贝莱德CEO拉里·芬克：算力将成新"大宗商品"，喊出"算力期货"概念</a></div>
-      <div class="item-summary">芬克表示未来将出现算力期货这一新资产类别，算力将像石油/粮食一样可交易；当前美国面临电力、算力、芯片、内存四大结构性短缺，没有AI泡沫，只有供给短缺。看多：NVDA、AMD、TSM、SK海力士、MU、CRDO、NBIS、BE、VRT、AES。</div>
-      <div class="item-meta"><span class="tag ai">Twitter / @web3annie</span> 62.4k浏览 · 280赞</div>
+      <div class="item-title">超微电脑（SMCI）逆势大涨 15.66%，成今日纳指最强科技股</div>
+      <div class="item-summary">SMCI 报 $35.46，成交量 1.17 亿股，在纳指整体 -1.32% 背景下独立走强。AI 服务器需求旺盛、供应链改善预期共振，是 AI 硬件基本面仍然坚实的有力印证。</div>
+      <div class="item-meta"><span class="tag ai">AI硬件</span><span class="tag">Yahoo Finance</span>· SMCI $35.46 <span class="up">▲ +15.66%</span></div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://x.com/i/status/2055618767044907444">黄仁勋：AI算力需求未来需增1000倍，能源需求同步</a></div>
-      <div class="item-summary">黄仁勋继续强调算力暴涨叙事，同时梳理出完整AI算力产业链受益股：NVDA、TSM、AVGO（博通）、SMCI（超微电脑）、GEV（GE Vernova电力）、VST（Vistra核电）、CEG（Constellation核电）、CCJ（铀矿）、NEE（新能源）、VRT（机房散热）、ETN（伊顿变压器）。</div>
-      <div class="item-meta"><span class="tag ai">Twitter / @LuBtc888</span> 29.7k浏览</div>
+      <div class="item-title">英特尔（INTC）大涨 5.19%，AI 芯片转型预期获市场重估</div>
+      <div class="item-summary">INTC 报 $140.94，成交量逾 1 亿股，Gaudi AI 加速器出货节奏加快的预期驱动市场重新审视英特尔的 AI 赋能潜力。与英伟达当日微跌形成对比，显示资金在 AI 芯片内部的再分配。</div>
+      <div class="item-meta"><span class="tag ai">AI芯片</span><span class="tag">Yahoo Finance</span>· INTC $140.94 <span class="up">▲ +5.19%</span></div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://finance.yahoo.com/news/getty-images-surges-145-after-announcing-openai-licensing-deal-164453567.html">Getty Images暴涨145%：与OpenAI签订图像授权协议</a></div>
-      <div class="item-summary">此前一直起诉AI图像侵权的Getty Images宣布180度转向，与OpenAI签订许可授权协议，版权内容变现路线获市场认可，当日盘中最大涨幅145%。</div>
-      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-23</div>
+      <div class="item-title">英伟达（NVDA）小幅收跌 0.97%，同日详解 Rubin 液冷技术路线</div>
+      <div class="item-summary">NVDA 报 $208.65，在纳指大跌环境下相对抗跌。英伟达同日发布下一代 Rubin 架构液冷散热方案详解，供应链相关厂商业绩释放预期升温；三星 HBM4 已对英伟达批量出货，销售额突破 10 亿美元里程碑。[财联社 / Yahoo Finance]</div>
+      <div class="item-meta"><span class="tag ai">AI算力</span><span class="tag">财联社 / Yahoo Finance</span>· NVDA $208.65 <span class="down">▼ -0.97%</span></div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/trump-signs-executive-orders-to-drive-development-of-commercially-relevant-quantum-computer-by-2028-205201485.html">特朗普签署量子计算行政令：2028年实现"商业级量子计算机"</a></div>
-      <div class="item-summary">两道行政令指令相关部门加速量子计算开发，目标是2028年前交付具有商业价值的量子计算机，可能利好相关硬件和算法企业。</div>
-      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-23</div>
+      <div class="item-title">三星 HBM4 销售额突破 10 亿美元，港股内存 ETF 飙至 170 亿创纪录</div>
+      <div class="item-summary">三星电子 HBM4 高带宽内存对英伟达出货强劲，销售额创里程碑。香港上市的 SK 海力士相关 ETF 资产规模飙升至 170 亿美元，成香港史上最大规模 ETF，机构资金向 AI 内存赛道集中的趋势显著。[Bloomberg]</div>
+      <div class="item-meta"><span class="tag ai">HBM / AI内存</span><span class="tag">Bloomberg</span>· 三星 / SK海力士</div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/article/spacex-stock-tumbles-164-shaving-off-most-ipo-gains-since-debut-141725657.html">SpaceX股价单日跌16%，三连阴回吐大部分IPO涨幅</a></div>
-      <div class="item-summary">SpaceX上市后经历三日大涨（累计约+60%），随后连续三日大跌，今日跌幅最大达16%，估值从约2.8万亿美元大幅缩水。部分分析师警示SpaceX市值一度超越亚马逊和微软总和，估值透支。</div>
-      <div class="item-meta"><span class="tag risk">Yahoo Finance</span> 2026-06-23</div>
+      <div class="item-title">Micron（MU）股价创历史新高，财报本周即将公布——最大风险催化剂</div>
+      <div class="item-summary">Micron 持续走强至历史新高，AI 存储需求预期支撑。但高预期即高风险：本周财报一旦数据不及预期，将成为 AI 板块链式回调导火索，NVDA/AMD/SMCI 均有传导风险，需高度警惕。[Yahoo Finance]</div>
+      <div class="item-meta"><span class="tag ai">AI存储</span><span class="tag risk">财报风险</span><span class="tag">Yahoo Finance</span>· MU</div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/live/stock-market-today-sp-500-nasdaq-slide-as-big-tech-spacex-hammered-225817825.html">纳指今日跌超1%，大型科技股普遍受压</a></div>
-      <div class="item-summary">SpaceX拖累科技股整体情绪，纳斯达克指数下跌超1%，道指和标普500跌幅相对有限，市场风格出现分化。</div>
-      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-23</div>
+      <div class="item-title">Getty Images 宣布与 OpenAI 达成图像授权协议，股价单日暴涨 145%</div>
+      <div class="item-summary">Getty Images 宣布授权 OpenAI 使用其图库用于 AI 训练和产品，消息公布后股价暴涨 145%，版权内容授权货币化的商业模式获市场高度认可，为 AI 内容授权赛道标杆性定价事件。[Yahoo Finance / Bloomberg]</div>
+      <div class="item-meta"><span class="tag ai">AI内容授权</span><span class="tag">Yahoo Finance / Bloomberg</span></div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://x.com/i/status/2068566053664264310">HBM高带宽内存详解：AI GPU"内存墙"解决方案，驱动本轮存储行情</a></div>
-      <div class="item-summary">HBM通过垂直堆叠多层内存 + 硅通孔封装，使内存紧贴GPU，大幅提升带宽、降低延迟，成为喂饱H100/B200系列GPU的核心技术。SK海力士、三星、美光三家瓜分市场，HBM市场从2020年$15亿扩张至AI时代数百亿美元规模。</div>
-      <div class="item-meta"><span class="tag ai">Twitter / @SUOHA_AI</span></div>
+      <div class="item-title">A 股电子板块净流出超 195 亿，兆易创新遭净卖出 19 亿位列全场第一</div>
+      <div class="item-summary">美联储加息预期升温叠加全球科技股承压，A 股科技/电子板块资金加速出逃。兆易创新单日净卖出达 19 亿元；电子整体板块净流出超 195 亿元，创近期新高，短期内资金再入意愿偏低。[财联社]</div>
+      <div class="item-meta"><span class="tag risk">资金流出</span><span class="tag">财联社</span>· A股电子板块</div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://x.com/i/status/2069239043800571988">AI芯片高度集中：TSMC占台湾TAIEX 42%，三星+SK海力士占韩国KOSPI 55%</a></div>
-      <div class="item-summary">亚洲主要股指越来越成为AI革命的直接代理。台湾和韩国股市几乎由少数半导体巨头主导，集中度风险显著上升。</div>
-      <div class="item-meta"><span class="tag ai">Twitter / @CapitalInsight3</span> 2026-06-23</div>
+      <div class="item-title">奈飞（NFLX）跌 5.82%，高估值成长股首当其冲于加息预期</div>
+      <div class="item-summary">NFLX 报 $72.88，跌幅居纳指主要成分股前列，成交量 7,115 万股。加息预期升温直接压制高市盈率成长股，内容成本上升对利润率的担忧同步发酵。[Yahoo Finance]</div>
+      <div class="item-meta"><span class="tag">Yahoo Finance</span>· NFLX $72.88 <span class="down">▼ -5.82%</span></div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/ais-next-bottleneck-is-power-chart-of-the-day-114139935.html">AI下一个瓶颈：电力网络，不再只是芯片</a></div>
-      <div class="item-summary">随着数据中心建设提速，电网容量已成为制约AI扩张的新瓶颈。GE Vernova（GEV）、Vistra（VST）、Constellation（CEG）、NextEra（NEE）等能源基础设施股受到关注。</div>
-      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-22</div>
+      <div class="item-title">礼来（LLY）凭 GLP-1 减肥药热潮市值正式突破 1 万亿美元</div>
+      <div class="item-summary">礼来成为全球首家市值破万亿的制药公司，Mounjaro/Zepbound 持续强劲需求驱动。GLP-1+AI 辅助药物研发的双重叙事，使医药科技成为当日 A 股和全球资金的共同偏好。[Bloomberg]</div>
+      <div class="item-meta"><span class="tag">Bloomberg</span>· LLY</div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://x.com/i/status/2069050271582376294">Magnificent 7市值近两年翻倍：从$11.8万亿升至$22.3万亿（含四次重大回调）</a></div>
-      <div class="item-summary">2024年1月至2026年6月，Magnificent 7合计市值几乎翻倍，历经2024年巩固期、2025年初回调、2025年4月关税冲击、2026年中东危机四轮修正，长期上升趋势完好。</div>
-      <div class="item-meta"><span class="tag ai">Twitter / @econovisuals</span> 2026-06-22</div>
+      <div class="item-title">Trump 签署量子计算行政令，目标 2028 年前实现"商用级"量子计算机</div>
+      <div class="item-summary">行政令要求联邦政府加速投资，在 2028 年前交付具有商业价值的量子计算机。利好 IBM、IonQ、Rigetti 等量子概念股的长期预期；与 AI 算力叙事相互强化。[Yahoo Finance]</div>
+      <div class="item-meta"><span class="tag ai">量子计算</span><span class="tag macro">政策利好</span><span class="tag">Yahoo Finance</span></div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/from-faang-to-mangos--wall-street-is-searching-for-the-next-magnificent-7-chart-of-the-day-112331299.html">华尔街寻找"下一个Magnificent 7"，新概念"MANGOS"登场</a></div>
-      <div class="item-summary">市场开始讨论后Magnificent 7时代的框架，"MANGOS"等新组合概念涌现，反映市场在估值历史高位之后开始寻找结构性轮动机会。</div>
-      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-21</div>
+      <div class="item-title">CATL 推出钠离子技术大规模储能系统，降本路线获突破</div>
+      <div class="item-summary">宁德时代发布全新钠电储能系统，成本较锂电更低，适合大规模电网储能场景，减少对锂资源依赖。打开新市场天花板，长期利好能源转型叙事及相关供应链。[Bloomberg]</div>
+      <div class="item-meta"><span class="tag ai">能源科技</span><span class="tag">Bloomberg</span>· CATL</div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/the-magnificent-7-is-so-last-year-spacex-openai-and-anthropic-are-ushering-in-the-fab-10-120409551.html">"FAB 10"：SpaceX、OpenAI、Anthropic纳入新一代核心科技阵容</a></div>
-      <div class="item-summary">SpaceX上市、OpenAI/Anthropic酝酿IPO，使"FAB 10"框架兴起，但部分分析师警告：大型IPO不创造新增资金，只是存量资金再分配，可能从指数中抽血。</div>
-      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-17</div>
+      <div class="item-title">国产超快光源技术突破，A 股激光器板块迎政策+技术双催化</div>
+      <div class="item-summary">中国本土超快激光光源技术取得关键进展，高端激光器国产替代预期升温，分析人士认为相关公司将进入高速增长轨道，政策支持与技术自主双轮驱动。[财联社]</div>
+      <div class="item-meta"><span class="tag ai">国产替代</span><span class="tag">财联社</span>· A股激光赛道</div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/how-fed-chairman-kevin-warsh-just-screwed-ai-tech-beasts-103000167.html">分析：新Fed主席Warsh鹰派立场压制AI科技股高估值</a></div>
-      <div class="item-summary">Warsh首次议息维持利率，但接近半数FOMC成员倾向年内加息，Warsh本人明确表态希望"市场引导美联储而非美联储引导市场"。利率不降、甚至可能上调，对依赖低贴现率支撑的AI成长股构成压制。</div>
-      <div class="item-meta"><span class="tag risk">Yahoo Finance</span> 2026-06-22</div>
+      <div class="item-title">韩国股市从历史高位跌超 4%，亚太科技股整体承压</div>
+      <div class="item-summary">美联储加息预期冲击全球科技股定价，韩国综合指数从近期历史高位回落超 4%，三星电子等权重科技股承压明显，亚太科技板块整体风险偏好同步下降。[Bloomberg]</div>
+      <div class="item-meta"><span class="tag risk">亚太风险</span><span class="tag">Bloomberg</span>· 韩国 KOSPI</div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://x.com/i/status/2069000400745697618">警告：S&amp;P 500突破7500点 + OpenAI/Anthropic潜在IPO = 指数资金虹吸效应</a></div>
-      <div class="item-summary">有分析师指出：IPO不创造新钱，每一美元进入OpenAI/Anthropic，就是从当前股票/ETF撤出的一美元。2021年大型IPO潮出现在市场顶部，当前高估值+高IPO供给+高乐观情绪叠加，需要警惕。</div>
-      <div class="item-meta"><span class="tag risk">Twitter / @gmulun</span> 2026-06-22</div>
+      <div class="item-title">CR 新能源（华润新能源）在深交所创纪录 IPO，零售认购火爆</div>
+      <div class="item-summary">华润新能源本次 IPO 创深圳证券交易所规模纪录，零售投资者认购热情高涨，显示 A 股市场对新能源板块的配置需求仍然旺盛，折射出今日资金并非整体撤退，而是高度选择性。[Bloomberg]</div>
+      <div class="item-meta"><span class="tag">Bloomberg</span>· CR新能源 深交所</div>
     </li>
+
   </ul>
 </div>
 
@@ -333,31 +412,43 @@
 <div class="card">
   <div class="card-title">💰 被动收入 &amp; 红利资产</div>
   <ul class="news">
+
     <li>
-      <div class="item-title"><a href="https://x.com/i/status/2069057834013057458">中国商业地产REITs新上架四只，散户可通过股票账户参与</a></div>
-      <div class="item-summary">国内公募REITs扩容提速，最新上架四只商业地产REITs（商场、写字楼打包基金），租金收益按规定大部分分配给投资者，为普通投资者提供新增稳健理财选择，同时为开发商提供正规退出渠道。</div>
-      <div class="item-meta"><span class="tag income">Twitter / @WangNextDoor2</span> 2026-06-22</div>
+      <div class="item-title">美银、德银双双改口：美联储 9 月或重启加息，降息预期彻底反转</div>
+      <div class="item-summary">此前主流预测美联储年内降息的美国银行和德意志银行，现在改口预测 9 月将重启加息。这是今日最重要的利率事件信号，对债券价格构成压力，对 REITs 估值构成打压，但对定存/T-bill 持有者形成相对利好（收益率将继续上行）。美联储有效利率当前为 3.63%（截至 6/19）。[财联社 / Bloomberg]</div>
+      <div class="item-meta"><span class="tag risk">利率风险</span><span class="tag income">影响定存/债券/REITs</span><span class="tag">财联社 / Bloomberg</span></div>
     </li>
+
     <li>
-      <div class="item-title">J-REIT收益率突破5%，全球利率走高致不动产股承压但性价比提升</div>
-      <div class="item-summary">日本REITs（J-REIT）指数年初以来跌至低位，但股息收益率因此升破5%。分析人士指出，AA级REIT利率超4%是否具吸引力，取决于对无风险利率上升周期中风险溢价是否已充分消化的判断。美以伊冲突以来，美国住房建设股指数已下跌约8%。</div>
-      <div class="item-meta"><span class="tag income">Twitter / @REfinanse / Nikkei</span> 2026-06-22</div>
+      <div class="item-title">美国国债收益率曲线全面上移，10Y 升至 4.51%</div>
+      <div class="item-summary">13 周 T-bill 3.68%、2 年 4.19%（6/18）、5 年 4.287%、10 年 4.509%、30 年 4.947%，收益率曲线全面上行。持有美国长期债券者面临资本损失压力；新增短债/定存配置者反受益于更高票息。[Federal Reserve H.15 / Yahoo Finance]</div>
+      <div class="item-meta"><span class="tag income">债券</span><span class="tag">Federal Reserve H.15 / Yahoo Finance</span></div>
     </li>
+
     <li>
-      <div class="item-title"><a href="https://x.com/i/status/2068331283122663875">10只被动收入ETF：SCHD、JEPI、JEPQ等兼顾成长与股息</a></div>
-      <div class="item-summary">综合收录市场热门被动收入ETF：QQQI（纳指权益溢价）、SCHD（施瓦布美股红利）、DIVO（增强股息）、JEPQ（摩根纳指溢价收入）、JEPI（摩根S&P溢价收入）、SPYI（高收入S&P）等，组合涵盖成长+股息+期权溢价策略。</div>
-      <div class="item-meta"><span class="tag income">Twitter / @TopDividendETFs</span> 2026-06-20 · 67赞</div>
+      <div class="item-title">新加坡 6 个月 T-bill 利率 1.48%，各银行 FD 最高 1.45%（CIMB）</div>
+      <div class="item-summary">6/4 最新一期 6 个月 T-bill 截止收益率 1.48%。1 年期 FD 比较：CIMB 1.45%、Maybank/BOC/ICBC/RHB 1.40%、UOB/OCBC 1.20%、DBS 1.00%。存款利率持续下行，T-bill 小幅优于 FD，建议优先考虑 T-bill 或 CIMB 短定存。[MoneySmart / MAS]</div>
+      <div class="item-meta"><span class="tag income">SG定存 / T-bill</span><span class="tag">MoneySmart / MAS</span></div>
     </li>
+
     <li>
-      <div class="item-title">新加坡CPF：SA/MediSave利率4.08%，OA 2.5% — 无风险高收益渠道</div>
-      <div class="item-summary">CPF特别账户（SA）和保健储蓄账户（MA）利率4.08%，为新加坡居民提供政府担保的无风险较高收益率；OA普通账户2.5%可用于住房和部分投资。在全球利率下行预期下，CPF仍是本地稳定收益的重要锚。OA→SA转入不可逆，需谨慎操作。</div>
-      <div class="item-meta"><span class="tag income">Reddit / r/singaporefi</span></div>
+      <div class="item-title">A 股证券板块涨 2.12%，天风、长江证券均涨超 10%</div>
+      <div class="item-summary">沪深两市成交额再度突破 2 万亿元，券商业绩直接受益于市场高活跃度。天风证券、长江证券涨幅超 10%，是今日 A 股最强防御+政策驱动板块之一，弥补科技板块下跌对指数的拖累。[财联社]</div>
+      <div class="item-meta"><span class="tag income">A股红利板块</span><span class="tag">财联社</span>· A股证券板块</div>
     </li>
+
     <li>
-      <div class="item-title">新加坡储蓄债券（SSB）：政府担保 + 可随时赎回（最长等待1个月）</div>
-      <div class="item-summary">SSB适合作为流动性较好的紧急备用金，可每6个月领取利息，随时申请赎回。在高利率环境下，SSB收益率具竞争力，是定存的有效替代。具体最新利率以MAS官网当期发行为准。</div>
-      <div class="item-meta"><span class="tag income">Reddit / r/singaporefi</span></div>
+      <div class="item-title">黄金回落 1.14% 至 $4,154，美伊谈判进展令避险溢价松动</div>
+      <div class="item-summary">金价从 $4,200+ 高位回落，主因美伊核协议谈判出现进展信号，部分避险需求消退。美债收益率上升也同步构成黄金压力。但长期高通胀预期与大国博弈格局仍对金价形成底部支撑。[Yahoo Finance]</div>
+      <div class="item-meta"><span class="tag income">黄金 / 避险</span><span class="tag">Yahoo Finance</span>· XAU/USD $4,154.70 <span class="down">▼ -1.14%</span></div>
     </li>
+
+    <li>
+      <div class="item-title">比特币 $63,908（+0.04%），以太坊 $1,725（-0.18%），加密市场相对抗跌</div>
+      <div class="item-summary">加密市场在全球 Risk-Off 背景下展现相对韧性，未出现明显跟跌。Michael Saylor 旗下公司持续用普通股购入比特币（约 $3,490 万），机构增量配置信号持续释放。[Yahoo Finance / Bloomberg]</div>
+      <div class="item-meta"><span class="tag income">加密货币</span><span class="tag">Yahoo Finance / Bloomberg</span></div>
+    </li>
+
   </ul>
 </div>
 
@@ -377,39 +468,43 @@
       <tbody>
         <tr>
           <td>政策 / 隔夜利率</td>
-          <td class="rate-val neutral">暂无可靠数据</td>
-          <td class="rate-val neutral">暂无可靠数据</td>
-          <td class="rate-val">3.5%–3.75%（有效 3.63%）</td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val">3.63%<br><span style="font-size:11px;font-weight:400;color:#6b7280">有效利率，2026-06-19<br>来源：Federal Reserve H.15</span></td>
         </tr>
         <tr>
           <td>短端（1–2Y / T-bill）</td>
-          <td class="rate-val neutral">暂无可靠数据</td>
-          <td class="rate-val neutral">暂无可靠数据</td>
-          <td class="rate-val">4.19%（2Y，2026-06-18）</td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val">1.48%<br><span style="font-size:11px;font-weight:400;color:#6b7280">6M T-bill，2026-06-04<br>来源：MAS / MoneySmart</span></td>
+          <td class="rate-val">4.19%<br><span style="font-size:11px;font-weight:400;color:#6b7280">2Y 国债，2026-06-18<br>来源：Federal Reserve H.15</span></td>
         </tr>
         <tr>
           <td>长端（10Y 国债）</td>
-          <td class="rate-val neutral">暂无可靠数据</td>
-          <td class="rate-val neutral">暂无可靠数据</td>
-          <td class="rate-val">4.46%（2026-06-18）</td>
+          <td class="rate-val">1.739% <span class="down">▲ +0.35%</span><br><span style="font-size:11px;font-weight:400;color:#6b7280">实时，来源：Investing.com</span></td>
+          <td class="rate-val">2.120% <span class="down">▲ +0.57%</span><br><span style="font-size:11px;font-weight:400;color:#6b7280">实时，来源：Investing.com</span></td>
+          <td class="rate-val">4.509% <span class="down">▲ +1.30%</span><br><span style="font-size:11px;font-weight:400;color:#6b7280">实时，来源：Yahoo Finance</span></td>
         </tr>
         <tr>
-          <td>房贷 / 5Y LPR / 30Y</td>
-          <td class="rate-val neutral">暂无可靠数据</td>
-          <td class="rate-val neutral">暂无可靠数据</td>
-          <td class="rate-val">6.47%（30Y 固定，2026-06-18）</td>
+          <td>5Y LPR / 房贷参考 / 30Y</td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val">4.947%<br><span style="font-size:11px;font-weight:400;color:#6b7280">30Y 国债（非房贷）<br>来源：Yahoo Finance</span></td>
         </tr>
         <tr>
           <td>1Y 定存参考</td>
-          <td class="rate-val neutral">暂无可靠数据</td>
-          <td class="rate-val">CPF-OA 2.5% / SA 4.08%</td>
-          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val">1.40–1.45%<br><span style="font-size:11px;font-weight:400;color:#6b7280">Maybank/CIMB，来源：MoneySmart</span></td>
+          <td class="rate-val">3.68%<br><span style="font-size:11px;font-weight:400;color:#6b7280">13W T-bill 参考，来源：Yahoo Finance</span></td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="rates-insight">
-    <strong>利率环境解读：</strong>美国利率环境整体偏鹰——新任美联储主席Warsh在6月18日议息会议上维持目标利率于3.5%–3.75%，但约半数FOMC委员在点阵图中倾向年内至少加息一次，与市场此前预期的降息路径明显背离。美国2Y收益率（4.19%）高于10Y（4.46%）的利差已从历史倒挂逐渐恢复正常，但整体利率曲线依然处于高位。<strong>对各类资产的影响：</strong>①定存/短债：短端4%+环境对定存和货币基金有利，建议维持较高流动性配置；②债券：长债收益率4.46%虽有吸引力，但加息预期使价格承压，需控制久期；③REITs：高利率环境持续利空，估值压缩逻辑仍在，需等待利率拐点明确后再增配；④新加坡CPF SA 4.08%为本地无风险最高稳定回报，仍具竞争力。中国和新加坡政策利率数据当日无可靠来源，留空标注。
+    <strong>利率环境解读：</strong>
+    美联储加息预期大幅升温（有效利率 3.63%），若 9 月真的加息，美元资产收益率将继续上行——对美国 REITs/长债构成进一步打压，但短期定存/T-bill 持有者反受益于更高票息。
+    中国 10Y 国债仅 1.739%，中美利差倒挂约 270 bp，国内债券/定存收益率极低，人民币资产汇率压力仍存。
+    新加坡 FD 利率持续下行（最高 1.45%），T-bill（1.48%）仍略优；整体 SG 利率环境对定存/债券持有者偏中性。
+    <br>综合判断：<strong>全球 REITs 短期中高负面；美元短债/T-bill 中性偏正；中国债券/定存吸引力弱；长期债券中高负面。</strong>
   </div>
 </div>
 
@@ -418,56 +513,55 @@
   <div class="card">
     <div class="card-title">🌍 宏观经济</div>
     <ul class="news">
+
       <li>
-        <div class="item-title">美联储Warsh首次议息：维持3.5%–3.75%，但鹰派倾向显现</div>
-        <div class="item-summary">6月18日，新任主席Kevin Warsh主持首次FOMC会议，全票维持利率不变，但点阵图显示约半数委员预期年内至少加息一次。Warsh明确表示希望"市场引导政策而非政策引导市场"，信号偏鹰。</div>
-        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-18</div>
+        <div class="item-title">美银、德银改口预测美联储 9 月重启加息，全球定价体系重置</div>
+        <div class="item-summary">今日最重要的宏观信号。两大行改口后，市场对美联储"更长时间维持高利率"甚至重新加息的定价概率大幅上升，直接驱动纳指 -1.32%、10Y 美债升至 4.51%。[财联社 / Bloomberg]</div>
+        <div class="item-meta"><span class="tag macro">美联储政策</span><span class="tag risk">利率风险</span><span class="tag">财联社 / Bloomberg</span></div>
       </li>
+
       <li>
-        <div class="item-title">美伊达成60天霍尔木兹海峡免通行费协议，油价显著回落</div>
-        <div class="item-summary">美国与伊朗达成临时协议，允许霍尔木兹海峡60天内免费通行；油价随即大幅下跌，美国全国均价跌破每加仑$4关口。能源通胀压力短期缓解，但协议届满后走向仍存不确定性。</div>
-        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-15/19</div>
+        <div class="item-title">美伊核谈判出现进展，白宫同步推动弹药增产</div>
+        <div class="item-summary">美国放宽对伊朗部分能源交易限制，地缘局势出现微妙缓和，推动黄金避险溢价回落。但美国同步召集国防承包商增产弹药，显示地缘博弈逻辑并未根本改变。[Bloomberg]</div>
+        <div class="item-meta"><span class="tag macro">地缘政治</span><span class="tag">Bloomberg</span></div>
       </li>
+
       <li>
-        <div class="item-title">格林斯潘去世，享年100岁</div>
-        <div class="item-summary">前美联储主席艾伦·格林斯潘6月22日辞世，在任期间（1987–2006）以"格林斯潘看跌期权"著称，其低利率政策为此后多次资产泡沫埋下伏笔。此时恰逢Warsh开启新货币政策时代。</div>
-        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-22</div>
+        <div class="item-title">日美就外汇政策举行双边会谈，日元走势备受关注</div>
+        <div class="item-summary">日本财务大臣确认与美财长贝森特会谈涉及外汇政策。在美元因加息预期走强背景下，日元汇率动态将影响日本出口股及亚太汇率预期。[Bloomberg]</div>
+        <div class="item-meta"><span class="tag macro">外汇 / 日元</span><span class="tag">Bloomberg</span></div>
       </li>
+
       <li>
-        <div class="item-title">美国战略石油储备降至1980年代初以来最低</div>
-        <div class="item-summary">连续多次动用战略储备以应对能源价格上涨，导致SPR库存骤降至历史低位，未来能源价格波动的政策缓冲空间大幅收窄。</div>
-        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-15</div>
+        <div class="item-title">A 股两市成交额突破 2 万亿，板块轮动而非整体撤退</div>
+        <div class="item-summary">沪深两市合计成交额再次破 2 万亿，显示流动性充沛。资金未整体离场，而是从科技/电子（净流出195亿+）轮动至医药（+4%）、证券（+2.1%），CR新能源 IPO 同步吸引大量打新资金。[财联社]</div>
+        <div class="item-meta"><span class="tag macro">A股流动性</span><span class="tag">财联社</span></div>
       </li>
-      <li>
-        <div class="item-title">大学生开始回避AI相关专业，转向医疗等领域</div>
-        <div class="item-summary">高盛数据显示，在AI就业替代效应持续发酵的背景下，大学生开始规避计算机科学等AI暴露度高的专业，转向医疗、护理等被认为就业稳健的领域，折射AI时代职业路径的结构性重塑。</div>
-        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-22</div>
-      </li>
+
     </ul>
   </div>
   <div class="card">
     <div class="card-title">🏠 房地产 &amp; REITs</div>
     <ul class="news">
+
       <li>
-        <div class="item-title">全球利率走高，住宅与地产股承压</div>
-        <div class="item-summary">美以伊冲突（2月末）以来，"道琼斯美国住房建设精选指数"下跌约8%，主要因利率走高导致购房成本上升，建设商毛利压缩。当前30年期固定房贷利率6.47%，在历史较高区间。</div>
-        <div class="item-meta"><span class="tag income">Nikkei / Twitter</span> 2026-06-22</div>
+        <div class="item-title">全球 REITs 面临美联储加息预期双重压制</div>
+        <div class="item-summary">若 9 月加息成真，REITs 将面临估值折现率上升+融资成本上升的双重压力。美国 10Y 已升至 4.51%，全球 REITs 配置吸引力进一步下降，建议谨慎控制仓位，优先选择租金增长强劲的优质资产。[分析判断]</div>
+        <div class="item-meta"><span class="tag risk">REITs风险</span><span class="tag income">影响被动收入</span></div>
       </li>
+
       <li>
-        <div class="item-title">J-REIT收益率升破5%，新进入性价比提升</div>
-        <div class="item-summary">日本REITs指数价格持续下调，AA级J-REIT平均股息收益率突破5%。但分析师指出，在无风险利率上升周期中，风险溢价能否守住仍是核心问题，不可单看绝对收益率。</div>
-        <div class="item-meta"><span class="tag income">Twitter / Nikkei</span> 2026-06-22</div>
+        <div class="item-title">新加坡 STI 逆势上涨 0.29%，年内累计涨幅 12.31%</div>
+        <div class="item-summary">STI 今日小涨 0.29% 至 5,218.94 点，在全球 Risk-Off 背景下相对抗跌，年内累计涨幅达 12.31%，表现显著优于纳指和恒指。S-REITs 具体走势暂无可靠数据，但利率上行环境下整体承压。[Yahoo Finance]</div>
+        <div class="item-meta"><span class="tag income">S-REITs / STI</span><span class="tag">Yahoo Finance</span>· STI 5,218.94 <span class="up">▲ +0.29%</span></div>
       </li>
+
       <li>
-        <div class="item-title">美国约三分之一35岁以下成年人与父母同住，高房价是主因</div>
-        <div class="item-summary">最新数据显示住房可负担性问题持续恶化，年轻群体购房意愿受挫，租房需求结构性上升，利好出租型REITs（住宅类）的长期基本面，但估值仍受高利率压制。</div>
-        <div class="item-meta"><span class="tag income">Yahoo Finance</span> 2026-06-22</div>
+        <div class="item-title">铝价下跌，和平谈判预示大宗商品供给预期松动</div>
+        <div class="item-summary">受地缘缓和预期影响，铝等工业金属价格下跌。对新能源车、航空制造等下游行业成本端形成小幅利好，但对资源/矿业类 REITs 和相关板块构成压力。[Bloomberg]</div>
+        <div class="item-meta"><span class="tag macro">大宗商品</span><span class="tag">Bloomberg</span></div>
       </li>
-      <li>
-        <div class="item-title">中国新上市四只商业地产REITs，覆盖商场和写字楼</div>
-        <div class="item-summary">国内公募REITs继续扩容，最新四只聚焦商业地产，为散户提供通过A股账户参与商业不动产收益分配的途径。当前A股REITs市场规模仍远小于海外成熟市场。</div>
-        <div class="item-meta"><span class="tag income">Twitter / @WangNextDoor2</span> 2026-06-22</div>
-      </li>
+
     </ul>
   </div>
 </div>
@@ -478,51 +572,104 @@
   <div class="rotation-grid">
     <div class="rotation-item">
       <div class="label">资金主要流入</div>
-      <div class="value">AI存储/HBM（MU↑创新高）、AI能源基础设施（GEV、VST、CEG、NEE）、版权经济（Getty受益OpenAI协议）</div>
+      <div class="value">A股医药生物（化学制药 +4.24% / 生物制品 +3.84%）· A股证券（+2.12%）· 美股价值蓝筹（道指 +0.29%）· 新加坡蓝筹（STI +0.29%）</div>
     </div>
     <div class="rotation-item">
       <div class="label">资金主要流出</div>
-      <div class="value">SpaceX（-16%）、大型科技股（纳指-1%+）、高估值成长股（受Warsh鹰派信号压制）</div>
+      <div class="value">A股电子/科技（净流出 195 亿+）· 纳指科技成长（-1.32%）· SpaceX 系（SPCX -16.43%）· 黄金（避险溢价回落 -1.14%）</div>
     </div>
     <div class="rotation-item">
       <div class="label">AI 主线状态</div>
-      <div class="value">🟡 持续但分化 — 硬件/存储（MU、NVDA周边）仍强；软件/消费级AI应用相对弱势；SpaceX调整不代表AI主线结束</div>
+      <div class="value">⚠️ 高度分化、短期承压。SMCI +15.66% 独强，NVDA 相对抗跌，但 Nasdaq -1.32%、A股电子大幅流出，AI 主线未破坏但面临明显扰动，需等待 Micron 财报验证</div>
     </div>
     <div class="rotation-item">
       <div class="label">市场风格</div>
-      <div class="value">成长分化 → 质量优先。高利率环境下，有真实盈利支撑的AI硬件股优于纯叙事驱动的高估值成长股；防御板块暂无明显异动</div>
+      <div class="value">成长→价值切换信号出现；道指跑赢纳指约 1.6 pct；A股大盘蓝筹优于创业板；防御医药/券商接棒科技；短期偏向价值/防御风格</div>
     </div>
   </div>
 </div>
 
-<!-- ══ 雪球热帖 & 热股 ══ -->
+<!-- ══ 今日活跃股 & 热门资产 ══ -->
 <div class="card">
-  <div class="card-title">🔥 雪球热帖 &amp; 热股</div>
-  <ul class="news">
-    <li>
-      <div class="item-title">暂无可靠数据</div>
-      <div class="item-summary">雪球热帖及热股实时数据今日未能获取。</div>
-      <div class="item-meta"><span class="tag">雪球</span></div>
-    </li>
-  </ul>
-  <div class="stock-grid" style="margin-top:16px">
-    <!-- 雪球热股数据暂无可靠来源 -->
+  <div class="card-title">🔥 美股今日成交量活跃榜 <span class="count">来源：Yahoo Finance</span></div>
+  <div class="stock-grid">
+    <div class="stock-chip">
+      <span class="name">美国航空</span>
+      <span class="code">AAL</span>
+      <span class="pct up">▲ +0.56%  $16.08</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SpaceX</span>
+      <span class="code">SPCX</span>
+      <span class="pct down">▼ -16.43%  $154.60</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">超微电脑</span>
+      <span class="code">SMCI</span>
+      <span class="pct up">▲ +15.66%  $35.46</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">诺基亚</span>
+      <span class="code">NOK</span>
+      <span class="pct up">▲ +6.97%  $14.43</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">英特尔</span>
+      <span class="code">INTC</span>
+      <span class="pct up">▲ +5.19%  $140.94</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">英伟达</span>
+      <span class="code">NVDA</span>
+      <span class="pct down">▼ -0.97%  $208.65</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SoFi科技</span>
+      <span class="code">SOFI</span>
+      <span class="pct down">▼ -4.52%  $17.10</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">奈飞</span>
+      <span class="code">NFLX</span>
+      <span class="pct down">▼ -5.82%  $72.88</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">MARA控股</span>
+      <span class="code">MARA</span>
+      <span class="pct up">▲ +4.43%  $14.85</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">比特币</span>
+      <span class="code">BTC-USD</span>
+      <span class="pct up">▲ +0.04%  $63,908</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">以太坊</span>
+      <span class="code">ETH-USD</span>
+      <span class="pct down">▼ -0.18%  $1,725</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">黄金</span>
+      <span class="code">XAU/USD</span>
+      <span class="pct down">▼ -1.14%  $4,154</span>
+    </div>
   </div>
+  <p style="margin-top:14px;font-size:12px;color:#6b7280;">雪球热帖/热股数据今日暂无可靠数据</p>
 </div>
 
 <!-- ══ B站 & 社区 ══ -->
 <div class="card">
-  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <div class="card-title">📺 社区情绪速描</div>
   <ul class="news">
     <li>
-      <div class="item-title">暂无可靠数据</div>
-      <div class="item-summary">B站财经视频数据今日未能获取。</div>
-      <div class="item-meta"><span class="tag">B站</span></div>
+      <div class="item-title">今日市场情绪综合观察：Risk-Off 主导，AI 信仰分化</div>
+      <div class="item-summary">综合 Bloomberg / Yahoo Finance / 财联社 多源信息：① SpaceX 暴跌令高估值科技信仰受冲击；② 美联储加息预期令成长股估值体系系统性承压；③ SMCI 大涨说明有业绩支撑的 AI 硬件仍受资金青睐；④ A股内部极度分化，医药/证券接棒，科技空仓倾向提升。综合情绪：偏谨慎，短期波动性上升，建议等待 Micron 财报落地后再判断 AI 主线是否延续。</div>
+      <div class="item-meta"><span class="tag">综合分析</span>· Bloomberg / Yahoo Finance / 财联社</div>
     </li>
     <li>
-      <div class="item-title">新加坡FI社区精选：2025年版财务独立入门指南（r/singaporefi）</div>
-      <div class="item-summary">热帖汇总新加坡理财路径：①建立应急金（UOB One、OCBC 360、GXS等高息账户）→ ②充分利用CPF（SA 4.08%无风险）→ ③投资长期宽基ETF（VOO/VTI）→ ④定期审视保险缺口。帖子强调：刚开始时投资不会让你快速致富，但长期复利不可忽视，坚持50/30/20的资金分配框架。</div>
-      <div class="item-meta"><span class="tag income">Reddit / r/singaporefi</span> 1738赞 · 47评论</div>
+      <div class="item-title">B站、Twitter、Reddit、小红书今日无可靠结构化数据</div>
+      <div class="item-summary">各社区渠道今日均未返回有效内容，以上情绪判断基于新闻媒体数据综合整理。</div>
+      <div class="item-meta"></div>
     </li>
   </ul>
 </div>
@@ -537,27 +684,27 @@
     <tbody>
       <tr>
         <td>宏观利率风险</td>
-        <td>Warsh主导的Fed偏鹰：约半数FOMC委员支持年内加息；美国10Y收益率4.46%，利率曲线正常化；高利率对成长股和REITs构成持续压力</td>
-        <td><span class="risk-midhigh">中高</span></td>
+        <td>美银、德银双双预测 9 月重启加息；10Y 美债升至 4.51%；Fed 实际利率 3.63%。若加息成真，全球风险资产估值体系将系统性重定价，是本阶段最大尾部风险</td>
+        <td><span class="risk-high">高</span></td>
       </tr>
       <tr>
-        <td>AI 拥挤度</td>
-        <td>TSMC占TAIEX 42%、三星+SK海力士占KOSPI 55%，集中度极高；Mag7两年市值翻倍；OpenAI/Anthropic大型IPO可能引发资金再分配；但芯片/存储基本面仍强</td>
-        <td><span class="risk-midhigh">中高</span></td>
-      </tr>
-      <tr>
-        <td>市场情绪</td>
-        <td>6月23日纳指-1%+，SpaceX重挫；但美光创新高、道指/标普相对稳定。整体情绪混沌，分化明显，非单纯恐慌也非贪婪</td>
+        <td>AI 板块拥挤度</td>
+        <td>内部高度分化（SMCI +15.66% vs 电子净流出 195 亿），AI 主线未破坏但压力加大；结构性资金在优化，拥挤度从"极度拥挤"向"中等"修正</td>
         <td><span class="risk-mid">中</span></td>
       </tr>
       <tr>
+        <td>市场情绪</td>
+        <td>纳指 -1.32%，创业板 -2.27%，恒指 -1.34%，全球科技同步承压；SpaceX 三日 -23% 贡献较大负面情绪；整体偏悲观但尚未达恐慌阈值</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
         <td>财报风险</td>
-        <td>美光本周财报是AI存储需求真实性的关键验证；若业绩不及预期，可能引发整个HBM/存储板块回调，连带影响AI情绪</td>
+        <td>Micron（MU）财报本周即将公布，股价已创历史新高，市场预期极高；不及预期将触发 HBM / AI 存储板块（NVDA/AMD/SMCI 及相关供应链）链式回调</td>
         <td><span class="risk-midhigh">中高</span></td>
       </tr>
       <tr>
         <td>地缘政治风险</td>
-        <td>美伊霍尔木兹协议60天窗口期，油价暂时回落；但协议有效期短，中东局势仍存变数；英国首相Starmer据报即将辞职，欧洲政治不确定性上升</td>
+        <td>美伊谈判出现缓和信号（金价回落印证），但中东局势仍存变数；日美外汇谈判结果不确定；铝价下跌显示市场已局部定价缓和</td>
         <td><span class="risk-mid">中</span></td>
       </tr>
     </tbody>
@@ -568,17 +715,17 @@
 <div class="card">
   <div class="card-title">🎯 明日关注</div>
   <ol class="focus">
-    <li><strong>美光（MU）财报</strong> — AI存储/HBM需求的核心验证窗口。若业绩超预期，将强化AI硬件主线；若指引保守，可能触发整个存储和AI芯片板块的连锁回调。</li>
-    <li><strong>SpaceX股价走势</strong> — 能否止稳、守住关键支撑位。三连跌后是否有底部买盘入场，将影响市场对高市值新上市科技股的整体定价预期。</li>
-    <li><strong>Fed官员讲话跟踪</strong> — 关注Warsh及其他FOMC委员在6月23日后是否进一步强化或软化加息信号，直接影响美债收益率和成长股估值。</li>
-    <li><strong>霍尔木兹协议落地情况</strong> — 监测石油运输是否实际恢复正常，若出现摩擦，油价可能反弹，重燃通胀担忧，进一步强化鹰派美联储叙事。</li>
-    <li><strong>S&P 500 / 纳指技术面</strong> — 纳指在7500点一带的支撑力度，以及是否出现更大规模的科技股减持信号；关注是否有防御性板块（公用事业、医疗、消费必选）异常走强。</li>
+    <li><strong>Micron（MU）财报发布</strong> — 股价刚创历史新高，市场预期极高；这是本周 AI 板块最关键的风险催化剂。超预期则 HBM/AI 存储板块继续走强并带动 NVDA/SMCI；不及预期则引发链式回调，AI 主线将面临短期重大考验。</li>
+    <li><strong>美联储官员是否就加息发声</strong> — 美银、德银改口仍属市场预测，真正的风险催化剂是 FOMC 成员出现鹰派表态。任何官方信号都将进一步压制成长股，并直接影响 REITs/长债的配置逻辑，需密切监测官员日程。</li>
+    <li><strong>SpaceX（SPCX）是否止跌企稳</strong> — 三日累计 -23%，成交量极高，观察是否出现抄底资金介入或进一步破位。马斯克相关资产（特斯拉 TSLA、xAI）的联动效应，以及是否波及 SpaceX 供应链（空间制造商、卫星通信链）值得关注。</li>
+    <li><strong>A 股创业板明日开盘方向</strong> — 今日午盘创业板跌 2.27%，若收盘未能收复部分跌幅，明日将面临情绪蔓延风险。关注医药板块能否延续领涨，以及成交额是否持续维持 2 万亿以上，判断资金是否真正轮动而非整体撤退。</li>
+    <li><strong>美伊谈判后续进展 &amp; 原油走势</strong> — 能源制裁若获实质性放松确认，WTI 供给预期将大幅改变，对通胀路径有直接影响，进而传导至美联储加息决策的可信度判断，连锁影响债券/黄金/能源板块。</li>
   </ol>
 </div>
 
 <footer>
-  2026-06-23 生成 · 数据来源：Twitter · Reddit · FRED · MAS · PBC · Yahoo Finance · Bloomberg<br>
-  仅供参考，不构成投资建议
+  2026-06-23 生成 · 数据来源：Yahoo Finance · Bloomberg · 财联社（CLS）· Federal Reserve H.15 · Investing.com · MoneySmart.sg · MAS · Barrons<br>
+  指数数据截至报告生成时间，部分为盘中实时值 · 仅供参考，不构成投资建议
 </footer>
 
 </div>

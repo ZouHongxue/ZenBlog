@@ -6,344 +6,569 @@
 <title>财经早报 2026-06-19</title>
 <style>
   :root {
-    --bg: #ffffff;
-    --text: #1a1a1a;
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
     --muted: #6b7280;
     --border: #e5e7eb;
     --up: #16a34a;
     --down: #dc2626;
-    --accent: #1d4ed8;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
     --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.65;
     color: var(--text);
     background: var(--bg);
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 32px 24px;
+    padding: 24px 16px 48px;
   }
-  header {
-    border-bottom: 2px solid var(--text);
-    padding-bottom: 12px;
-    margin-bottom: 28px;
+  .page { max-width: 900px; margin: 0 auto; }
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
   }
-  header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
-  header p { color: var(--muted); font-size: 12px; margin-top: 4px; }
-  section { margin-bottom: 32px; }
-  section h2 {
-    font-size: 15px;
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
     font-weight: 600;
-    border-left: 3px solid var(--text);
-    padding-left: 10px;
-    margin-bottom: 14px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
   }
-  ul { list-style: none; }
-  ul li {
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+  ul.news { list-style: none; }
+  ul.news li {
     padding: 10px 0;
     border-bottom: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 3px;
   }
-  ul li:last-child { border-bottom: none; }
-  .item-title { font-weight: 500; }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
   .item-title a { color: var(--text); text-decoration: none; }
   .item-title a:hover { color: var(--accent); }
-  .item-meta { font-size: 12px; color: var(--muted); }
-  .item-summary { font-size: 13px; color: #374151; }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .tag {
     display: inline-block;
-    font-size: 11px;
+    font-size: 10.5px;
     padding: 1px 6px;
-    border-radius: 3px;
+    border-radius: 4px;
     background: var(--tag-bg);
     color: var(--muted);
-    margin-right: 4px;
   }
-  .up { color: var(--up); font-weight: 600; }
-  .down { color: var(--down); font-weight: 600; }
-  /* 利率表格 */
-  .rates-table {
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+  table.risk {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
   }
-  .rates-table th {
+  table.risk th {
     background: var(--tag-bg);
     text-align: left;
     padding: 7px 12px;
     font-weight: 600;
-    border: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
   }
-  .rates-table td {
-    padding: 7px 12px;
-    border: 1px solid var(--border);
-    vertical-align: top;
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
   }
-  .rates-table td:first-child { color: var(--muted); font-size: 12px; }
-  .rates-note {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 8px;
-    padding: 8px 10px;
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
     background: var(--tag-bg);
-    border-radius: 4px;
+    border-radius: 8px;
+    padding: 12px 14px;
   }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
   footer {
-    margin-top: 40px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
+    text-align: center;
     font-size: 11px;
     color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
   }
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
 </style>
 </head>
 <body>
+<div class="page">
 
-<header>
-  <h1>📰 财经早报</h1>
-  <p>2026-06-19 · 数据来源：Twitter · Reddit · 雪球 · B站 · FRED · PBC</p>
-</header>
+<!-- 1. Header -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>财经早报</h1>
+      <div class="date">2026-06-19 · 数据来源：Twitter · Reddit · 雪球 · B站 · FRED · PBC</div>
+    </div>
+    <span class="market-state">美股三指数齐跌 · 费半逆势</span>
+  </div>
+  <div class="summary">
+    FOMC 鹰派超预期落地，19 位官员中 9 人预期 2026 年仍需加息，PCE 上修至 3.6%，降息窗口关闭；美伊核协议 MoU 签署，WTI 跌破 76，地缘溢价持续拆除，黄金短线承压；AI 算力叙事与利率压制明显分化——费半逆势 +1.38%，Meta/微软/亚马逊各跌 3–5%。
+  </div>
+</div>
 
-<!-- ===== AI & 科技股 ===== -->
-<section>
-  <h2>📈 AI &amp; 科技股</h2>
-  <ul>
+<!-- 2. AI & 科技股 -->
+<div class="card">
+  <div class="card-title">AI &amp; 科技股 <span class="count">5 条</span></div>
+  <ul class="news">
     <li>
       <div class="item-title"><a href="https://x.com/i/status/2067767825905996186">美国《芯片安全法案》外委会全票通过，英伟达、AMD 强烈反对</a></div>
       <div class="item-summary">法案拟强制 AI 芯片内置位置验证硬件或追踪软件，封堵中共通过灰色渠道获取先进芯片的漏洞。行业多数公司支持，但黄仁勋（NVDA）与苏姿丰（AMD）联合反对，称法案"复杂昂贵、未经验证"，将损害海外客户信任并阻碍出口。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · @dclibertyfarm · 2026-06-19</div>
+      <div class="item-meta"><span class="tag ai">Twitter</span> @dclibertyfarm · 2026-06-19</div>
     </li>
     <li>
       <div class="item-title"><a href="https://x.com/mingchikuo/status/2066562951792992600">郭明錤：联发科战略升级，从 IC 设计转型 AI 服务器系统级设计</a></div>
       <div class="item-summary">首要目标锁定 Google TPU v10 PCBA（L6）及 Musk 旗下 AI 芯片 L10 机柜，目标毛利率 40–50%，采"主导设计+验证、制造全外包"轻资产模式。短期（2 年内）基本面影响有限，但长期战略转型意义重大，台系供应链受益确定性高于 A 股。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · 郭明錤 @mingchikuo · 2026-06-15</div>
+      <div class="item-meta"><span class="tag ai">Twitter</span> 郭明錤 @mingchikuo · 2026-06-15</div>
     </li>
     <li>
       <div class="item-title"><a href="https://x.com/i/status/2067910705844785461">威盛电子押注台积电 3nm ASIC，CEO 称供应链紧张程度超过疫情</a></div>
       <div class="item-summary">VIA Technologies 加速 AI 布局，瞄准 3nm ASIC 项目与台积电合作，同步推进硅光子/光通信方案。CEO 陈文琦称内存、先进封装、光学组件均高度紧缺，AI 需求仍处早期阶段，做长期布局。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · @SemiconductorsX · 2026-06-19</div>
+      <div class="item-meta"><span class="tag ai">Twitter</span> @SemiconductorsX · 2026-06-19</div>
     </li>
     <li>
       <div class="item-title"><a href="https://x.com/i/status/2067610785367683111">AMD 推出平价本地算力设备，推理性能大幅超越同价位英伟达</a></div>
       <div class="item-summary">新设备凭借超大共享内存架构支持千亿级大模型离线运行，性价比极高、回本周期短，大幅降低个人 AI 算力门槛。玩本地推理，AMD 正在建立性价比优势。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · @WangNextDoor2 · 2026-06-18</div>
+      <div class="item-meta"><span class="tag ai">Twitter</span> @WangNextDoor2 · 2026-06-18</div>
     </li>
     <li>
       <div class="item-title"><a href="https://x.com/i/status/2053652612566896702">黄仁勋 1000 亿 AI 供应链投资名单：NVDA / CRWV / SMCI / TSM / AVGO 等 12 标的</a></div>
       <div class="item-summary">英伟达、CoreWeave（AI 云算力）、超微电脑（服务器组装）、戴尔（AI 服务器）、Marvell（互联芯片）、康宁（光纤）、Lumentum（光模块）、台积电（代工）、博通（ASIC）等列入核心受益名单。费半昨日逆势 +1.38%，芯片股与大盘出现明显分化。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · @web3annie · 综合</div>
+      <div class="item-meta"><span class="tag ai">Twitter</span> @web3annie · 综合</div>
     </li>
   </ul>
-</section>
+</div>
 
-<!-- ===== 被动收入 & 红利资产 ===== -->
-<section>
-  <h2>💰 被动收入 &amp; 红利资产</h2>
-  <ul>
+<!-- 3. 被动收入 & 红利资产 -->
+<div class="card">
+  <div class="card-title">被动收入 &amp; 红利资产 <span class="count">4 条</span></div>
+  <ul class="news">
     <li>
       <div class="item-title">FOMC 连续第四次维持 3.50–3.75%，点阵图鹰派超预期，降息窗口关闭</div>
       <div class="item-summary">19 位官员中 9 人预期 2026 年仍需加息，中位数升至 3.8%；PCE 通胀预期从 2.7% 上修至 3.6%，GDP 下调至 2.2%。Warsh 主席首场发布会措辞强硬。高利率环境延续，短端 T-bill 和货币基金仍是 USD 资产性价比最高的无风险选项，REITs 和长债估值继续承压。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · @Monera_Digital / @shufen46250836 · 2026-06-17~18</div>
+      <div class="item-meta"><span class="tag income">Twitter</span> @Monera_Digital / @shufen46250836 · 2026-06-17~18</div>
     </li>
     <li>
       <div class="item-title">日本 REIT 指数年内持续下行，长期利率急升成核心压制</div>
       <div class="item-summary">东证 REIT 指数与日经平均历史新高形成鲜明反差，主因是意外快速上行的日本长期利率，已开始向东京不动产价格传导。分析认为：若利率回稳，过度悲观预期将修正，下行空间已显著缩窄。全球 REITs 需要更高的分红率才能与无风险利率竞争。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · @reittweet55 / @REIT_INVESTMENT · 2026-06-15</div>
+      <div class="item-meta"><span class="tag income">Twitter</span> @reittweet55 / @REIT_INVESTMENT · 2026-06-15</div>
     </li>
     <li>
       <div class="item-title">Reddit r/investing：传统被动收入之外，有哪些值得关注的选项？</div>
       <div class="item-summary">热帖讨论：股息 ETF、债券、REITs、出租房产之外，私营企业股权众筹、消费类公司直投等新兴渠道值得关注，但评估难度更高。新加坡 r/singaporefi 社区 2025 版 FI 指南（CPF → T-bill → 指数 ETF）依然热度高涨。</div>
-      <div class="item-meta"><span class="tag">Reddit</span> · r/investing / r/singaporefi · 综合</div>
+      <div class="item-meta"><span class="tag income">Reddit</span> r/investing / r/singaporefi · 综合</div>
     </li>
     <li>
       <div class="item-title">中国国内红利低波策略：低利率环境下相对吸引力突出</div>
       <div class="item-summary">中国 10Y 国债收益率约 1.65–1.70%，高股息资产（中证红利 000922、红利低波 512890）4–5% 的股息率具有相对竞争力。但需警惕：若国际资金因美元强势持续外流，A 股整体估值仍面临压力。</div>
-      <div class="item-meta"><span class="tag">综合分析</span> · 基于今日利率数据推导</div>
+      <div class="item-meta"><span class="tag income">综合分析</span> 基于今日利率数据推导</div>
     </li>
   </ul>
-</section>
+</div>
 
-<!-- ===== 利率速览 ===== -->
-<section>
-  <h2>📊 利率速览</h2>
-  <table class="rates-table">
-    <thead>
-      <tr>
-        <th>指标</th>
-        <th>🇨🇳 中国</th>
-        <th>🇸🇬 新加坡</th>
-        <th>🇺🇸 美国</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>政策 / 隔夜利率</td>
-        <td>MLF / 7天逆回购：<strong>1.50%</strong></td>
-        <td>SORA 隔夜：<strong>~3.0%</strong> ★</td>
-        <td>Fed 目标区间：<strong>3.50–3.75%</strong><br><small>（5月均值 3.63% — FRED ✓）</small></td>
-      </tr>
-      <tr>
-        <td>短期（1–2Y）</td>
-        <td>LPR 1Y：<strong>3.10%</strong><br><small>（人行 2025-05 调整）</small></td>
-        <td>T-bill 6M：<strong>~3.15%</strong> ★</td>
-        <td>2Y 国债：<strong>4.20%</strong><br><small>（FRED 2026-06-17 ✓）</small></td>
-      </tr>
-      <tr>
-        <td>长期（10Y）</td>
-        <td>国债 10Y：<strong>~1.65%</strong> ★</td>
-        <td>SGS 10Y：<strong>~2.80%</strong> ★</td>
-        <td>10Y 国债：<strong>4.49%</strong><br><small>（FRED 2026-06-17 ✓）</small></td>
-      </tr>
-      <tr>
-        <td>房贷 / 存款</td>
-        <td>LPR 5Y+：<strong>3.60%</strong><br><small>商业房贷加权 Q1：≈3.1%（人行 2026-04-30 ✓）</small></td>
-        <td>银行存款 1Y：<strong>~2.5%</strong> ★<br><small>固定房贷包套：2.9–3.3%</small></td>
-        <td>30Y 房贷：<strong>6.47%</strong><br><small>（FRED 2026-06-18 ✓）</small></td>
-      </tr>
-    </tbody>
-  </table>
-  <p class="rates-note">
-    ✓ = FRED / 人行官方数据实时确认 &nbsp;|&nbsp; ★ = MAS API 今日不可用，为近期已知趋势估算，仅供参考<br><br>
-    <strong>一句话解读：</strong>美联储"higher for longer"格局确立，FOMC 点阵图封杀今年降息预期；美国短债（2Y 4.20%）和货币基金仍是 USD 资产最优无风险选项，30Y 房贷 6.47% 继续压制住宅 REITs；新加坡 SORA 随联储同步高位，T-bill 约 3.15% 对 SGD 资产仍有吸引力；中国 10Y 国债 1.65% 历史低位，境内高股息红利资产（分红率 4–5%）具备相对吸引力，但需关注汇率与外资流出风险。
-  </p>
-</section>
+<!-- 4. 利率速览 -->
+<div class="card">
+  <div class="card-title">利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td><span class="rate-val">1.50%</span><br><small>MLF / 7天逆回购</small></td>
+          <td><span class="rate-val">~3.0%</span> ★<br><small>SORA 隔夜</small></td>
+          <td><span class="rate-val">3.50–3.75%</span><br><small>Fed 目标区间（5月均值 3.63% — FRED ✓）</small></td>
+        </tr>
+        <tr>
+          <td>短期（1–2Y）</td>
+          <td><span class="rate-val">3.10%</span><br><small>LPR 1Y（人行 2025-05 调整）</small></td>
+          <td><span class="rate-val">~3.15%</span> ★<br><small>T-bill 6M</small></td>
+          <td><span class="rate-val">4.20%</span><br><small>2Y 国债（FRED 2026-06-17 ✓）</small></td>
+        </tr>
+        <tr>
+          <td>长期（10Y）</td>
+          <td><span class="rate-val">~1.65%</span> ★<br><small>国债 10Y</small></td>
+          <td><span class="rate-val">~2.80%</span> ★<br><small>SGS 10Y</small></td>
+          <td><span class="rate-val">4.49%</span><br><small>10Y 国债（FRED 2026-06-17 ✓）</small></td>
+        </tr>
+        <tr>
+          <td>房贷 / 存款</td>
+          <td><span class="rate-val">3.60%</span><br><small>LPR 5Y+；商业房贷加权 Q1 ≈3.1%（人行 2026-04-30 ✓）</small></td>
+          <td><span class="rate-val">~2.5%</span> ★<br><small>银行存款 1Y；固定房贷包套 2.9–3.3%</small></td>
+          <td><span class="rate-val">6.47%</span><br><small>30Y 房贷（FRED 2026-06-18 ✓）</small></td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td><span class="rate-val">暂无可靠数据</span></td>
+          <td><span class="rate-val">暂无可靠数据</span></td>
+          <td><span class="rate-val">暂无可靠数据</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    ✓ = FRED / 人行官方数据实时确认 &nbsp;|&nbsp; ★ = MAS API 今日不可用，为近期已知趋势估算，仅供参考。<br>
+    美联储"higher for longer"格局确立，FOMC 点阵图封杀今年降息预期；美国短债（2Y 4.20%）和货币基金仍是 USD 资产最优无风险选项，30Y 房贷 6.47% 继续压制住宅 REITs；新加坡 SORA 随联储同步高位，T-bill 约 3.15% 对 SGD 资产仍有吸引力；中国 10Y 国债 1.65% 历史低位，境内高股息红利资产（分红率 4–5%）具备相对吸引力，但需关注汇率与外资流出风险。
+  </div>
+</div>
 
-<!-- ===== 宏观经济 ===== -->
-<section>
-  <h2>🌍 宏观经济</h2>
-  <ul>
-    <li>
-      <div class="item-title">FOMC 鹰派全面落地：2026 年 PCE 预期升至 3.6%，GDP 下调，滞胀信号明确</div>
-      <div class="item-summary">美联储 SEP 全面上修，核心 PCE 从 2.7% 上调至 3.3%，GDP 从 2.4% 降至 2.2%。美股三指数齐跌：道指 −0.98%、标普 −1.21%、纳指 −1.34%；Meta −5%，微软/亚马逊 −3%，SpaceX 上市以来首跌 −5%。费半逆势 +1.38%，AI 算力叙事与宏观利率压制出现明显分化行情。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · @Monera_Digital · 2026-06-18</div>
-    </li>
-    <li>
-      <div class="item-title">美伊核协议 MoU 生效，霍尔木兹海峡解封，WTI 跌破 76 至 75.18</div>
-      <div class="item-summary">特朗普 6 月 17 日签署 MoU，伊朗同意 IAEA 监督下稀释浓缩铀，美方解除海峡海军封锁，牵头 3000 亿美元重建资金框架并解冻 240 亿美元资产。油价地缘溢价持续拆除，COMEX 黄金 −1.79% 后亚盘反弹至 4282–4300。以色列声称"不知道这份备忘录是什么"、不受约束，中东尾部风险未完全消除。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · @Monera_Digital · 2026-06-18</div>
-    </li>
-    <li>
-      <div class="item-title">美元走强，美债遭抛售；大宗商品分化，黄金短线承压</div>
-      <div class="item-summary">鹰派 FOMC + 美伊协议双重冲击下，市场完成风险重定价。银 −2.93% 报 67.96；铜受 AI/电网建设长期需求支撑。加密市场上行动能受限——联储锁息压制流动性溢价叙事，比特币对冲通胀属性边际减弱。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · 综合整理 · 2026-06-18</div>
-    </li>
-    <li>
-      <div class="item-title">宏观跟踪三指标：10Y 美债 4.49%、WTI 75.18、美元指数走强</div>
-      <div class="item-summary">后续重点：以色列动向与 60 天核查期进展（美伊协议执行）、下一份 CPI 数据（通胀是否真实回落）、OPEC+ 产量决策（原油供给端）。美债 4.5% 临界点是美股估值的关键压力位，需持续跟踪。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · @TiezhuCrypto / @Monera_Digital · 综合</div>
-    </li>
-  </ul>
-</section>
+<!-- 5. 宏观经济 + 房地产 REITs 并排 -->
+<div class="section-group">
+  <div class="card" style="margin-bottom:0">
+    <div class="card-title">宏观经济 <span class="count">4 条</span></div>
+    <ul class="news">
+      <li>
+        <div class="item-title">FOMC 鹰派全面落地：2026 年 PCE 预期升至 3.6%，GDP 下调，滞胀信号明确</div>
+        <div class="item-summary">美联储 SEP 全面上修，核心 PCE 从 2.7% 上调至 3.3%，GDP 从 2.4% 降至 2.2%。美股三指数齐跌：道指 −0.98%、标普 −1.21%、纳指 −1.34%；Meta −5%，微软/亚马逊 −3%，SpaceX 上市以来首跌 −5%。费半逆势 +1.38%，AI 算力叙事与宏观利率压制出现明显分化行情。</div>
+        <div class="item-meta"><span class="tag macro">Twitter</span> @Monera_Digital · 2026-06-18</div>
+      </li>
+      <li>
+        <div class="item-title">美伊核协议 MoU 生效，霍尔木兹海峡解封，WTI 跌破 76 至 75.18</div>
+        <div class="item-summary">特朗普 6 月 17 日签署 MoU，伊朗同意 IAEA 监督下稀释浓缩铀，美方解除海峡海军封锁，牵头 3000 亿美元重建资金框架并解冻 240 亿美元资产。油价地缘溢价持续拆除，COMEX 黄金 −1.79% 后亚盘反弹至 4282–4300。以色列声称"不知道这份备忘录是什么"、不受约束，中东尾部风险未完全消除。</div>
+        <div class="item-meta"><span class="tag macro">Twitter</span> @Monera_Digital · 2026-06-18</div>
+      </li>
+      <li>
+        <div class="item-title">美元走强，美债遭抛售；大宗商品分化，黄金短线承压</div>
+        <div class="item-summary">鹰派 FOMC + 美伊协议双重冲击下，市场完成风险重定价。银 −2.93% 报 67.96；铜受 AI/电网建设长期需求支撑。加密市场上行动能受限——联储锁息压制流动性溢价叙事，比特币对冲通胀属性边际减弱。</div>
+        <div class="item-meta"><span class="tag macro">Twitter</span> 综合整理 · 2026-06-18</div>
+      </li>
+      <li>
+        <div class="item-title">宏观跟踪三指标：10Y 美债 4.49%、WTI 75.18、美元指数走强</div>
+        <div class="item-summary">后续重点：以色列动向与 60 天核查期进展（美伊协议执行）、下一份 CPI 数据（通胀是否真实回落）、OPEC+ 产量决策（原油供给端）。美债 4.5% 临界点是美股估值的关键压力位，需持续跟踪。</div>
+        <div class="item-meta"><span class="tag macro">Twitter</span> @TiezhuCrypto / @Monera_Digital · 综合</div>
+      </li>
+    </ul>
+  </div>
+  <div class="card" style="margin-bottom:0">
+    <div class="card-title">房地产 &amp; REITs <span class="count">3 条</span></div>
+    <ul class="news">
+      <li>
+        <div class="item-title">美国 30Y 房贷 6.47%，高利率继续压制住宅 REITs 估值</div>
+        <div class="item-summary">Freddie Mac 最新数据（FRED 2026-06-18）：30Y 固定房贷较上周小幅回落 5bp，但仍处高位。在 Fed 不降息预期确立的背景下，REITs（VNQ、AMT 等）短期内难以获得估值扩张空间，高分红率是唯一支撑。</div>
+        <div class="item-meta"><span class="tag">FRED</span> MORTGAGE30US · 2026-06-18</div>
+      </li>
+      <li>
+        <div class="item-title">日本 REIT 与不动产价格双承压，但悲观预期或已过度</div>
+        <div class="item-summary">分析认为：金利若回稳，REIT 下行空间已大幅缩窄，过度悲观的需求端定价将逐步修正。东京商业不动产供需基本面尚稳定，但长期利率上行的传导效应仍需时间消化。</div>
+        <div class="item-meta"><span class="tag">Twitter</span> @reittweet55 / @REIT_INVESTMENT · 2026-06-15</div>
+      </li>
+      <li>
+        <div class="item-title">中国商业房贷加权平均利率 Q1 约 3.1%，历史低位继续</div>
+        <div class="item-summary">人民银行 2026-04-30 公布：2026Q1 全国新发放商业性个人住房贷款加权平均利率约 3.1%。国内房贷成本极低对刚需有支撑，但整体市场"弱复苏"态势未变。LPR 5Y 维持 3.60%，若继续下调，存量房贷将于年初重定价受益。</div>
+        <div class="item-meta"><span class="tag">PBC</span> 人民银行官网 · 2026-04-30</div>
+      </li>
+    </ul>
+  </div>
+</div>
 
-<!-- ===== 房地产 & REITs ===== -->
-<section>
-  <h2>🏠 房地产 &amp; REITs</h2>
-  <ul>
-    <li>
-      <div class="item-title">美国 30Y 房贷 6.47%，高利率继续压制住宅 REITs 估值</div>
-      <div class="item-summary">Freddie Mac 最新数据（FRED 2026-06-18）：30Y 固定房贷较上周小幅回落 5bp，但仍处高位。在 Fed 不降息预期确立的背景下，REITs（VNQ、AMT 等）短期内难以获得估值扩张空间，高分红率是唯一支撑。</div>
-      <div class="item-meta"><span class="tag">FRED</span> · MORTGAGE30US · 2026-06-18</div>
-    </li>
-    <li>
-      <div class="item-title">日本 REIT 与不动产价格双承压，但悲观预期或已过度</div>
-      <div class="item-summary">分析认为：金利若回稳，REIT 下行空间已大幅缩窄，过度悲观的需求端定价将逐步修正。东京商业不动产供需基本面尚稳定，但长期利率上行的传导效应仍需时间消化。</div>
-      <div class="item-meta"><span class="tag">Twitter</span> · @reittweet55 / @REIT_INVESTMENT · 2026-06-15</div>
-    </li>
-    <li>
-      <div class="item-title">中国商业房贷加权平均利率 Q1 约 3.1%，历史低位继续</div>
-      <div class="item-summary">人民银行 2026-04-30 公布：2026Q1 全国新发放商业性个人住房贷款加权平均利率约 3.1%。国内房贷成本极低对刚需有支撑，但整体市场"弱复苏"态势未变。LPR 5Y 维持 3.60%，若继续下调，存量房贷将于年初重定价受益。</div>
-      <div class="item-meta"><span class="tag">PBC</span> · 人民银行官网 · 2026-04-30</div>
-    </li>
-  </ul>
-</section>
+<!-- 6. 板块轮动判断 -->
+<div class="card" style="margin-top:16px">
+  <div class="card-title">板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">强势 / 资金流入</div>
+      <div class="value">AI 算力芯片链（费半逆势 +1.38%）<br>光模块 · ASIC · 先进封装</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">弱势 / 资金流出</div>
+      <div class="value">大型科技（Meta −5%、微软/亚马逊 −3%）<br>消费（茅台）· 保险（平安 −6.41%）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">观望 / 中性</div>
+      <div class="value">黄金（短线承压，亚盘反弹）<br>铜（长期需求支撑，短期震荡）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">逻辑主线</div>
+      <div class="value">AI 算力 vs. 利率压制分化持续<br>高利率封杀 REITs · 长债估值扩张</div>
+    </div>
+  </div>
+</div>
 
-<!-- ===== 雪球热帖 & 热股 ===== -->
-<section>
-  <h2>🔥 雪球热帖 &amp; 热股</h2>
-  <ul>
+<!-- 7. 雪球热帖 & 热股 -->
+<div class="card">
+  <div class="card-title">雪球热帖 &amp; 热股 <span class="count">热股榜 TOP 10</span></div>
+  <ul class="news">
     <li>
       <div class="item-title">雪球公开动态接口今日返回异常（Cookie 过期或接口变更）</div>
       <div class="item-summary">雪球热帖内容今日无法拉取，以下热股榜数据来自雪球热股 API（正常）。</div>
-      <div class="item-meta"><span class="tag">雪球</span> · 2026-06-19</div>
+      <div class="item-meta"><span class="tag">雪球</span> 2026-06-19</div>
     </li>
   </ul>
-  <!-- 热股榜 -->
-  <ul style="margin-top:12px">
-    <li>
-      <div class="item-title">1 · 智谱 (02513) &nbsp;<span class="up">+26.14%</span></div>
-      <div class="item-meta">现价：HK$2094.0 · 港股 AI 大模型龙头，单日大涨，关注量能</div>
-    </li>
-    <li>
-      <div class="item-title">2 · 麦捷科技 (SZ300319) &nbsp;<span class="up">+20.02%</span></div>
-      <div class="item-meta">现价：¥27.76 · 被动元器件，AI 硬件需求受益，涨停</div>
-    </li>
-    <li>
-      <div class="item-title">3 · 国瓷材料 (SZ300285) &nbsp;<span class="up">+14.05%</span></div>
-      <div class="item-meta">现价：¥89.53 · 先进陶瓷材料，AI 封装及半导体受益</div>
-    </li>
-    <li>
-      <div class="item-title">4 · 兆易创新 (SH603986) &nbsp;<span class="up">+7.33%</span></div>
-      <div class="item-meta">现价：¥629.0 · 国产存储芯片，AI 内存需求持续受益</div>
-    </li>
-    <li>
-      <div class="item-title">5 · 中际旭创 (SZ300308) &nbsp;<span class="up">+7.19%</span></div>
-      <div class="item-meta">现价：¥1367.88 · 光模块龙头，AI 数据中心核心标的</div>
-    </li>
-    <li>
-      <div class="item-title">6 · 中船特气 (SH688146) &nbsp;<span class="up">+7.15%</span></div>
-      <div class="item-meta">现价：¥364.0 · 半导体特种气体，国产替代持续推进</div>
-    </li>
-    <li>
-      <div class="item-title">7 · 东山精密 (SZ002384) &nbsp;<span class="up">+6.26%</span></div>
-      <div class="item-meta">现价：¥273.0 · 精密制造，苹果与 AI 服务器供应链</div>
-    </li>
-    <li>
-      <div class="item-title">8 · 贵州茅台 (SH600519) &nbsp;<span class="down">−2.02%</span></div>
-      <div class="item-meta">现价：¥1215.0 · 消费承压，资金转向科技链</div>
-    </li>
-    <li>
-      <div class="item-title">9 · SpaceX (SPCX) &nbsp;<span class="down">−3.56%</span></div>
-      <div class="item-meta">现价：$185.0 · 上市以来首次较大跌幅，FOMC 鹰派拖累大盘</div>
-    </li>
-    <li>
-      <div class="item-title">10 · 中国平安 (SH601318) &nbsp;<span class="down">−6.41%</span></div>
-      <div class="item-meta">现价：¥49.38 · 保险龙头，低利率压制险资投资收益，今日跌幅最大</div>
-    </li>
-  </ul>
-</section>
+  <div class="stock-grid" style="margin-top:16px">
+    <div class="stock-chip">
+      <span class="name">智谱</span>
+      <span class="code">02513 HK</span>
+      <span class="pct up">+26.14%</span>
+      <span class="name">HK$2094.0</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">麦捷科技</span>
+      <span class="code">SZ300319</span>
+      <span class="pct up">+20.02%</span>
+      <span class="name">¥27.76 · 涨停</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">国瓷材料</span>
+      <span class="code">SZ300285</span>
+      <span class="pct up">+14.05%</span>
+      <span class="name">¥89.53</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">兆易创新</span>
+      <span class="code">SH603986</span>
+      <span class="pct up">+7.33%</span>
+      <span class="name">¥629.0</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">中际旭创</span>
+      <span class="code">SZ300308</span>
+      <span class="pct up">+7.19%</span>
+      <span class="name">¥1367.88</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">中船特气</span>
+      <span class="code">SH688146</span>
+      <span class="pct up">+7.15%</span>
+      <span class="name">¥364.0</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">东山精密</span>
+      <span class="code">SZ002384</span>
+      <span class="pct up">+6.26%</span>
+      <span class="name">¥273.0</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">贵州茅台</span>
+      <span class="code">SH600519</span>
+      <span class="pct down">−2.02%</span>
+      <span class="name">¥1215.0</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SpaceX</span>
+      <span class="code">SPCX</span>
+      <span class="pct down">−3.56%</span>
+      <span class="name">$185.0</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">中国平安</span>
+      <span class="code">SH601318</span>
+      <span class="pct down">−6.41%</span>
+      <span class="name">¥49.38</span>
+    </div>
+  </div>
+</div>
 
-<!-- ===== B站 & 社区 ===== -->
-<section>
-  <h2>📺 B站 &amp; 社区</h2>
-  <ul>
+<!-- 8. B站 & 社区 -->
+<div class="card">
+  <div class="card-title">B站 &amp; 社区 <span class="count">3 条</span></div>
+  <ul class="news">
     <li>
       <div class="item-title"><a href="https://www.bilibili.com/video/BV1shBxBrEgQ">显卡 AI 算力天梯最新更新｜显卡日报第 1519 期</a></div>
       <div class="item-summary">主流消费级显卡 AI 推理算力横向对比排名，适合关注本地部署大模型的用户参考性价比选型。</div>
-      <div class="item-meta"><span class="tag">B站</span> · @冰糖shirley宝 · 播放 46,650</div>
+      <div class="item-meta"><span class="tag">B站</span> @冰糖shirley宝 · 播放 46,650</div>
     </li>
     <li>
       <div class="item-title"><a href="https://www.bilibili.com/video/BV1M6JG6PE8R">马赫 M100：全球性能最强 AI 车规芯片，单芯片 1280 TOPS / 5nm</a></div>
       <div class="item-summary">国产 5nm 车规 AI 芯片全面超越英伟达 Thor-U，加速国产算力在智能驾驶领域的渗透，关注 A 股汽车电子供应链机会。</div>
-      <div class="item-meta"><span class="tag">B站</span> · @智车星球 · 播放 4,847</div>
+      <div class="item-meta"><span class="tag">B站</span> @智车星球 · 播放 4,847</div>
     </li>
     <li>
       <div class="item-title"><a href="https://www.bilibili.com/video/BV1xzEm6oEu1">投研机构最新观点：国产算力芯片 &amp; 高速互联芯片（2026-06-09）</a></div>
       <div class="item-summary">机构对华为昇腾等国产 AI 算力芯片、中际旭创等高速互联芯片的投研观点，关注 A 股 AI 算力链边际机会。</div>
-      <div class="item-meta"><span class="tag">B站</span> · @芭菲猪财 · 播放 545</div>
+      <div class="item-meta"><span class="tag">B站</span> @芭菲猪财 · 播放 545</div>
     </li>
   </ul>
-</section>
+</div>
+
+<!-- 9. 风险评估 -->
+<div class="card">
+  <div class="card-title">风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr>
+        <th>风险项</th>
+        <th>等级</th>
+        <th>说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>美联储"higher for longer"</td>
+        <td><span class="risk-high">高</span></td>
+        <td>点阵图封杀降息，PCE 上修至 3.6%，REITs / 长债估值持续承压</td>
+      </tr>
+      <tr>
+        <td>中东地缘尾部风险</td>
+        <td><span class="risk-midhigh">中高</span></td>
+        <td>以色列不承认美伊 MoU，霍尔木兹 60 天核查期存在反复风险</td>
+      </tr>
+      <tr>
+        <td>美元走强 / 外资流出 A 股</td>
+        <td><span class="risk-mid">中</span></td>
+        <td>鹰派 FOMC 强化美元，A 股外资持续流出压力不减</td>
+      </tr>
+      <tr>
+        <td>AI 算力叙事与估值分化</td>
+        <td><span class="risk-mid">中</span></td>
+        <td>费半逆势但大型科技承压，分化行情考验个股选股精度</td>
+      </tr>
+      <tr>
+        <td>《芯片安全法案》推进</td>
+        <td><span class="risk-mid">中</span></td>
+        <td>若立法推进，NVDA / AMD 海外出口和客户信任受损</td>
+      </tr>
+      <tr>
+        <td>日本 REIT / 不动产压力</td>
+        <td><span class="risk-low">低</span></td>
+        <td>悲观预期或已过度定价，利率回稳后修正空间存在</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 10. 明日关注 -->
+<div class="card">
+  <div class="card-title">明日关注</div>
+  <ol class="focus">
+    <li>以色列对美伊核协议 MoU 的后续表态及 60 天核查期进展（中东尾部风险核心变量）</li>
+    <li>美国 CPI 下一份数据发布时间确认，观察通胀是否真实回落（美债 4.5% 压力位能否缓解）</li>
+    <li>OPEC+ 产量会议动向，原油供给端对 WTI 75 附近支撑力度</li>
+    <li>AI 算力链个股（中际旭创、兆易创新、麦捷科技）量能跟踪，确认资金持续性</li>
+    <li>中国平安及险资板块反弹力度，低利率压制下保险股估值修复路径</li>
+  </ol>
+</div>
 
 <footer>
   生成时间：2026-06-19 10:00 &nbsp;·&nbsp; 自动生成，仅供参考，不构成投资建议<br>
-  数据来源：Twitter · Reddit · 雪球热股榜 · B站 · FRED（美联储） · 人民银行官网<br>
-  注：小红书、雪球热帖、MAS 利率 API 今日不可用；新加坡及中国部分利率为近期估算值（★）
+  数据来源：Twitter · Reddit · 雪球热股榜 · B站 · FRED（美联储） · 人民银行官网
 </footer>
 
+</div>
 </body>
 </html>
