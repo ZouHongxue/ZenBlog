@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-06-23</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  /* ── News list ── */
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  /* ── Rates table ── */
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Hot stocks ── */
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  /* ── Risk table ── */
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  /* ── Section divider ── */
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  /* ── Tomorrow focus ── */
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  /* ── Rotation box ── */
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📰 财经早报</h1>
+      <div class="date">2026-06-23 · CN / SG / US</div>
+    </div>
+    <span class="market-state">⚠️ Risk-Off — 科技板块回调日</span>
+  </div>
+  <div class="summary">
+    纳指今日跌超1%，SpaceX三连跌累计回吐大部分IPO涨幅，拖累科技板块整体承压；美光（MU）逆市创历史新高，AI存储主线仍强，本周财报将是关键验证。新任美联储主席Warsh首次议息后维持利率于3.5%–3.75%不变，但接近半数FOMC委员倾向年内加息，利率"不降反升"叙事压制高估值成长股。资金呈现分化迹象：AI算力硬件/存储持续流入，而大市值科技股头寸出现减仓，防御性资产暂无明显异动。
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">15条</span></div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/article/micron-stock-surges-to-new-high-amid-ai-memory-trade-boom-anthropic-deal-125205263.html">美光科技（MU）创历史新高：AI存储需求爆发 + Anthropic供应协议，本周财报即将公布</a></div>
+      <div class="item-summary">MU股价在AI内存交易热潮和与Anthropic达成供应协议双重催化下，单日突破历史高位，涨幅约300%（从2025年低点累计）。本周财报是对AI存储需求实际落地的关键验证。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-23</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://x.com/i/status/2052722049622434162">贝莱德CEO拉里·芬克：算力将成新"大宗商品"，喊出"算力期货"概念</a></div>
+      <div class="item-summary">芬克表示未来将出现算力期货这一新资产类别，算力将像石油/粮食一样可交易；当前美国面临电力、算力、芯片、内存四大结构性短缺，没有AI泡沫，只有供给短缺。看多：NVDA、AMD、TSM、SK海力士、MU、CRDO、NBIS、BE、VRT、AES。</div>
+      <div class="item-meta"><span class="tag ai">Twitter / @web3annie</span> 62.4k浏览 · 280赞</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://x.com/i/status/2055618767044907444">黄仁勋：AI算力需求未来需增1000倍，能源需求同步</a></div>
+      <div class="item-summary">黄仁勋继续强调算力暴涨叙事，同时梳理出完整AI算力产业链受益股：NVDA、TSM、AVGO（博通）、SMCI（超微电脑）、GEV（GE Vernova电力）、VST（Vistra核电）、CEG（Constellation核电）、CCJ（铀矿）、NEE（新能源）、VRT（机房散热）、ETN（伊顿变压器）。</div>
+      <div class="item-meta"><span class="tag ai">Twitter / @LuBtc888</span> 29.7k浏览</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/news/getty-images-surges-145-after-announcing-openai-licensing-deal-164453567.html">Getty Images暴涨145%：与OpenAI签订图像授权协议</a></div>
+      <div class="item-summary">此前一直起诉AI图像侵权的Getty Images宣布180度转向，与OpenAI签订许可授权协议，版权内容变现路线获市场认可，当日盘中最大涨幅145%。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-23</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/trump-signs-executive-orders-to-drive-development-of-commercially-relevant-quantum-computer-by-2028-205201485.html">特朗普签署量子计算行政令：2028年实现"商业级量子计算机"</a></div>
+      <div class="item-summary">两道行政令指令相关部门加速量子计算开发，目标是2028年前交付具有商业价值的量子计算机，可能利好相关硬件和算法企业。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-23</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/article/spacex-stock-tumbles-164-shaving-off-most-ipo-gains-since-debut-141725657.html">SpaceX股价单日跌16%，三连阴回吐大部分IPO涨幅</a></div>
+      <div class="item-summary">SpaceX上市后经历三日大涨（累计约+60%），随后连续三日大跌，今日跌幅最大达16%，估值从约2.8万亿美元大幅缩水。部分分析师警示SpaceX市值一度超越亚马逊和微软总和，估值透支。</div>
+      <div class="item-meta"><span class="tag risk">Yahoo Finance</span> 2026-06-23</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/live/stock-market-today-sp-500-nasdaq-slide-as-big-tech-spacex-hammered-225817825.html">纳指今日跌超1%，大型科技股普遍受压</a></div>
+      <div class="item-summary">SpaceX拖累科技股整体情绪，纳斯达克指数下跌超1%，道指和标普500跌幅相对有限，市场风格出现分化。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-23</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://x.com/i/status/2068566053664264310">HBM高带宽内存详解：AI GPU"内存墙"解决方案，驱动本轮存储行情</a></div>
+      <div class="item-summary">HBM通过垂直堆叠多层内存 + 硅通孔封装，使内存紧贴GPU，大幅提升带宽、降低延迟，成为喂饱H100/B200系列GPU的核心技术。SK海力士、三星、美光三家瓜分市场，HBM市场从2020年$15亿扩张至AI时代数百亿美元规模。</div>
+      <div class="item-meta"><span class="tag ai">Twitter / @SUOHA_AI</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://x.com/i/status/2069239043800571988">AI芯片高度集中：TSMC占台湾TAIEX 42%，三星+SK海力士占韩国KOSPI 55%</a></div>
+      <div class="item-summary">亚洲主要股指越来越成为AI革命的直接代理。台湾和韩国股市几乎由少数半导体巨头主导，集中度风险显著上升。</div>
+      <div class="item-meta"><span class="tag ai">Twitter / @CapitalInsight3</span> 2026-06-23</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/ais-next-bottleneck-is-power-chart-of-the-day-114139935.html">AI下一个瓶颈：电力网络，不再只是芯片</a></div>
+      <div class="item-summary">随着数据中心建设提速，电网容量已成为制约AI扩张的新瓶颈。GE Vernova（GEV）、Vistra（VST）、Constellation（CEG）、NextEra（NEE）等能源基础设施股受到关注。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-22</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://x.com/i/status/2069050271582376294">Magnificent 7市值近两年翻倍：从$11.8万亿升至$22.3万亿（含四次重大回调）</a></div>
+      <div class="item-summary">2024年1月至2026年6月，Magnificent 7合计市值几乎翻倍，历经2024年巩固期、2025年初回调、2025年4月关税冲击、2026年中东危机四轮修正，长期上升趋势完好。</div>
+      <div class="item-meta"><span class="tag ai">Twitter / @econovisuals</span> 2026-06-22</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/from-faang-to-mangos--wall-street-is-searching-for-the-next-magnificent-7-chart-of-the-day-112331299.html">华尔街寻找"下一个Magnificent 7"，新概念"MANGOS"登场</a></div>
+      <div class="item-summary">市场开始讨论后Magnificent 7时代的框架，"MANGOS"等新组合概念涌现，反映市场在估值历史高位之后开始寻找结构性轮动机会。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-21</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/the-magnificent-7-is-so-last-year-spacex-openai-and-anthropic-are-ushering-in-the-fab-10-120409551.html">"FAB 10"：SpaceX、OpenAI、Anthropic纳入新一代核心科技阵容</a></div>
+      <div class="item-summary">SpaceX上市、OpenAI/Anthropic酝酿IPO，使"FAB 10"框架兴起，但部分分析师警告：大型IPO不创造新增资金，只是存量资金再分配，可能从指数中抽血。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> 2026-06-17</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/how-fed-chairman-kevin-warsh-just-screwed-ai-tech-beasts-103000167.html">分析：新Fed主席Warsh鹰派立场压制AI科技股高估值</a></div>
+      <div class="item-summary">Warsh首次议息维持利率，但接近半数FOMC成员倾向年内加息，Warsh本人明确表态希望"市场引导美联储而非美联储引导市场"。利率不降、甚至可能上调，对依赖低贴现率支撑的AI成长股构成压制。</div>
+      <div class="item-meta"><span class="tag risk">Yahoo Finance</span> 2026-06-22</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://x.com/i/status/2069000400745697618">警告：S&amp;P 500突破7500点 + OpenAI/Anthropic潜在IPO = 指数资金虹吸效应</a></div>
+      <div class="item-summary">有分析师指出：IPO不创造新钱，每一美元进入OpenAI/Anthropic，就是从当前股票/ETF撤出的一美元。2021年大型IPO潮出现在市场顶部，当前高估值+高IPO供给+高乐观情绪叠加，需要警惕。</div>
+      <div class="item-meta"><span class="tag risk">Twitter / @gmulun</span> 2026-06-22</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">💰 被动收入 &amp; 红利资产</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://x.com/i/status/2069057834013057458">中国商业地产REITs新上架四只，散户可通过股票账户参与</a></div>
+      <div class="item-summary">国内公募REITs扩容提速，最新上架四只商业地产REITs（商场、写字楼打包基金），租金收益按规定大部分分配给投资者，为普通投资者提供新增稳健理财选择，同时为开发商提供正规退出渠道。</div>
+      <div class="item-meta"><span class="tag income">Twitter / @WangNextDoor2</span> 2026-06-22</div>
+    </li>
+    <li>
+      <div class="item-title">J-REIT收益率突破5%，全球利率走高致不动产股承压但性价比提升</div>
+      <div class="item-summary">日本REITs（J-REIT）指数年初以来跌至低位，但股息收益率因此升破5%。分析人士指出，AA级REIT利率超4%是否具吸引力，取决于对无风险利率上升周期中风险溢价是否已充分消化的判断。美以伊冲突以来，美国住房建设股指数已下跌约8%。</div>
+      <div class="item-meta"><span class="tag income">Twitter / @REfinanse / Nikkei</span> 2026-06-22</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://x.com/i/status/2068331283122663875">10只被动收入ETF：SCHD、JEPI、JEPQ等兼顾成长与股息</a></div>
+      <div class="item-summary">综合收录市场热门被动收入ETF：QQQI（纳指权益溢价）、SCHD（施瓦布美股红利）、DIVO（增强股息）、JEPQ（摩根纳指溢价收入）、JEPI（摩根S&P溢价收入）、SPYI（高收入S&P）等，组合涵盖成长+股息+期权溢价策略。</div>
+      <div class="item-meta"><span class="tag income">Twitter / @TopDividendETFs</span> 2026-06-20 · 67赞</div>
+    </li>
+    <li>
+      <div class="item-title">新加坡CPF：SA/MediSave利率4.08%，OA 2.5% — 无风险高收益渠道</div>
+      <div class="item-summary">CPF特别账户（SA）和保健储蓄账户（MA）利率4.08%，为新加坡居民提供政府担保的无风险较高收益率；OA普通账户2.5%可用于住房和部分投资。在全球利率下行预期下，CPF仍是本地稳定收益的重要锚。OA→SA转入不可逆，需谨慎操作。</div>
+      <div class="item-meta"><span class="tag income">Reddit / r/singaporefi</span></div>
+    </li>
+    <li>
+      <div class="item-title">新加坡储蓄债券（SSB）：政府担保 + 可随时赎回（最长等待1个月）</div>
+      <div class="item-summary">SSB适合作为流动性较好的紧急备用金，可每6个月领取利息，随时申请赎回。在高利率环境下，SSB收益率具竞争力，是定存的有效替代。具体最新利率以MAS官网当期发行为准。</div>
+      <div class="item-meta"><span class="tag income">Reddit / r/singaporefi</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">📊 利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val">3.5%–3.75%（有效 3.63%）</td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val">4.19%（2Y，2026-06-18）</td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val">4.46%（2026-06-18）</td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val">6.47%（30Y 固定，2026-06-18）</td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val">CPF-OA 2.5% / SA 4.08%</td>
+          <td class="rate-val">暂无可靠数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    <strong>利率环境解读：</strong>美国利率环境整体偏鹰——新任美联储主席Warsh在6月18日议息会议上维持目标利率于3.5%–3.75%，但约半数FOMC委员在点阵图中倾向年内至少加息一次，与市场此前预期的降息路径明显背离。美国2Y收益率（4.19%）高于10Y（4.46%）的利差已从历史倒挂逐渐恢复正常，但整体利率曲线依然处于高位。<strong>对各类资产的影响：</strong>①定存/短债：短端4%+环境对定存和货币基金有利，建议维持较高流动性配置；②债券：长债收益率4.46%虽有吸引力，但加息预期使价格承压，需控制久期；③REITs：高利率环境持续利空，估值压缩逻辑仍在，需等待利率拐点明确后再增配；④新加坡CPF SA 4.08%为本地无风险最高稳定回报，仍具竞争力。中国和新加坡政策利率数据当日无可靠来源，留空标注。
+  </div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">🌍 宏观经济</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">美联储Warsh首次议息：维持3.5%–3.75%，但鹰派倾向显现</div>
+        <div class="item-summary">6月18日，新任主席Kevin Warsh主持首次FOMC会议，全票维持利率不变，但点阵图显示约半数委员预期年内至少加息一次。Warsh明确表示希望"市场引导政策而非政策引导市场"，信号偏鹰。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-18</div>
+      </li>
+      <li>
+        <div class="item-title">美伊达成60天霍尔木兹海峡免通行费协议，油价显著回落</div>
+        <div class="item-summary">美国与伊朗达成临时协议，允许霍尔木兹海峡60天内免费通行；油价随即大幅下跌，美国全国均价跌破每加仑$4关口。能源通胀压力短期缓解，但协议届满后走向仍存不确定性。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-15/19</div>
+      </li>
+      <li>
+        <div class="item-title">格林斯潘去世，享年100岁</div>
+        <div class="item-summary">前美联储主席艾伦·格林斯潘6月22日辞世，在任期间（1987–2006）以"格林斯潘看跌期权"著称，其低利率政策为此后多次资产泡沫埋下伏笔。此时恰逢Warsh开启新货币政策时代。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-22</div>
+      </li>
+      <li>
+        <div class="item-title">美国战略石油储备降至1980年代初以来最低</div>
+        <div class="item-summary">连续多次动用战略储备以应对能源价格上涨，导致SPR库存骤降至历史低位，未来能源价格波动的政策缓冲空间大幅收窄。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-15</div>
+      </li>
+      <li>
+        <div class="item-title">大学生开始回避AI相关专业，转向医疗等领域</div>
+        <div class="item-summary">高盛数据显示，在AI就业替代效应持续发酵的背景下，大学生开始规避计算机科学等AI暴露度高的专业，转向医疗、护理等被认为就业稳健的领域，折射AI时代职业路径的结构性重塑。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-22</div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">🏠 房地产 &amp; REITs</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">全球利率走高，住宅与地产股承压</div>
+        <div class="item-summary">美以伊冲突（2月末）以来，"道琼斯美国住房建设精选指数"下跌约8%，主要因利率走高导致购房成本上升，建设商毛利压缩。当前30年期固定房贷利率6.47%，在历史较高区间。</div>
+        <div class="item-meta"><span class="tag income">Nikkei / Twitter</span> 2026-06-22</div>
+      </li>
+      <li>
+        <div class="item-title">J-REIT收益率升破5%，新进入性价比提升</div>
+        <div class="item-summary">日本REITs指数价格持续下调，AA级J-REIT平均股息收益率突破5%。但分析师指出，在无风险利率上升周期中，风险溢价能否守住仍是核心问题，不可单看绝对收益率。</div>
+        <div class="item-meta"><span class="tag income">Twitter / Nikkei</span> 2026-06-22</div>
+      </li>
+      <li>
+        <div class="item-title">美国约三分之一35岁以下成年人与父母同住，高房价是主因</div>
+        <div class="item-summary">最新数据显示住房可负担性问题持续恶化，年轻群体购房意愿受挫，租房需求结构性上升，利好出租型REITs（住宅类）的长期基本面，但估值仍受高利率压制。</div>
+        <div class="item-meta"><span class="tag income">Yahoo Finance</span> 2026-06-22</div>
+      </li>
+      <li>
+        <div class="item-title">中国新上市四只商业地产REITs，覆盖商场和写字楼</div>
+        <div class="item-summary">国内公募REITs继续扩容，最新四只聚焦商业地产，为散户提供通过A股账户参与商业不动产收益分配的途径。当前A股REITs市场规模仍远小于海外成熟市场。</div>
+        <div class="item-meta"><span class="tag income">Twitter / @WangNextDoor2</span> 2026-06-22</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">🔄 板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value">AI存储/HBM（MU↑创新高）、AI能源基础设施（GEV、VST、CEG、NEE）、版权经济（Getty受益OpenAI协议）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value">SpaceX（-16%）、大型科技股（纳指-1%+）、高估值成长股（受Warsh鹰派信号压制）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value">🟡 持续但分化 — 硬件/存储（MU、NVDA周边）仍强；软件/消费级AI应用相对弱势；SpaceX调整不代表AI主线结束</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value">成长分化 → 质量优先。高利率环境下，有真实盈利支撑的AI硬件股优于纯叙事驱动的高估值成长股；防御板块暂无明显异动</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">🔥 雪球热帖 &amp; 热股</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">暂无可靠数据</div>
+      <div class="item-summary">雪球热帖及热股实时数据今日未能获取。</div>
+      <div class="item-meta"><span class="tag">雪球</span></div>
+    </li>
+  </ul>
+  <div class="stock-grid" style="margin-top:16px">
+    <!-- 雪球热股数据暂无可靠来源 -->
+  </div>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">暂无可靠数据</div>
+      <div class="item-summary">B站财经视频数据今日未能获取。</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title">新加坡FI社区精选：2025年版财务独立入门指南（r/singaporefi）</div>
+      <div class="item-summary">热帖汇总新加坡理财路径：①建立应急金（UOB One、OCBC 360、GXS等高息账户）→ ②充分利用CPF（SA 4.08%无风险）→ ③投资长期宽基ETF（VOO/VTI）→ ④定期审视保险缺口。帖子强调：刚开始时投资不会让你快速致富，但长期复利不可忽视，坚持50/30/20的资金分配框架。</div>
+      <div class="item-meta"><span class="tag income">Reddit / r/singaporefi</span> 1738赞 · 47评论</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">⚠️ 风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率风险</td>
+        <td>Warsh主导的Fed偏鹰：约半数FOMC委员支持年内加息；美国10Y收益率4.46%，利率曲线正常化；高利率对成长股和REITs构成持续压力</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>AI 拥挤度</td>
+        <td>TSMC占TAIEX 42%、三星+SK海力士占KOSPI 55%，集中度极高；Mag7两年市值翻倍；OpenAI/Anthropic大型IPO可能引发资金再分配；但芯片/存储基本面仍强</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>6月23日纳指-1%+，SpaceX重挫；但美光创新高、道指/标普相对稳定。整体情绪混沌，分化明显，非单纯恐慌也非贪婪</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>财报风险</td>
+        <td>美光本周财报是AI存储需求真实性的关键验证；若业绩不及预期，可能引发整个HBM/存储板块回调，连带影响AI情绪</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>地缘政治风险</td>
+        <td>美伊霍尔木兹协议60天窗口期，油价暂时回落；但协议有效期短，中东局势仍存变数；英国首相Starmer据报即将辞职，欧洲政治不确定性上升</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">🎯 明日关注</div>
+  <ol class="focus">
+    <li><strong>美光（MU）财报</strong> — AI存储/HBM需求的核心验证窗口。若业绩超预期，将强化AI硬件主线；若指引保守，可能触发整个存储和AI芯片板块的连锁回调。</li>
+    <li><strong>SpaceX股价走势</strong> — 能否止稳、守住关键支撑位。三连跌后是否有底部买盘入场，将影响市场对高市值新上市科技股的整体定价预期。</li>
+    <li><strong>Fed官员讲话跟踪</strong> — 关注Warsh及其他FOMC委员在6月23日后是否进一步强化或软化加息信号，直接影响美债收益率和成长股估值。</li>
+    <li><strong>霍尔木兹协议落地情况</strong> — 监测石油运输是否实际恢复正常，若出现摩擦，油价可能反弹，重燃通胀担忧，进一步强化鹰派美联储叙事。</li>
+    <li><strong>S&P 500 / 纳指技术面</strong> — 纳指在7500点一带的支撑力度，以及是否出现更大规模的科技股减持信号；关注是否有防御性板块（公用事业、医疗、消费必选）异常走强。</li>
+  </ol>
+</div>
+
+<footer>
+  2026-06-23 生成 · 数据来源：Twitter · Reddit · FRED · MAS · PBC · Yahoo Finance · Bloomberg<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>
