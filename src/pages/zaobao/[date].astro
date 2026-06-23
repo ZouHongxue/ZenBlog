@@ -11,7 +11,35 @@ export async function getStaticPaths() {
 
 const { date } = Astro.params;
 const zaobaoDir = join(process.cwd(), 'src/data/zaobao');
-const rawHtml = readFileSync(join(zaobaoDir, `${date}.html`), 'utf-8');
+let rawHtml = readFileSync(join(zaobaoDir, `${date}.html`), 'utf-8');
+
+// 在 </body> 前注入高度上报脚本。
+// 用 document.fonts.ready 确保字体加载完毕后再测量，是最准确的时机。
+const heightScript = `
+<script>
+(function() {
+  function send() {
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.documentElement.offsetHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    parent.postMessage({ type: 'zaobao-h', h: h }, '*');
+  }
+  // 1) 字体 ready 后测量
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function() { send(); setTimeout(send, 200); });
+  }
+  // 2) window load 作为保底
+  window.addEventListener('load', function() { send(); setTimeout(send, 500); });
+  // 3) 持续监听 body 高度变化（图片等异步内容）
+  if (window.ResizeObserver && document.body) {
+    new ResizeObserver(send).observe(document.body);
+  }
+})();
+<\/script>
+`;
+rawHtml = rawHtml.replace(/<\/body>/i, heightScript + '</body>');
 
 // 日期格式化（仅用于面包屑）
 const d = new Date(date);
@@ -41,35 +69,20 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       srcdoc={rawHtml}
       title={`财经早报 ${date}`}
       scrolling="no"
-      style="width:100%; border:none; display:block; min-height:800px;"
+      style="width:100%; border:none; display:block; min-height:600px;"
     />
   </div>
 
 </BaseLayout>
 
 <script>
-  // srcdoc 与父页面同源，load 后直接读 contentDocument 高度，最可靠
-  const frame = document.getElementById('zaobao-frame') as HTMLIFrameElement | null;
-  if (frame) {
-    function fitFrame() {
-      try {
-        const doc = frame!.contentDocument || frame!.contentWindow?.document;
-        if (!doc) return;
-        // 先重置高度让内容自然撑开，再测量
-        frame!.style.height = '0px';
-        const h = Math.max(
-          doc.documentElement.scrollHeight,
-          doc.documentElement.offsetHeight,
-          doc.body?.scrollHeight ?? 0
-        );
-        frame!.style.height = h + 'px';
-      } catch {}
+  window.addEventListener('message', function(e) {
+    if (!e.data || e.data.type !== 'zaobao-h') return;
+    var frame = document.getElementById('zaobao-frame') as HTMLIFrameElement | null;
+    if (frame && e.data.h > 0) {
+      // 只增不减（防止 ResizeObserver 中途测到偏小值）
+      var cur = parseInt(frame.style.height) || 0;
+      if (e.data.h > cur) frame.style.height = e.data.h + 'px';
     }
-    frame.addEventListener('load', () => {
-      fitFrame();
-      // 字体/图片异步加载完后再修正一次
-      setTimeout(fitFrame, 300);
-      setTimeout(fitFrame, 1000);
-    });
-  }
+  });
 </script>
