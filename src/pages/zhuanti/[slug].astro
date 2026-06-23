@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+
+export async function getStaticPaths() {
+  const dir = join(process.cwd(), 'src/data/zhuanti');
+  const files = readdirSync(dir).filter(f => f.endsWith('.html'));
+  return files.map(f => ({ params: { slug: f.replace('.html', '') } }));
+}
+
+const { slug } = Astro.params;
+const dir = join(process.cwd(), 'src/data/zhuanti');
+let rawHtml = readFileSync(join(dir, `${slug}.html`), 'utf-8');
+
+// 提取页面标题（用于 <title> 和面包屑）
+const titleMatch = rawHtml.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+const pageTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : slug;
+
+// 注入高度上报脚本
+const heightScript = `
+<script>
+(function() {
+  function send() {
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.documentElement.offsetHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    parent.postMessage({ type: 'zhuanti-h', h: h }, '*');
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function() { send(); setTimeout(send, 200); });
+  }
+  window.addEventListener('load', function() { send(); setTimeout(send, 500); });
+  if (window.ResizeObserver && document.body) {
+    new ResizeObserver(send).observe(document.body);
+  }
+})();
+<\/script>
+`;
+rawHtml = rawHtml.replace(/<\/body>/i, heightScript + '</body>');
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<BaseLayout title={pageTitle} description={`专题：${pageTitle}`}>
+
+  <!-- 面包屑 -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-3 flex items-center gap-3">
+    <a href={`${base}zhuanti`}
+      class="inline-flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-600 hover:text-indigo-500 transition-colors group">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+      专题列表
+    </a>
+    <span class="text-gray-200 dark:text-gray-800">·</span>
+    <span class="text-xs text-gray-400 dark:text-gray-600 truncate max-w-xs">{pageTitle}</span>
+  </div>
+
+  <!-- 正文：iframe 原样渲染 -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-16">
+    <iframe
+      id="zhuanti-frame"
+      srcdoc={rawHtml}
+      title={pageTitle}
+      scrolling="no"
+      style="width:100%; border:none; display:block; min-height:600px;"
+    />
+  </div>
+
+</BaseLayout>
+
+<script>
+  window.addEventListener('message', function(e) {
+    if (!e.data || e.data.type !== 'zhuanti-h') return;
+    var frame = document.getElementById('zhuanti-frame') as HTMLIFrameElement | null;
+    if (frame && e.data.h > 0) {
+      var cur = parseInt(frame.style.height) || 0;
+      if (e.data.h > cur) frame.style.height = e.data.h + 'px';
+    }
+  });
+</script>
