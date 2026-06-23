@@ -68,17 +68,22 @@ function devEditorPlugin() {
           const dest = join(process.cwd(), 'src/data/zaobao');
           if (!existsSync(dest)) mkdirSync(dest, { recursive: true });
           const srcFiles = readdirSync(src).filter(f => f.endsWith('.html'));
-          const copied = [];
-          const skipped = [];
+          const copied = [];   // 新增或内容有变化的文件
+          const skipped = [];  // 内容完全相同，跳过
           for (const f of srcFiles) {
+            const srcPath  = join(src, f);
             const destPath = join(dest, f);
-            // 仅复制新文件（旧文件跳过，避免无谓 commit）
-            if (!existsSync(destPath)) {
-              copyFileSync(join(src, f), destPath);
-              copied.push(f);
-            } else {
-              skipped.push(f);
+            if (existsSync(destPath)) {
+              // 已存在：对比内容，有变化才覆盖
+              const srcContent  = readFileSync(srcPath);
+              const destContent = readFileSync(destPath);
+              if (srcContent.equals(destContent)) {
+                skipped.push(f);
+                continue;
+              }
             }
+            copyFileSync(srcPath, destPath);
+            copied.push(f);
           }
           // git add + commit（有新文件才提交）
           if (copied.length > 0) {
