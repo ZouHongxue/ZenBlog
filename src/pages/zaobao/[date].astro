@@ -11,19 +11,7 @@ export async function getStaticPaths() {
 
 const { date } = Astro.params;
 const zaobaoDir = join(process.cwd(), 'src/data/zaobao');
-let rawHtml = readFileSync(join(zaobaoDir, `${date}.html`), 'utf-8');
-
-// 注入高度上报脚本，让 iframe 自动撑开
-rawHtml = rawHtml.replace('</body>', `
-<script>
-  function report() {
-    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-    parent.postMessage({ type: 'zaobao-h', h }, '*');
-  }
-  new ResizeObserver(report).observe(document.body);
-  window.addEventListener('load', report);
-</script>
-</body>`);
+const rawHtml = readFileSync(join(zaobaoDir, `${date}.html`), 'utf-8');
 
 // 日期格式化（仅用于面包屑）
 const d = new Date(date);
@@ -53,17 +41,35 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
       srcdoc={rawHtml}
       title={`财经早报 ${date}`}
       scrolling="no"
-      style="width:100%; border:none; display:block; min-height:600px; border-radius:12px; overflow:hidden;"
+      style="width:100%; border:none; display:block; min-height:800px;"
     />
   </div>
 
 </BaseLayout>
 
 <script>
-  window.addEventListener('message', (e) => {
-    if (e.data?.type === 'zaobao-h') {
-      const frame = document.getElementById('zaobao-frame') as HTMLIFrameElement | null;
-      if (frame) frame.style.height = e.data.h + 'px';
+  // srcdoc 与父页面同源，load 后直接读 contentDocument 高度，最可靠
+  const frame = document.getElementById('zaobao-frame') as HTMLIFrameElement | null;
+  if (frame) {
+    function fitFrame() {
+      try {
+        const doc = frame!.contentDocument || frame!.contentWindow?.document;
+        if (!doc) return;
+        // 先重置高度让内容自然撑开，再测量
+        frame!.style.height = '0px';
+        const h = Math.max(
+          doc.documentElement.scrollHeight,
+          doc.documentElement.offsetHeight,
+          doc.body?.scrollHeight ?? 0
+        );
+        frame!.style.height = h + 'px';
+      } catch {}
     }
-  });
+    frame.addEventListener('load', () => {
+      fitFrame();
+      // 字体/图片异步加载完后再修正一次
+      setTimeout(fitFrame, 300);
+      setTimeout(fitFrame, 1000);
+    });
+  }
 </script>
