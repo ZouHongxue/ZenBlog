@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-06-24</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  /* ── News list ── */
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  /* ── Rates table ── */
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Hot stocks ── */
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  /* ── Risk table ── */
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  /* ── Section divider ── */
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  /* ── Tomorrow focus ── */
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  /* ── Rotation box ── */
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📰 财经早报</h1>
+      <div class="date">2026-06-24 · CN / SG / US</div>
+    </div>
+    <span class="market-state">⚡ Risk-Off · 科技重压 · 防御轮动</span>
+  </div>
+  <div class="summary">
+    全球科技股延续抛售，美股6/23纳斯达克跌2.21%至25,587、标普500跌1.44%至7,365，A股上证指数同步下跌1.37%至4,106点，港股恒生指数跌0.65%，整体呈Risk-Off格局。驱动因素双重叠加：Broadcom Q3 AI芯片销售指引$160亿低于预期$172亿触发半导体连锁抛售，新任美联储主席Warsh鹰派首秀后点阵图显示多数委员预测2026年加息而非降息，高盛已将降息预期推至2027年。资金明显从科技/通讯（-3.83%）流向房地产（+1.38%）、能源（+1.24%）、医疗（+0.87%）防御板块，全球REITs 6月大涨7.41%印证避险资金迁移；今日NVDA股东大会（6/24）为短期重要观察窗口。
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">10 条</span></div>
+  <ul class="news">
+
+    <li>
+      <div class="item-title">NVIDIA 2026年度股东大会今日召开（6/24），市场聚焦Blackwell/Vera架构产能进展</div>
+      <div class="item-summary">重点议题包括Blackwell GPU和Vera CPU-GPU超级芯片生产加速、AI生态商业化路径及资本回报计划。分析师普遍视此为短期方向性催化剂。NVDA现价$200.04（6/23收），年内高点$235.47，38位分析师共识"强烈买入"，目标价$298.87。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span><span class="tag ai">TradingKey</span> · 2026-06-24</div>
+    </li>
+
+    <li>
+      <div class="item-title">美股6/23科技板块暴跌：纳指-2.21%，通讯服务板块-3.83%领跌</div>
+      <div class="item-summary">标普500跌1.44%至7,365；道指相对抗跌仅-0.09%。板块分化明显：房地产（+1.38%）、能源（+1.24%）逆势走强。科技+通讯板块全面承压，市场避险情绪升温。</div>
+      <div class="item-meta"><span class="tag ai">TheStreet</span><span class="tag ai">CNBC</span> · 2026-06-23</div>
+    </li>
+
+    <li>
+      <div class="item-title">Broadcom Q3 AI芯片指引$160亿低于预期$172亿，引爆半导体连锁抛售</div>
+      <div class="item-summary">此次财报低于预期被市场解读为AI数据中心支出高增速可能触顶信号，单日蒸发$1.3万亿市值（6/5）。AMD单日跌10.86%至$466，Intel跌11.28%至$99。该冲击余震持续，成为本轮半导体调整的核心触发点。</div>
+      <div class="item-meta"><span class="tag ai">intellectia.ai</span><span class="tag risk">风险事件</span> · 2026-06-05起持续</div>
+    </li>
+
+    <li>
+      <div class="item-title">韩国KOSPI单日暴跌9.99%，三个月最大跌幅，海外投资者大规模抛售芯片股</div>
+      <div class="item-summary">与全球半导体抛售潮联动，韩国市场受冲击尤为剧烈。反映AI芯片板块全球同步调整，亚太科技股信心普遍受损。</div>
+      <div class="item-meta"><span class="tag ai">TheStreet</span><span class="tag risk">风险信号</span> · 2026-06-23</div>
+    </li>
+
+    <li>
+      <div class="item-title">TSMC遭美国ITC专利侵权调查，AI加速器芯片面临进口禁令风险，6月末初裁</div>
+      <div class="item-summary">美国国际贸易委员会（ITC）调查TSMC专利侵权投诉，若初裁不利，相关AI加速器芯片或面临进口限制。TSM 6/23单日跌5.08%，此为近期重要监管尾部风险。</div>
+      <div class="item-meta"><span class="tag ai">DIGITIMES</span><span class="tag risk">监管风险</span> · 2026-06-23</div>
+    </li>
+
+    <li>
+      <div class="item-title">Intel 18A-P工艺进入风险生产，Apple、Google关注；与UMC达成战略合作</div>
+      <div class="item-summary">Intel先进制程实质性推进，Apple同意参与合作降低对TSMC依赖，Google亦表达关注。背景：TSMC先进产能已被大量预订，AMD、Intel等客户因产能紧张而受益于替代选项。这是Intel多年来最具实质意义的制造业突破。</div>
+      <div class="item-meta"><span class="tag ai">ts2.tech</span><span class="tag ai">Yahoo Finance</span> · 2026年6月</div>
+    </li>
+
+    <li>
+      <div class="item-title">Samsung与SK Hynix向主要客户发运第七代HBM4E芯片样品，AI内存军备竞赛升温</div>
+      <div class="item-summary">HBM4E为下一代AI训练/推理内存标准，两家韩企同步向NVIDIA等主要客户送样，决战AI内存市占率。高带宽内存成为AI算力瓶颈之一，此动态直接影响NVDA未来Blackwell/Rubin平台供应链。</div>
+      <div class="item-meta"><span class="tag ai">Distill Intelligence</span> · 2026年6月</div>
+    </li>
+
+    <li>
+      <div class="item-title">SIA-Deloitte报告：AI数据中心芯片年收入预计2028年超$1.2万亿，四年增长近10倍</div>
+      <div class="item-summary">报告指出半导体占AI数据中心服务器机架价值的95%。2028年$1.2万亿将超越2025年全球半导体总销售额，体现AI算力基础设施建设的长期结构性驱动力不变。</div>
+      <div class="item-meta"><span class="tag ai">SIA / Deloitte</span><span class="tag macro">行业研报</span> · 2026-06-01</div>
+    </li>
+
+    <li>
+      <div class="item-title">NVIDIA完成$250亿债券融资，推进计算租赁（AI-as-a-Service）商业模式</div>
+      <div class="item-summary">NVDA以债券方式融资$250亿，除硬件销售外加速布局AI算力租赁模式，向更稳定的经常性收入结构转型。此举显示管理层对长期需求高度乐观。</div>
+      <div class="item-meta"><span class="tag ai">intellectia.ai</span> · 2026年6月</div>
+    </li>
+
+    <li>
+      <div class="item-title">光子芯片突破：新型光驱动芯片可大幅降低AI推理能耗，或重塑长期算力格局</div>
+      <div class="item-summary">研究人员发布新一代光子计算芯片，在AI推理任务中能耗仅为传统硅芯片的数分之一。目前仍处研究阶段，距商业化尚远，但代表AI芯片算力效率提升的潜在颠覆性路径。</div>
+      <div class="item-meta"><span class="tag ai">ScienceDaily</span> · 2026-06-01</div>
+    </li>
+
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">💰 被动收入 &amp; 红利资产</div>
+  <ul class="news">
+
+    <li>
+      <div class="item-title">全球REITs 6月大涨7.41%，终结此前4个月连续下跌，年初至今+9.33%</div>
+      <div class="item-summary">小盘REITs领涨（+8.59% vs 大盘+5.51%）。酒店REITs涨12.35%，工业REITs涨8.23%。唯一年内仍录得负回报的子类为办公REITs（-8.19%）。6月强势修复反映市场开始定价"高利率已顶"预期。</div>
+      <div class="item-meta"><span class="tag income">Janus Henderson</span><span class="tag income">Seeking Alpha</span> · 2026年6月</div>
+    </li>
+
+    <li>
+      <div class="item-title">新加坡S-REITs年初至今-6.7%，平均股息收益率5.9%；数据中心、物流类领跑</div>
+      <div class="item-summary">零售投资者截至5月底净流入S-REITs $9.25亿新元，显示本地散户逢低加仓信心。OCBC推荐关注三大主题：数据中心REITs（AI需求驱动）、物流/专业用途、新加坡核心办公地产。工业及专业板块股息收益率部分突破7-9%。</div>
+      <div class="item-meta"><span class="tag income">Growbeansprout</span><span class="tag income">The Edge Singapore</span> · 2026年6月</div>
+    </li>
+
+    <li>
+      <div class="item-title">Realty Income (O) 月度派息，收益率5.1%；P&amp;G连续70年提升股息，收益率约3%</div>
+      <div class="item-summary">在高利率环境下，高质量红利股成避险配置重点。$O 收益率5.1%显著高于S&amp;P500均值1.1%，具备较强防御吸引力；P&amp;G等"红利贵族"股在市场波动期提供稳定现金流保护。50万美元高红利组合（均值5%）可产生月均$2,083被动收入。</div>
+      <div class="item-meta"><span class="tag income">Motley Fool</span><span class="tag income">NerdWallet</span> · 2026年6月</div>
+    </li>
+
+    <li>
+      <div class="item-title">美联储2026年降息已"基本不可能"，高盛预测降息推至2027年，利率敏感资产承压</div>
+      <div class="item-summary">Warsh领导的FOMC点阵图：9/17委员预测2026年至少加息一次；仅1个点阵显示有降息。PCE通胀预期年底升至3.6%（原预测2.7%）。高利率环境延续压制REITs、债券估值，但若通胀受控，2027年降息预期或支撑利率敏感资产中长期布局机会。</div>
+      <div class="item-meta"><span class="tag risk">Yahoo Finance</span><span class="tag risk">JP Morgan</span> · 2026-06-17 FOMC</div>
+    </li>
+
+    <li>
+      <div class="item-title">JP Morgan 6月分析师精选：5支被动收入红利股，聚焦能源与公用事业板块</div>
+      <div class="item-summary">在科技股波动加剧的背景下，JP Morgan本月重点推荐能源、公用事业等高股息防御板块，认为其现金流稳定性在高利率+通胀环境下具备优势。具体标的数据暂无可靠来源，仅供方向参考。</div>
+      <div class="item-meta"><span class="tag income">247WallSt / JP Morgan</span> · 2026-06-04</div>
+    </li>
+
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">📊 利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val">MLF 参考利率（LPR锚定）</td>
+          <td class="rate-val">SORA 1M：1.16%</td>
+          <td class="rate-val"><span class="neutral">3.50%–3.75%</span>（Fed Funds）</td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val">1Y LPR：<span class="neutral">3.00%</span></td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">2Y 国债：<span class="down">4.21%</span></td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">10Y 国债：<span class="down">4.50%</span></td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val">5Y LPR：<span class="neutral">3.50%</span></td>
+          <td class="rate-val">固定利率：1.40%–1.50%<br><span style="font-size:11px;color:#6b7280">DBS: 3M SORA+0.20%=1.27%</span></td>
+          <td class="rate-val">30Y 房贷：<span class="down">6.43%–6.48%</span></td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    <strong>利率环境解读：</strong>三市场分化显著。美国：Fed维持3.5%–3.75%不动，但Warsh鹰派立场令点阵图转向"2026年或加息"，10Y收益率4.50%、2Y达4.21%，短端美债仍是全球高息资产锚。新加坡：SORA维持低位（1M 1.16%），与美联储背离明显，房贷利率极具吸引力（低至1.27%），对购房者利好，但S-REITs因全球利率预期压制估值扩张空间。中国：LPR连续12个月历史低位（1Y 3.0%，5Y 3.5%），宽松基调不变，但银行净息差压力限制进一步降息，楼市政策宽松但需求端复苏仍需观察。综合判断：当前环境对美国短端固收（2Y国债4.21%）最友好；新加坡房贷置换窗口仍佳；A股红利低波具备估值支撑；REITs估值修复依赖美联储政策转向信号，2027年前难有系统性向上动力。
+  </div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">🌍 宏观经济</div>
+    <ul class="news">
+
+      <li>
+        <div class="item-title">OECD下调全球经济增速：2026年2.8%，2027年3.1%；通胀超预期持久</div>
+        <div class="item-summary">美国2.0%、欧元区0.8%、中国4.5%。G20通胀2026年预期升至4.0%（vs 2025年3.4%），能源供应冲击和地缘政治不确定性是主要压力来源。</div>
+        <div class="item-meta"><span class="tag macro">OECD</span> · 2026-06</div>
+      </li>
+
+      <li>
+        <div class="item-title">美联储Warsh鹰派首秀：2026年降息"基本出局"，点阵图转向加息</div>
+        <div class="item-summary">6月16-17日FOMC维持利率3.5%–3.75%，9名委员预测年内至少加息一次。PCE通胀年底预期上修至3.6%。高盛已将美联储降息预期推至2027年。这是全年最重要的宏观转折信号。</div>
+        <div class="item-meta"><span class="tag macro">Federal Reserve</span><span class="tag risk">高盛</span> · 2026-06-17</div>
+      </li>
+
+      <li>
+        <div class="item-title">伊朗和平谈判取得进展，油价回落至约$75/桶，能源通胀压力有望缓解</div>
+        <div class="item-summary">中东冲突降温预期推动油价从高位回落，带动10Y美债收益率小幅减压，30Y房贷利率连续两周下行。若和平协议落地，将是2026年下半年最大宏观利好之一。</div>
+        <div class="item-meta"><span class="tag macro">CNBC</span><span class="tag macro">BBN Times</span> · 2026-06-23</div>
+      </li>
+
+      <li>
+        <div class="item-title">中国5月出口同比+19.4%，AI相关产品需求旺盛成重要驱动力</div>
+        <div class="item-summary">出口超预期反映中国AI硬件及电子制造业在全球供应链中的持续渗透；但国内需求偏弱、LPR低位运行的结构性矛盾依然存在。</div>
+        <div class="item-meta"><span class="tag macro">Rio Times Online</span> · 2026-06</div>
+      </li>
+
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">🏠 房地产 &amp; REITs</div>
+    <ul class="news">
+
+      <li>
+        <div class="item-title">美国房地产板块当日领涨（+1.38%），成全球Risk-Off最大受益板块</div>
+        <div class="item-summary">在科技股暴跌背景下，资金流入防御性房地产资产。美国30Y房贷利率6.43%–6.48%（较高点回落），伊朗和平预期缓解利率上行压力，为住宅市场提供边际支撑。</div>
+        <div class="item-meta"><span class="tag income">Freddie Mac</span><span class="tag income">Money.com</span> · 2026-06-23</div>
+      </li>
+
+      <li>
+        <div class="item-title">新加坡数据中心&amp;物流REITs受AI需求驱动，1Q26录得正向租赁续约</div>
+        <div class="item-summary">AI算力建设持续推动数据中心租赁需求，相关S-REITs在整体指数年内-6.7%的背景下明显抗跌。OCBC等机构指此类资产为2026年S-REITs最佳配置方向之一。</div>
+        <div class="item-meta"><span class="tag income">The Edge Singapore</span><span class="tag income">OCBC</span> · 2026年6月</div>
+      </li>
+
+      <li>
+        <div class="item-title">中国LPR连续12个月不变（1Y 3.0%，5Y 3.5%），楼市政策宽松但净息差制约进一步降息</div>
+        <div class="item-summary">政策层面宽松基调延续，但商业银行净息差已至历史低位，叠加美联储鹰派转向令人民币贬值压力上升，PBoC降息窗口暂时关闭。楼市政策宽松需依赖结构性工具定向支持。</div>
+        <div class="item-meta"><span class="tag macro">TradingEconomics</span> · 2026-06</div>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">🔄 板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value">房地产（+1.38%）· 能源（+1.24%）· 医疗健康（+0.87%）· 全球REITs（+7.41% 月）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value">通讯服务（-3.83%）· 半导体（NVDA -前期高点 -15%，TSM 6/23 -5%）· 科技成长</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value" class="neutral">⚠️ 短期承压：Broadcom指引低预期引发重估；NVDA股东会今日或为情绪分水岭；中期基础设施建设主线未变（SIA预测2028年$1.2T市场）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value">成长 → 价值/防御切换中；利率敏感资产（REITs、高息股）获避险买盘；A股银行股（工行+2.5%，农行+2.66%）抗跌明显</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">🔥 雪球热帖 &amp; 热股</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">A股 6/24 盘面：上证 -1.37% 至 4,106，CSI300 -2.77% 至 4,919</div>
+      <div class="item-summary">资源股领跌：中国钼业-9.98%、紫金矿业-9.00%、铝业-7.61%；银行股逆市走强：工商银行+2.5%、农业银行+2.66%，成为今日最重要的防御性避风港。全球科技抛售情绪同步传导A股。</div>
+      <div class="item-meta"><span class="tag macro">TradingEconomics</span><span class="tag macro">上交所</span> · 2026-06-24</div>
+    </li>
+    <li>
+      <div class="item-title">港股 6/24：恒生指数 -0.3% 至约 23,766，延续弱势整理</div>
+      <div class="item-summary">美联储鹰派信号压制港股估值扩张空间；伊朗和平谈判进展为市场提供边际支撑，但整体情绪仍偏谨慎。科技板块随全球同步调整，红筹/国企银行股相对抗跌。</div>
+      <div class="item-meta"><span class="tag macro">TradingEconomics</span><span class="tag macro">Yahoo Finance</span> · 2026-06-24</div>
+    </li>
+  </ul>
+  <div class="stock-grid" style="margin-top:16px">
+    <div class="stock-chip">
+      <span class="name">工商银行</span>
+      <span class="code">SH601398</span>
+      <span class="pct up">+2.50%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">农业银行</span>
+      <span class="code">SH601288</span>
+      <span class="pct up">+2.66%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">中国钼业</span>
+      <span class="code">SH603993</span>
+      <span class="pct down">-9.98%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">紫金矿业</span>
+      <span class="code">SH601899</span>
+      <span class="pct down">-9.00%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">NVIDIA</span>
+      <span class="code">NVDA</span>
+      <span class="pct down">$200.04 (-前高15%)</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">AMD</span>
+      <span class="code">AMD</span>
+      <span class="pct down">$466 (-10.86% 6/5)</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">TSMC ADR</span>
+      <span class="code">TSM</span>
+      <span class="pct down">-5.08% (6/23)</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">Realty Income</span>
+      <span class="code">O</span>
+      <span class="pct up">股息收益率 5.1%</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">暂无可靠数据</div>
+      <div class="item-summary">B站财经内容今日无法获取，相关社区讨论数据缺失。</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">⚠️ 风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率风险</td>
+        <td>美联储Warsh鹰派转向，点阵图9/17委员预测加息，高盛降息预期推至2027年；PCE通胀年底或达3.6%；2Y国债4.21%、10Y 4.50%，利率曲线倒挂收窄但高利率将长期压制估值</td>
+        <td><span class="risk-high">高</span></td>
+      </tr>
+      <tr>
+        <td>AI 拥挤度</td>
+        <td>Broadcom指引低于预期暴露AI资本支出高预期的脆弱性；NVDA较年内高点回撤15%；韩国芯片股单日-10%；市场开始质疑AI支出回报周期，但SIA/Deloitte长期预测维持结构性逻辑</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>韩国KOSPI单日-10%，纳指-2.21%，通讯服务-3.83%，亚太科技股同步暴跌；但防御板块（房地产+1.38%，能源+1.24%）逆势走强，资金有序轮动而非全面恐慌，情绪偏空但未失控</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>财报风险</td>
+        <td>NVDA股东大会今日（6/24）——指引若低于预期将再触半导体抛售；近期Broadcom财报已引发市场重估AI支出节奏；下半年Q2财报季陆续开启，科技板块高预期面临验证压力</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>地缘政治风险</td>
+        <td>伊朗和平谈判进展积极，油价回落至$75，能源通胀压力边际减轻；TSMC面临美国ITC调查（6月末初裁）存在AI芯片进口禁令尾部风险；中美科技博弈背景持续</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">🎯 明日关注</div>
+  <ol class="focus">
+    <li><strong>NVIDIA 2026年度股东大会成果（6/24 今日）</strong> — 重点：Blackwell/Vera架构产能进展、AI商业化路径、资本回报计划是否超预期。若正面，可为半导体板块提供短期反弹动力；若指引保守，将强化本轮调整。这是近期最关键的单一事件催化剂。</li>
+    <li><strong>TSMC美国ITC专利侵权初裁（6月末）</strong> — 若裁定不利将限制AI加速器芯片进口，直接冲击NVDA/AMD供应链及TSMC ADR；密切关注裁定内容及可能的豁免申请进展。</li>
+    <li><strong>美联储官员讲话 &amp; 加息预期演变</strong> — Warsh鹰派立场是否进一步强化？市场当前对"2026年加息"概率的定价是否充分？任何偏鸽表态都将为利率敏感资产（REITs、债券）带来修复机会。</li>
+    <li><strong>A股银行板块防御性能否持续，资源股（紫金、钼业）企稳信号</strong> — 今日银行股逆市走强（工行+2.5%，农行+2.66%）是否形成风格切换起点？资源股已大幅调整是否进入超跌反弹区间？</li>
+    <li><strong>伊朗和平谈判实质性进展</strong> — 若协议接近落地：油价↓ → 通胀预期↓ → 美债收益率↓ → REITs/成长股同步受益，是2026年下半年最大潜在宏观利好，值持续追踪。</li>
+  </ol>
+</div>
+
+<footer>
+  2026-06-24 自动生成 · 数据来源：Yahoo Finance · TheStreet · CNBC · Federal Reserve · Freddie Mac · OECD · TradingEconomics · Janus Henderson · Seeking Alpha · Growbeansprout · The Edge Singapore · SIA/Deloitte · intellectia.ai · DIGITIMES · ts2.tech<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>
