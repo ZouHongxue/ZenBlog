@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-06-25</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  /* ── News list ── */
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  /* ── Rates table ── */
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Hot stocks ── */
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  /* ── Risk table ── */
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  /* ── Section divider ── */
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  /* ── Tomorrow focus ── */
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  /* ── Rotation box ── */
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📰 财经早报</h1>
+      <div class="date">2026-06-25 · CN / SG / US</div>
+    </div>
+    <span class="market-state">⚡ AI 超级周期强化 · 大宗商品全线承压</span>
+  </div>
+  <div class="summary">
+    昨日（6/24）美股整体震荡：S&amp;P 500 微跌 0.10% 至 7,358，Nasdaq 100 跌 0.43% 至 29,220；但 Micron（MU）盘后爆炸性财报（Q3 FY2026 营收 $41.46B，超预期 16%，EPS $25.11，单季营收同比 +346%）推动科技期货盘后上涨 2%，预示今日 AI 芯片板块强势开门。油价是昨日最大变量：伊朗宣布取消霍尔木兹海峡过境收费，Brent 原油暴跌 4.33% 至 $73.74/bbl，带动全球债券大幅反弹（10Y 美债 -10.5bp 至 4.39%），黄金跌破 $4,000 关口（去年 11 月以来首次），比特币创 20 个月新低（$61K 以下）。当前资金高度分化：AI 算力链（HBM/GPU/光模块/PCB）是首要资金归宿，大宗商品遭遇系统性抛售，A 股科技/半导体板块已于 6/24 提前接力，算力、PCB 批量涨停。
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">12 条</span></div>
+  <ul class="news">
+    <li>
+      <div class="item-title">Micron（MU）Q3 FY2026 史诗级财报：营收 $41.46B 超预期 16%，EPS $25.11，毛利率 84.9%，Q4 指引 $50B</div>
+      <div class="item-summary">单季营收同比暴增 346%（去年同期 $9.30B），创 Micron 历史最高单季营收。AI 驱动 HBM 需求持续超预期，三大内存巨头（Samsung / SK Hynix / Micron）合计市值已超 $1T。MU 盘中 -0.31%，盘后跳涨 +10%。AI 记忆体正式从"周期性商品"升格为"AI 基础设施核心资产"重新定价。[Reddit / r/DRAM_ETF · Twitter]</div>
+      <div class="item-meta">
+        <span class="tag ai">Reddit</span>
+        <span class="tag ai">Twitter</span>
+        2026-06-25
+      </div>
+    </li>
+    <li>
+      <div class="item-title">SK Hynix 计划在纳斯达克发行 $290 亿 ADR，预计 7 月 10 日开始交易</div>
+      <div class="item-summary">全球第二大内存制造商在 AI 算力支出高峰期选择美股上市，SK Hynix 生产的 HBM3E 是 Nvidia H100/B200 核心组件。此次 ADR 将成为 HBM 赛道的新估值锚点，Micron +10% AH 被视为其 ADR 定价逻辑的"确认交易"。[Reddit / r/stockrager]</div>
+      <div class="item-meta">
+        <span class="tag ai">Reddit</span>
+        2026-06-25
+      </div>
+    </li>
+    <li>
+      <div class="item-title">Marvell（MRVL）正式纳入 S&amp;P 500；Q1 FY2027 营收 $2.418B（76% 来自数据中心）；Stifel 上调目标价至 $350</div>
+      <div class="item-summary">MRVL 于 6/22 正式加入 S&amp;P 500，被动资金持续流入。6/24 Stifel 再度上调目标价（$321→$350），KeyBanc 此前已升至 $385（街头最高）。Jensen Huang 6/2 在 Computex 公开称 MRVL 为"下一家万亿美元公司"仍是最强催化剂。[Reddit / r/MRVL_Stock]</div>
+      <div class="item-meta">
+        <span class="tag ai">Reddit</span>
+        2026-06-24~25
+      </div>
+    </li>
+    <li>
+      <div class="item-title">SpaceX 与 Reflection AI 签署 $63 亿算力合约，提供 Nvidia GB300 集群（Colossus 2 数据中心）访问权</div>
+      <div class="item-summary">SpaceX 从火箭公司转型为 AI 算力基础设施供应商。核心问题：算力基础设施的控制权是否比模型本身更重要？此单是 Colossus 数据中心商业化的重要信号。[Reddit]</div>
+      <div class="item-meta">
+        <span class="tag ai">Reddit</span>
+        2026-06-25
+      </div>
+    </li>
+    <li>
+      <div class="item-title">OpenAI 联手 Broadcom（AVGO）发布 AI 芯片；Apple 借 Intel 代工破局；Qualcomm 进军数据中心 CPU 市场</div>
+      <div class="item-summary">AI 自研芯片生态系统加速分化：OpenAI+AVGO 组合直接挑战 Nvidia 的算力垄断；Apple 绕开 TSMC 产能限制；QCOM 数据中心 CPU 意在抢夺 ARM 服务器份额。[B站]</div>
+      <div class="item-meta">
+        <span class="tag ai">B站</span>
+        2026-06-25
+      </div>
+    </li>
+    <li>
+      <div class="item-title">中国超算重回世界第一：华为鲲鹏 920F 驱动"灵晟"以 2.19 EFlops 登顶 TOP500（6/23）</div>
+      <div class="item-summary">中国最新超算在出口管制背景下实现突破，国产算力链叙事再度强化，昇腾生态重新进入市场视野。[B站 · 十八级达贡之神力，5128 次播放]</div>
+      <div class="item-meta">
+        <span class="tag ai">B站</span>
+        2026-06-23
+      </div>
+    </li>
+    <li>
+      <div class="item-title">A 股 6/24 算力、PCB 板块批量涨停；兆易创新 +6.54%，中际旭创 +7.47%，长电科技 +10%</div>
+      <div class="item-summary">花旗上调沪电股份和胜宏科技 AI-PCB 市场目标价：2026 全球 AI-PCB 市场 1520 亿元（+86% YoY），2027 年 3070 亿元（+102%）。A 股半导体反弹超预期，与美股 Micron 盘后行情形成正向互动。[雪球 · 我怀念1998]</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        2026-06-24
+      </div>
+    </li>
+    <li>
+      <div class="item-title">超材料基板：AI 高端 GPU 服务器封装的第三条产业化突围路线</div>
+      <div class="item-summary">封装基板性能瓶颈日益突出（ABF 基板、有机中介层两条主流路线之外），超材料路线在 Chiplet 三维堆叠方向上具备差异化价值，有望成为下一个算力基础设施投资赛道。[雪球 · 抱节君]</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        2026-06-25
+      </div>
+    </li>
+    <li>
+      <div class="item-title">终局思维看 AI：大模型淘汰赛之后，算力还会稀缺吗？</div>
+      <div class="item-summary">类比新能源车周期，大模型淘汰赛后算力需求向推理端迁移，但顶层 AI 基础设施需求不降反升。Micron 财报验证了该逻辑：AI 推理内存需求正在追赶训练。[雪球 · 大国产业逻辑Paul哥]</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        2026-06-25
+      </div>
+    </li>
+    <li>
+      <div class="item-title">AI 硬件投资进入"ROI 审视"阶段：A 股与美股逻辑闭环已形成</div>
+      <div class="item-summary">"晚看美股→次日日韩→A股推演"的跨市场逻辑闭环已成共识；AI 硬件从"泡沫叙事"升格为"ROI 验证"阶段，Micron 史诗财报是最强实证。[雪球 · 三石而立orz]</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        2026-06-25
+      </div>
+    </li>
+    <li>
+      <div class="item-title">算租公司算力拿卡能力比较：协创、宏景节前连续涨停创新高</div>
+      <div class="item-summary">AI 算力租用赛道持续获得资金追捧，"拿卡、拿钱、拿单"三大壁垒决定算租公司估值分化，GPU 供给稀缺性仍是核心变量。[雪球 · 乘黄18]</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        2026-06-25
+      </div>
+    </li>
+    <li>
+      <div class="item-title">中国开源模型竞争力持续提升：智谱 GLM-5.2 获 Vercel CEO 等海外工程师认可</div>
+      <div class="item-summary">GLM-5.2 在编程基准上的出色表现令海外资深软件工程师惊讶，中国开源模型崛起叙事与国产算力链形成协同强化。[雪球 · 亲爱的阿兰]</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        2026-06-21
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">💰 被动收入 &amp; 红利资产</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">10Y 美债收益率大幅下行 10.5bp 至 4.39%，债券多头与 REITs 受益</div>
+      <div class="item-summary">油价暴跌（Brent -4.33%）大幅压低全球通胀预期，推动债券全线反弹；30Y 美债收益率同步下行 10.6bp 至 4.84%。存量债券持有者账面盈利，REITs 估值压力边际缓解。德国 10Y Bund 同步下行 5.5bp 至 2.87%。[Reddit / Saxo Asia Market Quick Take]</div>
+      <div class="item-meta"><span class="tag income">Reddit · Saxo</span> 2026-06-24</div>
+    </li>
+    <li>
+      <div class="item-title">美国新屋销售 5 月 -7.3% 至年化 58 万套（4 个月新低），库存升至 2009 年来最高（10.3 个月）</div>
+      <div class="item-summary">30 年期房贷利率 6.47% 持续压制需求，楼市降温信号明确。库存高企强化"长端利率必须下行"逻辑，亦对住宅 REITs 租金和资产价值形成拖累。[Reddit / Saxo]</div>
+      <div class="item-meta"><span class="tag income">Reddit · Saxo</span> 2026-06-24</div>
+    </li>
+    <li>
+      <div class="item-title">A500 红利低波指数 2026 中期样本调整完成；部分股息率已至历史吸引区间</div>
+      <div class="item-summary">上周红利类股因 AI 主线引发的流动性虹吸大幅下跌，但"木头攒股记"等雪球用户指出多只成分股股息率已超过历史均值，中长期配置价值逐渐凸显，正在等待市场风格切换信号。[雪球]</div>
+      <div class="item-meta"><span class="tag income">雪球</span> 2026-06-25</div>
+    </li>
+    <li>
+      <div class="item-title">保险股"黄金十年"争议：低利率环境下负债端压力 vs. 老龄化长期红利</div>
+      <div class="item-summary">寿险公司在"资产荒"环境中投资收益率持续承压，但人口老龄化和保险渗透率提升构成长期结构性需求。当前保险股股息率相对吸引，被 AI 行情错杀成分明显。[雪球 · 多鱼价投]</div>
+      <div class="item-meta"><span class="tag income">雪球</span> 2026-06-25</div>
+    </li>
+    <li>
+      <div class="item-title">中国银行股：信贷增速放缓不必然是长期利空，净息差压力更值得关注</div>
+      <div class="item-summary">"ice_招行谷子地"分析：银行股当前股息率具配置价值，但净息差收窄（资产端定价下行）是核心拖累；在 AI 行情主导的风格下，银行资金持续外流，短期难以成为主线。[雪球]</div>
+      <div class="item-meta"><span class="tag income">雪球</span> 2026-06-25</div>
+    </li>
+    <li>
+      <div class="item-title">价值投资者"破防"：白酒/银行/保险/煤炭/地产全线跌，老登股还要等多久？</div>
+      <div class="item-summary">端午假期投资群中"价值投资者破防"情绪弥漫。分析认为这是极端行情下的流动性冲击，金子与刀子并存——部分被错杀标的仍值得关注，但切换时机难以判断。[雪球 · 张翼轸 / 睿知睿见]</div>
+      <div class="item-meta"><span class="tag income">雪球</span> 2026-06-25</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">📊 利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val"><span class="neutral">3.63%</span> <small style="color:var(--muted)">（2026-05，FRED）</small></td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val"><span class="neutral">4.16%</span> <small style="color:var(--muted)">（2Y，2026-06-23，FRED）</small></td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val"><span class="down">4.39%</span> <small style="color:var(--muted)">（6/24 -10.5bp，Saxo）</small></td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val"><span class="neutral">6.47%</span> <small style="color:var(--muted)">（30Y 固定，2026-06-18，FRED）</small></td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    <strong>利率环境解读：</strong>油价暴跌（Brent -4.33%）是昨日最大宏观变量，大幅压低全球通胀预期，推动美债 10Y 单日下行 10.5bp 至 4.39%，30Y 下行 10.6bp 至 4.84%。<br>
+    对被动收入资产影响判断：<strong>债券</strong>——短期利多（价格上涨），存量债持有者受益；<strong>REITs</strong>——利好（折现率下降，估值压力减轻），但美国住宅 REIT 仍受 6.47% 房贷高位压制；<strong>定存</strong>——中性，银行定存利率短期无调整压力；<strong>整体</strong>——中性偏利好（oil→inflation↓→rates↓），但美联储在 DXY 新高背景下暂不具备降息条件，利率环境对被动收入整体评级：中性偏利好。
+  </div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">🌍 宏观经济</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">霍尔木兹海峡重开：伊朗取消过境收费，Brent 暴跌 4.33% 至 $73.74</div>
+        <div class="item-summary">油市从 backwardation 转入 contango 熊市结构，WTI -3.92% 至 $70.34。供应端正常化是当前最大宏观利好，中国原油进口成本降低。[Saxo]</div>
+        <div class="item-meta"><span class="tag macro">Reddit · Saxo</span> 2026-06-24</div>
+      </li>
+      <li>
+        <div class="item-title">美元指数创 52 周新高 97.73，USD/JPY 161.78 触发日本央行干预预警</div>
+        <div class="item-summary">"鹰派美联储预期"驱动强美元，EUR/USD 1.1358，GBP/USD 1.3168。USD/JPY 超 160 为历史警戒线，BOJ 实际或口头干预随时可能触发。[Saxo]</div>
+        <div class="item-meta"><span class="tag macro">Reddit · Saxo</span> 2026-06-24</div>
+      </li>
+      <li>
+        <div class="item-title">比特币跌破 $61K（20 个月新低），黄金跌破 $4,000（$3,999.41，-2.86%）</div>
+        <div class="item-summary">强美元同时打压加密资产和贵金属，两者均在 AI 主线吸引资金的背景下缺乏对冲买盘。白银 -6.76% 至 $57.42，铜 -3.23% 至 $601.15。[Twitter]</div>
+        <div class="item-meta"><span class="tag macro">Twitter · Saxo</span> 2026-06-24</div>
+      </li>
+      <li>
+        <div class="item-title">纽约市长 Mamdani 三连胜国会初选，进步税政策预期升温</div>
+        <div class="item-summary">Mamdani 支持的三位候选人全胜，财政部长 Bessent 称其为"民主党领袖"。纽约企业所得税和高收入税上调预期增强，对 NYC 金融/REIT 机构构成长期背景风险。[Reddit]</div>
+        <div class="item-meta"><span class="tag macro">Reddit</span> 2026-06-24</div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">🏠 房地产 &amp; REITs</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">美国新屋销售 5 月 -7.3%，库存 10.3 个月（金融危机以来最高）</div>
+        <div class="item-summary">美国楼市降温明确，房贷利率 6.47% 持续压制购买力。库存积压对住宅 REITs 租金定价构成中期压力。[Saxo]</div>
+        <div class="item-meta"><span class="tag">Saxo</span> 2026-06-24</div>
+      </li>
+      <li>
+        <div class="item-title">10Y 美债 -10.5bp 至 4.39%，REITs 估值短期获益</div>
+        <div class="item-summary">长端利率下行是 REIT 最强估值催化剂。油价驱动的利率下行能否持续取决于 PCE 数据（6/26）和美联储表态，短期 REIT 价格上行空间打开。[Saxo / FRED]</div>
+        <div class="item-meta"><span class="tag">Saxo · FRED</span> 2026-06-24</div>
+      </li>
+      <li>
+        <div class="item-title">纽约曼哈顿甲级写字楼租金 +3.5% YoY，入住率持续改善（JLL Q1 2026）</div>
+        <div class="item-summary">美国运通、美国银行签署新长期租约；Ken Griffin 仍推进 Midtown 200 万平方英尺项目。Mamdani 当选引发的初期恐慌已被商业地产基本面化解。[Reddit]</div>
+        <div class="item-meta"><span class="tag">Reddit</span> 2026-06-25</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">🔄 板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value">AI 算力链（HBM / GPU / 光模块 / PCB / 定制芯片 ASIC）；债券（通胀预期下行受益）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value">大宗商品（黄金 / 白银 / 原油 / 铜）；比特币；A股价值/防御板块（白酒 / 银行 / 保险 / 煤炭 / 地产）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value">🟢 持续强化——Micron Q3 FY2026 +346% YoY 史诗财报确认 HBM 超级周期；MRVL 纳入 S&amp;P500 完成，被动资金持续流入；叙事无动摇迹象</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value">成长 &gt;&gt; 价值；AI 硬件 &gt; AI 软件；美股科技 &gt; 大宗商品；A股算力/半导体 &gt; A股消费/金融</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">🔥 雪球热帖 &amp; 热股</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/5963406195/395787500">碳基引信，硅基纪元：为什么 AI 涨上天，而硅基（人类）的一切都在跌？</a></div>
+      <div class="item-summary">算力/半导体/光模块/PCB 沾边就涨；白酒/银行/保险/煤炭/地产集体下跌——流动性极端分化还是基本面永久裂变？深度讨论市场风格转换的根本原因。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 财务自由AT56</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/8080788274/396394404">超材料基板：AI 高端 GPU 服务器的第三条产业化路线</a></div>
+      <div class="item-summary">在 ABF 基板和有机中介层之外，超材料基板在 Chiplet 三维堆叠方向上具备差异化价值，或成为下一个算力基础设施投资赛道。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 抱节君</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/2799488232/396067206">聊聊胜沪/国产 AI/谷歌利空 6.23：花旗上调 AI-PCB 目标价</a></div>
+      <div class="item-summary">花旗预测：2026 年全球 AI-PCB 市场 1520 亿元（+86% YoY），2027 年 3070 亿元（+102%）。沪电股份、胜宏科技目标价同步上调。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 我怀念1998</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/6828304753/396315204">A500 红利低波指数 2026 年中期样本调整效果评析</a></div>
+      <div class="item-summary">二季度调整完成；AI 主线压制下红利类成分承压，部分个股股息率已达历史吸引区间，等待风格切换信号。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 躺红利摊转债</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/3945042689/396039024">算租公司拿卡能力比较：协创、宏景节前大涨联袂创新高</a></div>
+      <div class="item-summary">GPU 供给稀缺性仍是核心变量，"拿卡、拿钱、拿单"三大核心壁垒决定算租公司估值分化方向。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 乘黄18</div>
+    </li>
+  </ul>
+  <div class="stock-grid" style="margin-top:16px">
+    <div class="stock-chip">
+      <span class="name">SH603986</span>
+      <span class="code">兆易创新</span>
+      <span class="pct up">+6.54%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SH600584</span>
+      <span class="code">长电科技</span>
+      <span class="pct up">+10.00%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">MU · 美股</span>
+      <span class="code">Micron</span>
+      <span class="pct neutral">-0.31% → +10% AH</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SZ000725</span>
+      <span class="code">京东方 A</span>
+      <span class="pct up">+6.79%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SH688525</span>
+      <span class="code">芯联集成</span>
+      <span class="pct up">+10.47%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SH601899</span>
+      <span class="code">紫金矿业</span>
+      <span class="pct down">-6.08%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SZ301308</span>
+      <span class="code">中际旭创</span>
+      <span class="pct up">+7.47%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SH600667</span>
+      <span class="code">太极股份</span>
+      <span class="pct up">+10.00%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SZ002384</span>
+      <span class="code">东山精密</span>
+      <span class="pct up">+5.48%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SZ001309</span>
+      <span class="code">骏创科技</span>
+      <span class="pct up">+6.99%</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1hCjR6JEwn">A股 6.24 收评+6.25 盘前预判：全线走强！算力、PCB 批量涨停，科技个股强势反包，AI 硬件与芯片同步拉升，半导体反弹超预期</a></div>
+      <div class="item-summary">价值投资笔记 · 5564 次播放 · 12:25</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1VJ786XEEt">美股 MU 财报后暴涨！OpenAI 携手 AVGO 发布 AI 芯片！NVDA 还有希望吗？AAPL 借 INTC 代工破局！QCOM 发布数据中心 CPU！</a></div>
+      <div class="item-summary">请不要叫我梁同学 · 120 次播放 · 22:20</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1qLj26iE9F">中国超算重回世界第一！6 月 23 日全球超算 TOP500 发布："灵晟"以 2.19 EFlops 登顶</a></div>
+      <div class="item-summary">十八级达贡之神力 · 5128 次播放 · 4:32</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1shBxBrEgQ">显卡 AI 算力天梯更新｜显卡日报第 1519 期</a></div>
+      <div class="item-summary">冰糖 shirley 宝 · 47400 次播放 · 2:20</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1a25v6fEUi">AI 算力的尽头是存储！</a></div>
+      <div class="item-summary">帐篷里的帐篷 · 2806 次播放 · 16:16</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV115BKBDEGv">通俗解析 AI 算力核心赛道之 AIDC 电源</a></div>
+      <div class="item-summary">一手时间 · 9637 次播放 · 10:40</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1DX4y1D7PC">AI 芯片涉及哪些知识？【AI 芯片】内容简介</a></div>
+      <div class="item-summary">ZOMI 酱 · 50133 次播放 · 7:56</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">⚠️ 风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率风险</td>
+        <td>Fed Funds 3.63%，DXY 52 周高点 97.73 显示鹰派预期；但油价暴跌压低通胀预期，10Y 单日 -10.5bp。双向拉力，降息时间表仍不明朗，PCE 数据（6/26）将是关键测试</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>AI 算力拥挤度</td>
+        <td>Micron 超预期 16% 的财报进一步强化拥挤交易；MRVL S&amp;P500 纳入带来被动资金持续流入；多家机构持续上调目标价。基本面支撑强，但估值和拥挤度均处高位，短期回调风险存在</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>VIX 显著下降至 18.63（乐观情绪偏高）；黄金/比特币同步下跌（部分压力信号）；USD/JPY 161.78 处于历史危险区间，BOJ 干预风险实质存在且可能引发短暂剧烈波动</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>财报季风险</td>
+        <td>Micron 爆炸式财报大幅消除半导体板块近期财报恐慌；SK Hynix ADR（7/10 上市定价）是下一关注点；当前无重大财报地雷可见</td>
+        <td><span class="risk-low">低</span></td>
+      </tr>
+      <tr>
+        <td>地缘政治风险</td>
+        <td>霍尔木兹重开缓解中东风险溢价（利好）；USD/JPY BOJ 干预、纽约进步税政策预期上升、中美科技管制（出口管制）仍是背景噪音</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">🎯 明日关注</div>
+  <ol class="focus">
+    <li><strong>Micron（MU）今日开盘能否兑现盘后 +10% 涨幅</strong> — 关注 A 股半导体/封测/光模块链（兆易创新、长电科技、中际旭创等）是否全线接力；全球存储股（三星电子、SK Hynix ADR 定价参考）均将跟随</li>
+    <li><strong>美国 PCE 通胀数据（预计 2026-06-26）</strong> — 美联储最看重的通胀指标；油价暴跌可能带来超预期下行，若 PCE 走弱将强化降息预期，进一步推动债券/REITs 反弹，并为美元降温提供条件</li>
+    <li><strong>USD/JPY 161.78 日本央行干预信号</strong> — BOJ 此前分别在 145 和 152 区间发动干预；当前水位远超任何历史干预阈值，任何口头警告或实际入市均可能触发全球资产短暂剧烈波动，需紧密跟踪</li>
+    <li><strong>黄金 $4,000 心理关口攻防</strong> — 若进一步跌破并站稳 $4,000 以下，大宗商品通胀对冲叙事瓦解，贵金属矿股（紫金矿业 SH601899 已 -6.08%）跌幅或加剧；同时强化债券/REITs 的利好逻辑</li>
+    <li><strong>SK Hynix Nasdaq ADR 路演动态（7/10 上市）</strong> — $290 亿是半导体史上最大 ADR，其定价将为 HBM 需求与估值提供新的市场锚点，直接影响 Micron 和整个存储赛道的相对定价逻辑</li>
+  </ol>
+</div>
+
+<footer>
+  2026-06-25 自动生成 · 数据来源：Twitter · Reddit (Saxo / r/DRAM_ETF / r/MRVL_Stock / r/stockrager / r/GeopoliticsMicroscope) · 雪球 · B站 · FRED · Bloomberg<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>
