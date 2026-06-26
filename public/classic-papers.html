@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClassicPapers — 核心思想提炼</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222536;
+    --border: #2e3147;
+    --text: #e2e4f0;
+    --muted: #7c82a3;
+    --accent1: #6c8cff;
+    --accent2: #ff6b9d;
+    --accent3: #43d9ad;
+    --accent4: #f7c948;
+    --accent5: #ff8c5a;
+    --accent6: #b67aff;
+    --accent7: #5ad4ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'PingFang SC', 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  header {
+    padding: 64px 40px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--accent1), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 600px;
+  }
+
+  .stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-num {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 17, 23, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  nav ul::-webkit-scrollbar { display: none; }
+
+  nav a {
+    display: block;
+    padding: 14px 18px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  nav a:hover { color: var(--text); }
+
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+  }
+
+  .section {
+    margin-bottom: 64px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .section-count {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .papers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  .paper-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+    transition: border-color 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .paper-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .paper-card:hover {
+    border-color: #3d4260;
+    transform: translateY(-2px);
+  }
+
+  .paper-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  .paper-year {
+    display: inline-block;
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 1px 8px;
+    border-radius: 4px;
+    margin-bottom: 14px;
+    font-family: monospace;
+  }
+
+  .ideas {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .idea {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 0.84rem;
+    color: #b8bcd8;
+    line-height: 1.6;
+  }
+
+  .idea-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+
+  /* Category accent colors */
+  .cat-consensus .paper-card::before { background: var(--accent1); }
+  .cat-consensus .idea-dot { background: var(--accent1); }
+  .cat-consensus .section-icon { background: rgba(108,140,255,0.15); color: var(--accent1); }
+
+  .cat-theory .paper-card::before { background: var(--accent3); }
+  .cat-theory .idea-dot { background: var(--accent3); }
+  .cat-theory .section-icon { background: rgba(67,217,173,0.15); color: var(--accent3); }
+
+  .cat-google .paper-card::before { background: var(--accent4); }
+  .cat-google .idea-dot { background: var(--accent4); }
+  .cat-google .section-icon { background: rgba(247,201,72,0.15); color: var(--accent4); }
+
+  .cat-fb-amz .paper-card::before { background: var(--accent2); }
+  .cat-fb-amz .idea-dot { background: var(--accent2); }
+  .cat-fb-amz .section-icon { background: rgba(255,107,157,0.15); color: var(--accent2); }
+
+  .cat-fs .paper-card::before { background: var(--accent5); }
+  .cat-fs .idea-dot { background: var(--accent5); }
+  .cat-fs .section-icon { background: rgba(255,140,90,0.15); color: var(--accent5); }
+
+  .cat-db .paper-card::before { background: var(--accent6); }
+  .cat-db .idea-dot { background: var(--accent6); }
+  .cat-db .section-icon { background: rgba(182,122,255,0.15); color: var(--accent6); }
+
+  .cat-llm .paper-card::before { background: var(--accent7); }
+  .cat-llm .idea-dot { background: var(--accent7); }
+  .cat-llm .section-icon { background: rgba(90,212,255,0.15); color: var(--accent7); }
+
+  footer {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 700px) {
+    header, main, nav { padding-left: 20px; padding-right: 20px; }
+    header { padding-top: 40px; }
+    .papers-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.8rem; }
+    .stats { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ClassicPapers — 核心思想提炼</h1>
+  <p>来源：<a href="https://github.com/Hexiaoqiao/ClassicPapers" style="color:var(--accent1);text-decoration:none">github.com/Hexiaoqiao/ClassicPapers</a>，涵盖分布式系统、数据库、大语言模型等方向的经典论文核心思想。</p>
+  <div class="stats">
+    <div class="stat"><span class="stat-num">43</span><span class="stat-label">篇论文</span></div>
+    <div class="stat"><span class="stat-num">7</span><span class="stat-label">大类别</span></div>
+    <div class="stat"><span class="stat-num">~120</span><span class="stat-label">核心观点</span></div>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#consensus">共识算法</a></li>
+    <li><a href="#theory">系统理论</a></li>
+    <li><a href="#google">Google 系统</a></li>
+    <li><a href="#fb-amz">Facebook / Amazon</a></li>
+    <li><a href="#fs">分布式文件系统</a></li>
+    <li><a href="#db">数据库理论</a></li>
+    <li><a href="#llm">大语言模型</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ① 共识算法 -->
+<section class="section cat-consensus" id="consensus">
+  <div class="section-header">
+    <div class="section-icon">⚡</div>
+    <span class="section-title">分布式一致性与共识算法</span>
+    <span class="section-count">6 篇</span>
+  </div>
+  <div class="papers-grid">
+
+    <div class="paper-card">
+      <div class="paper-year">1980 · JACM</div>
+      <div class="paper-title">Reaching Agreement in the Presence of Faults</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>首次严格证明：在异步网络中，存在节点故障时仍可达成一致，奠定分布式容错共识的数学基础。</li>
+        <li class="idea"><span class="idea-dot"></span>拜占庭容错上限：n 个节点最多容忍 f &lt; n/3 个拜占庭节点，这一界限被后续所有 BFT 协议遵循。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">1982 · TOPLAS</div>
+      <div class="paper-title">The Byzantine Generals Problem</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>用"将军协调攻击"的比喻将分布式一致性问题具象化，提出叛徒（故障节点）可以发送任意虚假消息的强故障模型。</li>
+        <li class="idea"><span class="idea-dot"></span>给出两种算法：口头消息协议（需 n > 3f）和书面消息协议（签名防伪造，理论上 n > f 即可）。</li>
+        <li class="idea"><span class="idea-dot"></span>1/3 阈值是硬下界，不是工程权衡，任何协议在此限制下都无法突破。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2001 · ACM SIGACT</div>
+      <div class="paper-title">Paxos Made Simple</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>两阶段协议（Prepare/Promise → Accept/Accepted）：通过多数派投票保证只有一个值被选定，即使在消息丢失和节点重启的情况下。</li>
+        <li class="idea"><span class="idea-dot"></span>Proposer 编号单调递增是关键安全保证——旧 Proposer 的请求会被自动拒绝，避免冲突。</li>
+        <li class="idea"><span class="idea-dot"></span>活性依赖"稳定 Leader"，两个 Proposer 互相抢占会导致活锁，工程实现需额外处理选主。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2014 · USENIX ATC</div>
+      <div class="paper-title">Raft: In Search of an Understandable Consensus Algorithm</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>将共识拆解为三个相互独立的子问题：Leader 选举、日志复制、安全性，使协议比 Paxos 更易理解和正确实现。</li>
+        <li class="idea"><span class="idea-dot"></span>强 Leader 模型：所有写操作必须经 Leader，日志只从 Leader 流向 Follower，大幅简化一致性推理。</li>
+        <li class="idea"><span class="idea-dot"></span>随机化选举超时解决选票分裂问题，无需额外的选主协议，优雅且有效。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2011 · EuroSys</div>
+      <div class="paper-title">ZooKeeper's Atomic Broadcast Protocol (ZAB)</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>区分崩溃恢复阶段和消息广播阶段：恢复时选主并同步日志，广播时保证全局顺序原子提交。</li>
+        <li class="idea"><span class="idea-dot"></span>引入 epoch（纪元）概念，每次 Leader 切换递增 epoch，旧 Leader 的消息在新 epoch 自动失效，避免"脑裂"。</li>
+        <li class="idea"><span class="idea-dot"></span>相比 Paxos 更贴近工程实际：明确区分主备角色，保证消息的全局因果顺序。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">1979 · JACM</div>
+      <div class="paper-title">A Quorum Consensus Replication Method for Abstract Data Types</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>法定人数机制：读写操作需满足 R + W &gt; N，保证读写集合至少有一个节点重叠，从而获取最新数据。</li>
+        <li class="idea"><span class="idea-dot"></span>将 Quorum 思想推广到任意抽象数据类型，而不仅限于简单 KV，为 Dynamo 等系统的可调一致性提供理论支撑。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ② 系统理论 -->
+<section class="section cat-theory" id="theory">
+  <div class="section-header">
+    <div class="section-icon">🔬</div>
+    <span class="section-title">分布式系统理论基础</span>
+    <span class="section-count">6 篇</span>
+  </div>
+  <div class="papers-grid">
+
+    <div class="paper-card">
+      <div class="paper-year">1978 · CACM</div>
+      <div class="paper-title">Time, Clocks, and the Ordering of Events in a Distributed System</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>物理时钟无法可靠排序分布式事件，提出"happened-before"（→）偏序关系，用逻辑时钟捕捉因果依赖。</li>
+        <li class="idea"><span class="idea-dot"></span>Lamport 时钟算法：发消息时附带时间戳，接收方取 max(本地, 收到) + 1，实现全局因果一致的时间戳。</li>
+        <li class="idea"><span class="idea-dot"></span>通过进程 ID 打破并发事件的平局，可构造全序——这一思想直接影响了分布式数据库的事务排序设计。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">1987 · Springer</div>
+      <div class="paper-title">An Overview of Clock Synchronization</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>物理时钟存在漂移（drift），需要持续校准；网络延迟的不确定性使得精确同步从根本上受限。</li>
+        <li class="idea"><span class="idea-dot"></span>外部同步（对齐 UTC）与内部同步（节点间互对）是两类不同目标，对应 NTP 和 Berkeley 算法等不同方案。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2002 · PODC</div>
+      <div class="paper-title">Brewer's Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>CAP 定理：分布式系统不能同时保证一致性（C）、可用性（A）和分区容错性（P），网络分区下必须在 C 和 A 间取舍。</li>
+        <li class="idea"><span class="idea-dot"></span>分区容错性在真实网络中不可避免，因此实际选择只在 CP 和 AP 之间，没有"三者兼得"的系统。</li>
+        <li class="idea"><span class="idea-dot"></span>CAP 是思维框架而非精确定理：C/A 都可以有程度之分，PACELC 等后续模型对此做了更细粒度的刻画。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2007 · CIDR</div>
+      <div class="paper-title">Life beyond Distributed Transactions: an Apostate's Opinion</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>分布式事务代价极高，大规模系统应避免跨实体（Aggregate）的事务；按"活动实体"分片是根本设计原则。</li>
+        <li class="idea"><span class="idea-dot"></span>用幂等消息、补偿操作、工作流协调替代 2PC，牺牲强一致性换取可扩展性和可用性。</li>
+        <li class="idea"><span class="idea-dot"></span>这是 Saga 模式、事件驱动架构的思想先驱，对微服务时代的分布式数据设计影响深远。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">1997 · STOC</div>
+      <div class="paper-title">Consistent Hashing and Random Trees</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>核心突破：节点增减时只需迁移 K/n 的数据（K 为键总数，n 为节点数），避免传统哈希取模导致的全量重映射。</li>
+        <li class="idea"><span class="idea-dot"></span>虚节点（Virtual Nodes）技术解决真实节点稀少时的负载不均问题，使数据分布更加平滑。</li>
+        <li class="idea"><span class="idea-dot"></span>Dynamo、Cassandra、CDN 等大规模分布式系统的关键基础组件，是"无中心"分片思想的奠基之作。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">1989 · ACM TOCS</div>
+      <div class="paper-title">Leases: An Efficient Fault-Tolerant Mechanism for Distributed File Cache Consistency</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>租约机制：服务端向客户端授予有时限的缓存权，在租约期内客户端无需回服务端验证，到期自动失效。</li>
+        <li class="idea"><span class="idea-dot"></span>优雅处理故障：即使服务端宕机，客户端租约超时后自动恢复一致状态，无需主动通知，大幅降低系统复杂度。</li>
+        <li class="idea"><span class="idea-dot"></span>这一模式被 GFS、Chubby、etcd 等系统广泛采用，是分布式锁和元数据缓存的核心原语。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ③ Google 系统 -->
+<section class="section cat-google" id="google">
+  <div class="section-header">
+    <div class="section-icon">🏗️</div>
+    <span class="section-title">Google 数据库与基础设施</span>
+    <span class="section-count">11 篇</span>
+  </div>
+  <div class="papers-grid">
+
+    <div class="paper-card">
+      <div class="paper-year">2003 · SOSP</div>
+      <div class="paper-title">The Google File System</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>针对大文件、追加写为主的工作负载重新设计接口：放松 POSIX 一致性，换取极高的顺序读写吞吐。</li>
+        <li class="idea"><span class="idea-dot"></span>单 Master 存元数据（不存数据），ChunkServer 存 64MB 的数据块；Master 是控制面瓶颈，但被证明在实践中可接受。</li>
+        <li class="idea"><span class="idea-dot"></span>原子记录追加（Record Append）解决多客户端并发写同一文件的问题，是 MapReduce 等框架的数据基础。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2006 · OSDI</div>
+      <div class="paper-title">Bigtable: A Distributed Storage System for Structured Data</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>数据模型极简但强大：(RowKey, ColumnFamily:Qualifier, Timestamp) → Value，支持多版本，天然适合时序数据和宽表。</li>
+        <li class="idea"><span class="idea-dot"></span>Memtable + SSTable + 多级 Compaction 架构，是 LSM-Tree 在工业界最早的大规模实践，直接启发 HBase、Cassandra。</li>
+        <li class="idea"><span class="idea-dot"></span>依赖 Chubby 做 Master 选举和 Tablet 定位，将分布式协调与存储彻底分离。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2006 · OSDI</div>
+      <div class="paper-title">Chubby: The Chubby Lock Service for Loosely-Coupled Distributed Systems</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>提供粗粒度分布式锁和小文件存储，基于 Paxos 复制组实现强一致性，专为选主和元数据存储场景设计。</li>
+        <li class="idea"><span class="idea-dot"></span>客户端缓存 + 租约机制大幅减少服务端压力，客户端侧缓存失效由服务端通过"无效化"消息驱动。</li>
+        <li class="idea"><span class="idea-dot"></span>Chubby 是 Google 内部几乎所有分布式系统的协调基础（GFS、Bigtable、Spanner 都依赖它），是 etcd/ZooKeeper 的直接对标。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2012 · OSDI</div>
+      <div class="paper-title">Spanner: Google's Globally Distributed Database</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>TrueTime API：用原子钟 + GPS 提供有界不确定性的全球时间（误差 &lt; 10ms），使外部一致性事务无需全局锁协调。</li>
+        <li class="idea"><span class="idea-dot"></span>Commit Wait：事务提交时必须等待 TrueTime 误差窗口过去，确保后续事务一定读到本事务的写，实现真正的外部一致性。</li>
+        <li class="idea"><span class="idea-dot"></span>Paxos 组 + 目录（Directory）分片机制，实现跨数据中心的自动副本管理和地理分布，用户可声明式配置副本策略。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2017 · SIGMOD</div>
+      <div class="paper-title">Spanner: Becoming a SQL System</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>从 NoSQL KV 演进到完整 SQL 系统，核心挑战是在全球分布式、强一致性约束下实现高效的 SQL 查询执行。</li>
+        <li class="idea"><span class="idea-dot"></span>交叉表（Interleaved Tables）将父子表数据物理上共同存储，减少分布式 Join 的跨节点通信开销。</li>
+        <li class="idea"><span class="idea-dot"></span>分布式查询编译与执行框架：支持下推、并行扫描和分片聚合，查询计划在编译期就感知数据分片信息。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2017 · IEEE Data Eng. Bull.</div>
+      <div class="paper-title">Spanner, TrueTime and the CAP Theorem</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>Spanner 本质是 CP 系统：分区发生时拒绝服务，而非牺牲一致性。TrueTime 是工程优化，不是 CAP 的突破。</li>
+        <li class="idea"><span class="idea-dot"></span>Spanner 之所以"看起来违反 CAP"，是因为 Google 数据中心内网分区概率极低，实践上趋近于零停机。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2012 · SIGMOD</div>
+      <div class="paper-title">F1: A Distributed SQL Database That Scales</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>构建在 Spanner 之上，将 Google AdWords 从 MySQL 迁移到可横向扩展的分布式 SQL 系统，验证 Spanner 的实用性。</li>
+        <li class="idea"><span class="idea-dot"></span>乐观事务为主：读阶段不加锁，提交时验证冲突，适合读多写少、冲突概率低的广告业务场景。</li>
+        <li class="idea"><span class="idea-dot"></span>Protocol Buffers 作为列类型直接存储在 Spanner 中，避免大量外键 Join，体现了 NoSQL 数据建模对 SQL 系统的渗透。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2018 · VLDB</div>
+      <div class="paper-title">F1 Query: Declarative Querying at Scale</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>统一查询引擎：同一 SQL 可查询 Spanner、Bigtable、CSV 文件等异构数据源，解耦查询语言与存储系统。</li>
+        <li class="idea"><span class="idea-dot"></span>支持 UDF（用户定义函数）并可下推到数据源侧执行，兼顾灵活性与执行效率。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2011 · CIDR</div>
+      <div class="paper-title">Megastore: Providing Scalable, Highly Available Storage for Interactive Services</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>实体组（Entity Group）设计：组内支持完整 ACID 事务，组间仅最终一致，将强一致性的代价限定在数据局部性范围内。</li>
+        <li class="idea"><span class="idea-dot"></span>跨数据中心基于 Paxos 同步复制，写延迟高但读可以在任意副本就近完成，适合读多写少的交互式服务。</li>
+        <li class="idea"><span class="idea-dot"></span>尝试融合关系模型与 NoSQL 可扩展性，是 Spanner 之前 Google 在这一方向上的重要探索，也是反面教材（复杂性过高）。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2014 · VLDB</div>
+      <div class="paper-title">Mesa: Geo-Replicated, Near Real-Time, Scalable Data Warehousing</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>Delta 文件 + Base 文件的分层合并架构：增量数据实时写入小 Delta 文件，后台异步合并为大 Base 文件，兼顾写入延迟和查询性能。</li>
+        <li class="idea"><span class="idea-dot"></span>版本化数据：每次查询指定一个一致版本，读取时不受写入影响，实现近实时数据仓库的快照隔离。</li>
+        <li class="idea"><span class="idea-dot"></span>多数据中心地理复制，依赖 Paxos 保证版本元数据的全球一致，是 Google 广告指标统计的核心基础设施。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2015 · EuroSys</div>
+      <div class="paper-title">Large-scale Cluster Management at Google with Borg</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>混部策略（Gang Scheduling）：将高优先级在线服务（prod）和低优先级批处理任务（non-prod）混合部署在同一机器上，将集群资源利用率从 ~20% 提升到 ~60%。</li>
+        <li class="idea"><span class="idea-dot"></span>声明式配置（BCL）：用户描述"期望状态"，Borg 负责调度、重启和故障恢复，是 Kubernetes 声明式 API 的直接前身。</li>
+        <li class="idea"><span class="idea-dot"></span>Cell 架构 + Borgmaster 高可用：每个 Cell 独立调度，Borgmaster 五副本 Paxos 保证控制面不中断，大规模实践验证了中心化调度的可行性。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ④ Facebook / Amazon -->
+<section class="section cat-fb-amz" id="fb-amz">
+  <div class="section-header">
+    <div class="section-icon">🌐</div>
+    <span class="section-title">Facebook / Amazon 系统</span>
+    <span class="section-count">5 篇</span>
+  </div>
+  <div class="papers-grid">
+
+    <div class="paper-card">
+      <div class="paper-year">2007 · SOSP</div>
+      <div class="paper-title">Dynamo: Amazon's Highly Available Key-value Store</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>可用性优先（AP 系统）：永远接受写入，冲突在读取时解决（向量时钟 + 应用层合并），购物车数据不丢比短暂不一致更重要。</li>
+        <li class="idea"><span class="idea-dot"></span>一致性哈希 + 虚节点 + Gossip 协议：完全去中心化的成员管理和数据路由，无单点瓶颈。</li>
+        <li class="idea"><span class="idea-dot"></span>可调一致性（NWR 参数）：让业务自行权衡读写延迟与一致性强度，是"一刀切"强一致性之外的重要工程实践。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2013 · SIGMOD</div>
+      <div class="paper-title">TAO: Facebook's Distributed Data Store for the Social Graph</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>专为社交图谱设计的对象（Object）+ 关联（Association）数据模型，比通用 KV 更贴合业务语义，减少应用层抽象成本。</li>
+        <li class="idea"><span class="idea-dot"></span>Leader-Follower 多级缓存：区域内 Follower 缓存承接读流量，Leader 负责写和缓存失效；Facebook 级别的读放大（读/写 ≈ 500:1）验证了此架构的正确性。</li>
+        <li class="idea"><span class="idea-dot"></span>接受最终一致性：Follower 可能短暂读到旧数据，但通过关联列表的"写后读"保证确保用户自己的写操作立即可见。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2010 · OSDI</div>
+      <div class="paper-title">Finding a Needle in Haystack: Facebook's Photo Storage</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>根本问题：海量小文件导致 NFS 元数据 inode 大量缓存 miss，每次图片请求平均需要 3+ 次磁盘 IO。Haystack 将数以亿计的图片合并到少数大逻辑卷中，将元数据全量载入内存。</li>
+        <li class="idea"><span class="idea-dot"></span>每张图片读取只需一次磁盘 IO（通过内存中的偏移量直接定位），读写分离通过 CDN 缓存热图减少对 Store 的压力。</li>
+        <li class="idea"><span class="idea-dot"></span>写入仅追加（append-only），删除标记软删除，定期 Compaction 回收空间，设计极其简单且高效。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2014 · OSDI</div>
+      <div class="paper-title">F4: Facebook's Warm BLOB Storage System</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>将 Haystack 中"温数据"（访问量下降但仍需保存的老照片）迁移到纠删码（Reed-Solomon）存储，存储开销从 3 副本的 3.6x 降至 1.4x。</li>
+        <li class="idea"><span class="idea-dot"></span>明确区分数据温度：热数据留 Haystack（低延迟、高冗余），温数据迁 F4（高效率、可接受稍高延迟），是分层存储思想的经典实践。</li>
+        <li class="idea"><span class="idea-dot"></span>每年节省数 EB 的存储空间，证明了在超大规模下，存储效率的微小改进能带来巨大的成本收益。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2011 · SOSP</div>
+      <div class="paper-title">Windows Azure Storage: A Highly Available Cloud Storage Service with Strong Consistency</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>Stream Layer（追加写日志流）+ Partition Layer（结构化数据索引）两层分离：底层只做可靠有序追加，上层在此之上构建 Blob/Table/Queue 语义。</li>
+        <li class="idea"><span class="idea-dot"></span>强一致性 + 高可用并存：通过 Stream Layer 的同步复制（3 副本）保证强一致，同时在 Partition Layer 的故障切换不依赖任何单点。</li>
+        <li class="idea"><span class="idea-dot"></span>统一存储不同数据类型（对象存储、结构化表、消息队列），降低运维复杂度，是 Azure 云存储平台的基石。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ⑤ 分布式文件系统 -->
+<section class="section cat-fs" id="fs">
+  <div class="section-header">
+    <div class="section-icon">💾</div>
+    <span class="section-title">分布式文件系统</span>
+    <span class="section-count">4 篇</span>
+  </div>
+  <div class="papers-grid">
+
+    <div class="paper-card">
+      <div class="paper-year">2018 · VLDB</div>
+      <div class="paper-title">PolarFS: An Ultra-low Latency and Failure Resilient Distributed File System for Shared Storage Cloud Database</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>存算分离架构：多个数据库计算节点共享同一套 PolarFS 存储层，写入一次，多个只读节点可立即读取最新数据。</li>
+        <li class="idea"><span class="idea-dot"></span>RDMA + SPDK 绕过内核，实现微秒级 I/O 延迟，将网络存储延迟降低至接近本地 SSD 水平。</li>
+        <li class="idea"><span class="idea-dot"></span>ParallelRaft：允许乱序提交日志（在不冲突的情况下），突破标准 Raft 串行提交的吞吐瓶颈。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2003 · SC</div>
+      <div class="paper-title">Lustre: A Scalable, High-Performance File System</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>元数据服务器（MDS）与对象存储服务器（OSS）严格分离，数据路径不经过 MDS，实现元数据与数据的独立扩展。</li>
+        <li class="idea"><span class="idea-dot"></span>文件条带化（Striping）跨多个 OSS 分布，单文件可聚合所有 OSS 的带宽，适合 HPC 场景的大文件高带宽需求。</li>
+        <li class="idea"><span class="idea-dot"></span>POSIX 兼容性使其可以无缝对接 MPI、HDF5 等 HPC 生态，成为超算中心的主流文件系统。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2017 · EuroSys</div>
+      <div class="paper-title">Scaling HDFS with HopsFS</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>将 HDFS 的单 NameNode 元数据瓶颈彻底消除：把元数据迁移到 MySQL Cluster（NDB）分布式数据库，实现 NameNode 水平扩展。</li>
+        <li class="idea"><span class="idea-dot"></span>用数据库事务保证元数据操作的原子性，替代 HDFS 原有的 EditLog+FSImage 机制，提升可靠性与可维护性。</li>
+        <li class="idea"><span class="idea-dot"></span>完全兼容 HDFS API，现有 Hadoop 生态无需修改即可迁移，验证了"将分布式协调外包给专业数据库"的可行性。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2014 · SOCC</div>
+      <div class="paper-title">Tachyon: Reliable, Memory Speed Storage for Cluster Computing Frameworks</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>以内存为中心的分布式存储层：将跨计算框架（Spark/MapReduce）的中间数据缓存在内存中，消除重复从 HDFS 读盘的开销。</li>
+        <li class="idea"><span class="idea-dot"></span>Lineage（血缘）机制：内存数据不持久化，丢失时通过重新执行计算血缘恢复，用计算换存储可靠性。</li>
+        <li class="idea"><span class="idea-dot"></span>存储与计算框架解耦：Spark、MR、Flink 可共享同一份数据，避免计算框架竞争底层存储资源，是 Alluxio 的前身。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ⑥ 数据库理论 -->
+<section class="section cat-db" id="db">
+  <div class="section-header">
+    <div class="section-icon">🗄️</div>
+    <span class="section-title">数据库理论与存储引擎</span>
+    <span class="section-count">5 篇</span>
+  </div>
+  <div class="papers-grid">
+
+    <div class="paper-card">
+      <div class="paper-year">1996 · ACM TODS</div>
+      <div class="paper-title">The Log-Structured Merge-Tree (LSM-Tree)</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>核心思想：将所有随机写转换为顺序写——新数据先写内存（Memtable），溢出后顺序刷盘为 SSTable，彻底消除随机 IO，写吞吐远超 B+ Tree。</li>
+        <li class="idea"><span class="idea-dot"></span>多层 Compaction：后台定期将多个 SSTable 合并排序，维持读性能；写放大和读放大是与 B+ Tree 互换的代价。</li>
+        <li class="idea"><span class="idea-dot"></span>LevelDB、RocksDB、Cassandra、HBase、TiKV 等现代存储引擎均以 LSM-Tree 为核心，是过去 20 年存储领域最重要的工程贡献之一。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2008 · SIGMOD</div>
+      <div class="paper-title">Column Stores vs. Row Stores: How Different Are They Really?</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>列存的核心优势不仅在于"只读相关列"，更在于同一列数据类型相同，压缩率极高（RLE、字典编码等），实际 IO 量远低于行存。</li>
+        <li class="idea"><span class="idea-dot"></span>向量化执行（Late Materialization）：尽可能推迟将列数据组装为行，延迟物化能显著减少不必要的数据搬移。</li>
+        <li class="idea"><span class="idea-dot"></span>在行存系统上模拟列存效果很难达到原生列存的性能，架构选择需在设计阶段决定，对 OLAP 场景，列存几乎是唯一正确答案。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">1992 · Addison-Wesley</div>
+      <div class="paper-title">Concurrency Control and Recovery in Database Systems</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>两阶段锁（2PL）是实现可串行化的充要条件：加锁阶段只加锁不释放，解锁阶段只释放不加锁，严格 2PL 避免级联回滚。</li>
+        <li class="idea"><span class="idea-dot"></span>WAL（Write-Ahead Logging）原则：数据页落盘前日志必须先落盘，是崩溃恢复的基石，ARIES 算法对此做了完整的工业级实现。</li>
+        <li class="idea"><span class="idea-dot"></span>Undo Log + Redo Log 分离：Undo 用于事务回滚，Redo 用于崩溃恢复，二者配合保证原子性和持久性，是现代 RDBMS 的标准教材。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2019 · VLDB</div>
+      <div class="paper-title">BzTree: A High-Performance Latch-free Range Index for Non-Volatile Memory</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>专为非易失性内存（NVM/Optane）设计的 B 树：NVM 的持久性使 WAL 变得不必要，数据结构可以直接持久化在 NVM 上。</li>
+        <li class="idea"><span class="idea-dot"></span>PMwCAS（持久化多字比较并交换）：在 NVM 上实现跨多字的原子操作，无锁并发更新 B 树节点，消除传统 latch 带来的争用。</li>
+        <li class="idea"><span class="idea-dot"></span>NVM 时代的索引设计需要同时考虑字节寻址、持久性和并发，BzTree 是这一新硬件场景下的重要探索。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2014 · VLDB</div>
+      <div class="paper-title">Constraint-based Explanation and Repair of Filter-based Transformations</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>针对数据清洗与转换场景：当过滤/映射操作产生错误结果时，系统能自动生成约束条件解释"哪里出了问题"。</li>
+        <li class="idea"><span class="idea-dot"></span>将数据转换的调试从手动排查提升为自动约束推导，为数据工程领域的可解释性和自动化修复提供了形式化基础。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ⑦ LLM -->
+<section class="section cat-llm" id="llm">
+  <div class="section-header">
+    <div class="section-icon">🤖</div>
+    <span class="section-title">大语言模型（LLM）</span>
+    <span class="section-count">7 篇</span>
+  </div>
+  <div class="papers-grid">
+
+    <div class="paper-card">
+      <div class="paper-year">2017 · NeurIPS</div>
+      <div class="paper-title">Attention Is All You Need</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>完全抛弃 RNN/CNN，仅用自注意力机制（Self-Attention）建模序列依赖，任意两个位置间距离恒为 1，彻底解决长距离梯度消失问题。</li>
+        <li class="idea"><span class="idea-dot"></span>Multi-Head Attention：将注意力并行拆成多个头，每个头学习不同维度的语义关联（句法、语义、指代等），再拼接融合。</li>
+        <li class="idea"><span class="idea-dot"></span>位置编码（Positional Encoding）弥补注意力机制天然缺乏位置感知的短板，Transformer 成为 NLP、视觉、多模态的统一骨架。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2023 · arXiv</div>
+      <div class="paper-title">A Survey of Large Language Models</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>规模定律（Scaling Laws）：模型性能随参数量、数据量、计算量的增长呈幂律提升，催生了以"更大即更好"为信条的 LLM 发展路线。</li>
+        <li class="idea"><span class="idea-dot"></span>涌现能力（Emergent Abilities）：超过某个规模阈值后，模型突然获得小模型完全不具备的能力（如推理、代码生成），这一现象目前仍缺乏完整理论解释。</li>
+        <li class="idea"><span class="idea-dot"></span>指令微调（Instruction Tuning）+ RLHF：预训练给模型"能力"，对齐训练给模型"态度"，二者缺一不可，是 ChatGPT 成功的核心。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2024 · arXiv</div>
+      <div class="paper-title">A Survey of LLM Inference Systems</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>KV Cache 是推理性能的核心瓶颈：存储历史 token 的 K/V 矩阵随序列长度线性增长，内存成为推理吞吐的主要限制。</li>
+        <li class="idea"><span class="idea-dot"></span>连续批处理（Continuous Batching）：动态将不同长度请求合批处理，GPU 利用率从 &lt;30% 提升到 &gt;80%，是 vLLM 等系统的核心技术。</li>
+        <li class="idea"><span class="idea-dot"></span>PagedAttention 借鉴操作系统虚拟内存的分页思想管理 KV Cache，消除碎片化，使单 GPU 可同时服务更多并发请求。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2023 · arXiv</div>
+      <div class="paper-title">A Survey on Evaluation of Large Language Models</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>评估维度多元化：知识、推理、代码、安全、事实性、长上下文等维度各需专门基准，不存在能覆盖一切的单一指标。</li>
+        <li class="idea"><span class="idea-dot"></span>基准污染（Benchmark Contamination）是核心风险：训练数据泄漏导致评分虚高，需要动态更新基准或使用"私有测试集"对抗。</li>
+        <li class="idea"><span class="idea-dot"></span>LLM-as-Judge：用强模型评估弱模型输出正在成为主流，降低人工标注成本，但需警惕评估者的系统性偏见。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2023 · arXiv</div>
+      <div class="paper-title">Challenges and Applications of Large Language Models</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>幻觉（Hallucination）是 LLM 的根本性挑战：模型以流畅的形式输出错误事实，且置信度与准确性不相关，RAG 和引用验证是主要缓解手段。</li>
+        <li class="idea"><span class="idea-dot"></span>对齐（Alignment）与安全：模型越强大，潜在的滥用风险越高；RLHF/RLAIF 和红队测试是当前对齐工程的主流方法。</li>
+        <li class="idea"><span class="idea-dot"></span>Tool Use（工具调用）突破了 LLM 的知识截止和计算局限，赋予模型搜索、代码执行、API 调用等能力，是 Agent 范式的基础。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2024 · arXiv</div>
+      <div class="paper-title">Datasets for Large Language Models: A Comprehensive Survey</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>数据质量 > 数据数量：高质量过滤数据集（如 FineWeb）在相同计算量下显著优于未经过滤的原始爬取数据，"垃圾进，垃圾出"。</li>
+        <li class="idea"><span class="idea-dot"></span>数据去重和多样性是影响模型泛化能力的关键变量，重复数据会导致模型记忆而非泛化，多样性决定能力的广度。</li>
+        <li class="idea"><span class="idea-dot"></span>指令数据和偏好数据（用于 RLHF）的质量直接决定对齐效果，合成数据（LLM 自生成）正在成为弥补标注数据不足的重要手段。</li>
+      </ul>
+    </div>
+
+    <div class="paper-card">
+      <div class="paper-year">2023 · arXiv</div>
+      <div class="paper-title">Harnessing the Power of LLMs in Practice: A Survey on ChatGPT and Beyond</div>
+      <ul class="ideas">
+        <li class="idea"><span class="idea-dot"></span>提示工程（Prompt Engineering）是成本最低的能力提升手段：思维链（CoT）、少样本示例（Few-shot）、角色扮演等技巧能大幅提升推理准确率。</li>
+        <li class="idea"><span class="idea-dot"></span>微调 vs 提示的边界：微调适合领域知识注入和风格迁移，提示适合任务切换和快速原型；两者互补而非替代。</li>
+        <li class="idea"><span class="idea-dot"></span>LLM 部署的实际瓶颈在于延迟、成本和可靠性，而非模型能力本身；Prompt 缓存、模型蒸馏和异步调用是工程侧的核心优化方向。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  数据来源：<a href="https://github.com/Hexiaoqiao/ClassicPapers" style="color:var(--accent1);text-decoration:none">github.com/Hexiaoqiao/ClassicPapers</a> &nbsp;·&nbsp; 核心思想基于论文原文提炼，仅供参考
+</footer>
+
+</body>
+</html>
