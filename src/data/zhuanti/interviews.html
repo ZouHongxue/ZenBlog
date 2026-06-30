@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>访谈笔记 — 对话有趣的人</title>
+<meta name="description" content="那些值得反复咀嚼的对话，记下让我停下来想一想的那些话。">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222536;
+    --border: #2e3147;
+    --text: #e2e4f0;
+    --muted: #7c82a3;
+    --accent1: #6c8cff;
+    --accent2: #ff6b9d;
+    --accent3: #43d9ad;
+    --accent4: #f7c948;
+    --accent5: #ff8c5a;
+    --accent6: #b67aff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'PingFang SC', 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  header {
+    padding: 64px 40px 48px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  header .label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent3);
+    margin-bottom: 16px;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--accent1), var(--accent6));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 520px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  /* 访谈卡片 */
+  .interview-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .interview-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent1), var(--accent6));
+  }
+
+  .interview-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .interview-index {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent1);
+    background: rgba(108, 140, 255, 0.1);
+    border: 1px solid rgba(108, 140, 255, 0.2);
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .interview-people {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .person {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .role-badge {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .arrow {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .interview-date {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .interview-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .interview-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  /* 感触点 */
+  .insights-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .insight-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 52px;
+  }
+
+  .insight-num {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .insight-item:nth-child(1) .insight-num { background: rgba(108,140,255,0.15); color: var(--accent1); }
+  .insight-item:nth-child(2) .insight-num { background: rgba(247,201,72,0.15); color: var(--accent4); }
+  .insight-item:nth-child(3) .insight-num { background: rgba(67,217,173,0.15); color: var(--accent3); }
+
+  .insight-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+
+  .insight-body {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .insight-body strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* 推荐资源 */
+  .resources-section {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .resources-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .resource-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .resource-chip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    transition: border-color 0.2s, background 0.2s;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  .resource-chip:hover {
+    border-color: var(--accent6);
+    background: rgba(182,122,255,0.06);
+  }
+
+  .chip-icon {
+    font-size: 18px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .chip-content { flex: 1; min-width: 0; }
+
+  .chip-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+
+  .chip-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .chip-sub {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .chip-arrow {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  .resource-chip:hover .chip-arrow { opacity: 1; color: var(--accent6); }
+
+  .chip-conclusions {
+    list-style: none;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .chip-conclusions li {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .chip-conclusions li::before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    color: var(--accent6);
+    font-weight: 700;
+  }
+
+  /* 空状态 */
+  .empty-hint {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-size: 14px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 40px 20px 32px; }
+    .container { padding: 0 20px 60px; }
+    .interview-card { padding: 24px 20px; }
+    .insight-item { padding: 16px 16px 16px 46px; }
+    .insight-num { left: 14px; top: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="label">Interviews</div>
+  <h1>访谈笔记</h1>
+  <p>那些值得反复咀嚼的对话，记下让我停下来想一想的那些话。</p>
+</header>
+
+<div class="container">
+
+  <!-- 第一篇：张小珺 × 姚顺宇 -->
+  <div class="interview-card">
+
+    <div class="interview-meta">
+      <span class="interview-index">#01</span>
+      <div class="interview-people">
+        <span class="person">张小珺</span>
+        <span class="role-badge">主持</span>
+        <span class="arrow">→</span>
+        <span class="person">姚顺宇</span>
+        <span class="role-badge">技术</span>
+      </div>
+      <span class="interview-date">2026</span>
+    </div>
+
+    <div class="interview-title">AI 浪潮初期</div>
+    <div class="interview-desc">
+      张小珺对话姚顺宇，聊 AI 浪潮下的方方面面。
+    </div>
+
+    <div class="insights-label">触动我的点</div>
+
+    <div class="insight-item">
+      <div class="insight-num">1</div>
+      <div class="insight-title">产品经理比你想的更难被替代</div>
+      <div class="insight-body">
+        AI 能生成方案、跑数据、写文档，但它很难做的事情是<strong>判断好坏</strong>。
+        产品的品味是高度主观的东西——这个交互是否顺手、这个功能是否多余、这个文案是否有感觉——
+        这类决策没有标准答案，AI 没有立场去拍板。
+        真正的产品判断力，来自大量的使用经验、审美积累和对人的理解，这些很难被训练进去。
+      </div>
+    </div>
+
+    <div class="insight-item">
+      <div class="insight-num">2</div>
+      <div class="insight-title">不要迷信老登，保持独立判断</div>
+      <div class="insight-body">
+        行业里总有一些「老登」——资历深、说话有权威感，但他们的经验是在旧范式下积累的。
+        <strong>时代变了，旧经验不一定适用。</strong>
+        听建议可以，但要有自己的判断：这条经验的前提条件还成立吗？
+        放在现在的语境下还管用吗？盲目崇拜是认知懒惰，独立思考才是真竞争力。
+      </div>
+    </div>
+
+    <div class="insight-item">
+      <div class="insight-num">3</div>
+      <div class="insight-title">推荐的经典论文</div>
+      <div class="insight-body">
+        姚顺宇点名了两篇 AI 方向的必读 paper：
+        <strong>Sequence to Sequence Learning with Neural Networks</strong>（Sutskever et al., 2014）——
+        seq2seq 架构奠定了现代 NLP 的基础，读懂它才能理解 Transformer 的前世今生；
+        <strong>Scaling Laws for Neural Language Models</strong>（Kaplan et al., 2020）——
+        解释了为什么「更大就是更好」，是理解当前大模型军备竞赛的底层逻辑。
+      </div>
+    </div>
+
+    <div class="resources-section">
+      <div class="resources-label">嘉宾推荐</div>
+      <div class="resource-chips">
+        <a class="resource-chip" href="https://arxiv.org/abs/1409.3215" target="_blank" rel="noopener">
+          <span class="chip-icon">📄</span>
+          <div class="chip-content">
+            <div class="chip-header">
+              <span class="chip-title">Sequence to Sequence Learning with Neural Networks</span>
+              <span class="chip-sub">Sutskever et al. · NeurIPS 2014</span>
+              <span class="chip-arrow">↗</span>
+            </div>
+            <ul class="chip-conclusions">
+              <li>提出 encoder-decoder 架构，两个独立 LSTM 分别负责"理解输入"和"生成输出"，首次优雅解决变长序列到变长序列的映射问题</li>
+              <li>将输入序列<strong>反转</strong>后再送入 encoder，显著改善长句翻译效果——短距离依赖更容易被 LSTM 捕捉</li>
+              <li>这套架构是现代 NLP 的基石，直接催生了 attention 机制，进而演化为 Transformer</li>
+            </ul>
+          </div>
+        </a>
+        <a class="resource-chip" href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">
+          <span class="chip-icon">📄</span>
+          <div class="chip-content">
+            <div class="chip-header">
+              <span class="chip-title">Scaling Laws for Neural Language Models</span>
+              <span class="chip-sub">Kaplan et al. · OpenAI 2020</span>
+              <span class="chip-arrow">↗</span>
+            </div>
+            <ul class="chip-conclusions">
+              <li>模型性能与参数量、数据量、计算量均呈现出平滑的<strong>幂律关系</strong>，可以精确预测——这给了大力出奇迹一个理论背书</li>
+              <li>同等算力下，训练一个更大的模型比反复训练小模型更高效；模型大小比数据量影响更大</li>
+              <li>奠定了 GPT-3、GPT-4 等大模型军备竞赛的底层逻辑：scaling 是可预测的，投入越多收益越确定</li>
+            </ul>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 占位：更多访谈 -->
+  <div class="empty-hint">
+    更多访谈陆续整理中……
+  </div>
+
+</div>
+
+</body>
+</html>
