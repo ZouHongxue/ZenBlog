@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-07-02</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>财经早报</h1>
+      <div class="date">2026-07-02 · CN / SG / US</div>
+    </div>
+    <span class="market-state">Risk-Off · AI芯片恐慌</span>
+  </div>
+  <div class="summary">
+    ① 全球市场Risk-Off：韩国股市暴跌6%，AI半导体板块遭恐慌性抛售，美光-10.57%，SK海力士与三星领跌，恐慌蔓延至亚洲全线。<br>
+    ② 驱动因素：AI基础设施投入见顶担忧（Meta卖算力）+ 杠杆ETF放大SK海力士波动 + 美联储加息预期升温，资金从硬件向软件/防御切换。<br>
+    ③ 资金流向：黄金受Warsh鸽派讲话提振，新兴亚洲债券获全球资金流入，比特币跌至21个月低点（跌破$60K），避险情绪显著。科技股内部分化剧烈——META+8.81%独涨，AI硬件全面承压。
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">AI &amp; 科技股 <span class="count">12条</span></div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://www.bloomberg.com/news/articles/2026-07-02/south-korean-stocks-tumble-6-as-ai-jitters-hurt-chipmakers">韩国股市暴跌6%，AI恐慌重创芯片板块</a></div>
+      <div class="item-summary">KOSPI指数单日暴跌约6%，SK海力士、三星电子领跌半导体板块。市场对AI基础设施投资回报率的担忧集中爆发，叠加杠杆ETF放大波动，韩国市场遭遇2020年以来最严重单日跌幅。</div>
+      <div class="item-meta"><span class="tag ai">Bloomberg</span><span class="tag risk">重大</span>Bloomberg · 2026-07-02</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/">美光科技 MU -10.57%，存储芯片遭重创</a></div>
+      <div class="item-summary">美光科技单日跌超10%，成为Yahoo Finance Trending Ticker中跌幅最大的芯片股之一。存储芯片需求前景受到AI资本支出放缓担忧的严重冲击。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span><span class="tag ai">Bloomberg</span>Yahoo Finance · 2026-07-02</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bloomberg.com/news/features/2026-07-01/how-a-13-billion-leveraged-etf-drives-volatility-in-a-key-ai-memory-stock">$13亿杠杆ETF正在重塑SK海力士交易格局</a></div>
+      <div class="item-summary">一只香港上市的SK海力士杠杆ETF规模已膨胀至约13亿美元，巨大的资金体量开始反过来影响标的股票本身的波动。这种"尾巴摇狗"效应在今日韩国暴跌中起到放大作用。</div>
+      <div class="item-meta"><span class="tag ai">Bloomberg</span><span class="tag risk">风险信号</span>Bloomberg · 2026-07-01</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/">Meta +8.81%，进军云基础设施业务</a></div>
+      <div class="item-summary">Meta Platforms宣布进入云计算基础设施领域，股价大涨8.81%至$612.91。此举被视为Meta将其AI基础设施投资变现的新路径，但也引发市场对全行业AI CapEx是否已达峰值的讨论。</div>
+      <div class="item-meta"><span class="tag ai">Bloomberg</span><span class="tag ai">Yahoo Finance</span>Bloomberg · 2026-07-01</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/">NBIS (Nebius) -17.01%，AI云基础设施股遭暴击</a></div>
+      <div class="item-summary">Nebius Group单日暴跌17%，AI云基础设施板块出现严重分歧。Meta入局被视为对现有AI云玩家的竞争威胁，同时市场对AI基础设施泡沫的担忧加剧。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span>Yahoo Finance · 2026-07-02</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/">Reddit RDDT +13.93%，社交平台逆势大涨</a></div>
+      <div class="item-summary">Reddit在AI芯片普跌中逆势飙升近14%，受益于AI训练数据授权与广告收入增长双重逻辑，显示资金正向AI应用层和数据层转移。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span>Yahoo Finance · 2026-07-02</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/AISEOInsider/comments/1ul4r58/meituan_longcat_ai_is_surprisingly_powerful/">美团LongCat AI发布：1.6万亿参数，未使用NVIDIA芯片训练</a></div>
+      <div class="item-summary">美团发布1.6万亿参数开源大模型LongCat AI，采用MoE稀疏架构，据称完全使用国产硬件堆栈训练而未依赖NVIDIA芯片。Benchmark接近GPT-4级别，但实际应用效果参差不齐。该发布证明先进AI训练可绕开NVIDIA生态，对芯片格局具有战略意义。</div>
+      <div class="item-meta"><span class="tag ai">Reddit</span>NecessaryBear98 · 2026-07-02</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bloomberg.com/news/articles/2026-07-01/asian-stocks-to-decline-as-traders-weigh-ai-warsh-markets-wrap">亚洲股市普跌，芯片抛售蔓延全区域</a></div>
+      <div class="item-summary">韩国芯片股暴跌引发亚洲市场连锁反应，日本、中国台湾股市同步走弱。交易员在评估AI投资过热风险和美联储政策路径，整体市场情绪转向防御。</div>
+      <div class="item-meta"><span class="tag ai">Bloomberg</span>Bloomberg · 2026-07-01</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1DJTz67EpP">Meta开始卖算力，AI基础设施投入见顶了吗？</a></div>
+      <div class="item-summary">市场开始重新审视科技巨头AI资本支出的可持续性。Meta一方面自建云基础设施，另一方面对外出售算力，是否意味着内部AI训练需求增速放缓？该话题引发B站投资者广泛讨论。</div>
+      <div class="item-meta"><span class="tag ai">B站</span>蛇口费雪和不二家 · 4,748次播放</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1s6TF6hEHM">鹏城云脑Ⅲ霸榜，AI算力瓶颈改写</a></div>
+      <div class="item-summary">中国鹏城云脑Ⅲ在多个AI算力基准测试中取得领先成绩，国产算力基础设施正在缩小与NVIDIA生态的差距。</div>
+      <div class="item-meta"><span class="tag ai">B站</span>肥啾OwO · 2026-07-02</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV126736xEaA">国家能源局：AI生成5秒高清视频用电量=10部手机充电</a></div>
+      <div class="item-summary">国家能源局公布AI能耗数据，强调将强化"算电协同"部署。AI算力能耗问题正成为政策关注焦点，91万次播放显示公众高度关注。</div>
+      <div class="item-meta"><span class="tag ai">B站</span>观察者网 · 913,988次播放</div>
+    </li>
+    <li>
+      <div class="item-title">中国A股科技板块普跌，在岸人民币走弱</div>
+      <div class="item-summary">受全球芯片抛售情绪传导，A股科技板块同步走弱。雪球热股中半导体/电子类标的多数下跌，SH603986 -6.06%、SZ002384 -8.67%。</div>
+      <div class="item-meta"><span class="tag ai">TradingEconomics</span><span class="tag ai">雪球</span>TradingEconomics · 2026-07-02</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">被动收入 &amp; 红利资产</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">新兴亚洲债券吸引全球资金流入，无视美联储加息担忧</div>
+      <div class="item-summary">尽管市场对美联储加息预期升温，新兴亚洲债券市场仍持续吸引全球资金流入，反映投资者对亚洲相对高收益和宏观经济稳定性的认可。</div>
+      <div class="item-meta"><span class="tag income">Bloomberg</span>Bloomberg · 2026-07-02</div>
+    </li>
+    <li>
+      <div class="item-title">新加坡6月T-bill收益率1.46%，持续走低</div>
+      <div class="item-summary">新加坡短期国债收益率全面下行：1月期1.40%、3月期1.42%、6月期1.46%、12月期1.45%。对定存和货币基金收益构成下行压力。</div>
+      <div class="item-meta"><span class="tag income">TradingEconomics</span>TradingEconomics · 2026-07-02</div>
+    </li>
+    <li>
+      <div class="item-title">美国10年期国债收益率升至4.44%，REITs持续承压</div>
+      <div class="item-summary">10年期美债收益率从4.38%升至4.44%，2年期升至4.14%。利率上行对REITs和高股息资产估值构成压力，但高收益率也为债券配置提供了更有吸引力的入场点。</div>
+      <div class="item-meta"><span class="tag income">FRED</span>FRED · 2026-06-30</div>
+    </li>
+    <li>
+      <div class="item-title">中国10年期国债收益率1.74%，延续上行趋势</div>
+      <div class="item-summary">中国10年期国债收益率近一月上涨0.03个百分点，同比上涨0.10个百分点。央行7天逆回购注入3000亿元流动性，货币环境保持宽松但长端利率温和回升。</div>
+      <div class="item-meta"><span class="tag income">TradingEconomics</span>TradingEconomics · 2026-07-02</div>
+    </li>
+    <li>
+      <div class="item-title">黄金持稳上涨，Warsh讲话缓解加息恐慌</div>
+      <div class="item-summary">美联储官员Warsh的鸽派讲话缓解了市场对激进加息的担忧，黄金价格获得支撑。对于被动收入投资者，黄金作为抗通胀和避险资产的配置价值再次凸显。</div>
+      <div class="item-meta"><span class="tag income">Bloomberg</span>Bloomberg · 2026-07-02</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>中国</th>
+          <th>新加坡</th>
+          <th>美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val">7D逆回购 1.50%</td>
+          <td class="rate-val">SORA 1.19%</td>
+          <td class="rate-val">Fed Funds 3.63%</td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val">2Y国债 1.25%</td>
+          <td class="rate-val">6M T-bill 1.46%</td>
+          <td class="rate-val">2Y国债 4.14%</td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val">10Y国债 1.74%</td>
+          <td class="rate-val">10Y SGS 2.08%</td>
+          <td class="rate-val">10Y国债 4.44%</td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val">5Y LPR 暂无可靠数据</td>
+          <td class="rate-val">HDB贷款 2.60%</td>
+          <td class="rate-val">30Y房贷 6.49%</td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    <strong>利率环境解读：</strong>美联储加息预期升温（10Y 4.44%），对全球REITs和高杠杆资产构成压力，但利好美元定存和短期美债配置。新加坡利率全面走低（SORA 1.19%、T-bill 1.46%），持有SGD现金或定存的吸引力下降，但低利率环境支撑HDB贷款成本稳定（2.6%）。中国维持宽松基调（10Y 1.74%，央行逆回购3,000亿注入流动性），红利低波资产在低利率+避险情绪下有相对优势。整体判断：<strong>美国债券配置价值上升，新加坡定存收益收窄，中国红利策略受益于避险+宽松共振。</strong>
+  </div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">宏观经济</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">中国6月官方制造业PMI升至50.3，重回扩张区间</div>
+        <div class="item-summary">官方制造业PMI从5月的50.0反弹至50.3，高于市场预期。高技术出口需求提供主要支撑，但财新PMI微降至51.7（三个月低点），反映中小企业信心略有回落。</div>
+        <div class="item-meta"><span class="tag macro">TradingEconomics</span>TradingEconomics · 2026-07-02</div>
+      </li>
+      <li>
+        <div class="item-title">中国6月非制造业PMI升至50.2，服务业意外扩张</div>
+        <div class="item-summary">非制造业PMI从50.1升至50.2，超出市场预期的49.9，服务业持续企稳，为消费复苏提供支撑信号。</div>
+        <div class="item-meta"><span class="tag macro">TradingEconomics</span>TradingEconomics · 2026-07-02</div>
+      </li>
+      <li>
+        <div class="item-title">中国1-5月工业企业利润同比大增18.8%</div>
+        <div class="item-summary">工业企业利润延续强劲增长，反映制造业盈利改善趋势。工业企业利润高增长与A股盈利预期形成正向支撑。</div>
+        <div class="item-meta"><span class="tag macro">TradingEconomics</span>TradingEconomics · 2026-07-02</div>
+      </li>
+      <li>
+        <div class="item-title">央行开展3000亿元逆回购，强化短期流动性管理</div>
+        <div class="item-summary">中国央行通过7天期逆回购向市场净投放3000亿元，引入隔夜逆回购操作工具，增强货币市场稳定性和短期利率传导效率。</div>
+        <div class="item-meta"><span class="tag macro">TradingEconomics</span>TradingEconomics · 2026-07-02</div>
+      </li>
+      <li>
+        <div class="item-title">比特币跌至21个月低点，跌破$60,000关口</div>
+        <div class="item-summary">比特币受Strategy（原MicroStrategy）抛售和美联储加息恐慌双重打击，一度跌破$60,000，创21个月新低。加密货币市场情绪极度低迷。</div>
+        <div class="item-meta"><span class="tag macro">Bloomberg</span>Bloomberg · 2026-06-30 / 07-01</div>
+      </li>
+      <li>
+        <div class="item-title">K型经济：雪球热议经济结构分化</div>
+        <div class="item-summary">雪球用户"燕云1988"发布长文解析K型经济复苏——科技/高端制造向上，传统行业/低收入群体向下。这一分析框架在当前AI硬件暴跌的背景下重新引发关注。</div>
+        <div class="item-meta"><span class="tag macro">雪球</span>燕云1988 · 2026-07-02</div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">房地产 &amp; REITs</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">美国30年固定房贷利率维持6.49%高位</div>
+        <div class="item-summary">房贷利率从6.47%升至6.49%（截至6月25日当周），住房可负担性持续受压。高利率对住宅REITs和按揭REITs的融资成本和资产估值形成持续压力。</div>
+        <div class="item-meta"><span class="tag income">FRED</span>FRED · 2026-06-25</div>
+      </li>
+      <li>
+        <div class="item-title">新加坡HDB优惠贷款利率维持2.60%</div>
+        <div class="item-summary">HDB贷款利率挂钩CPF普通账户利率（2.50%+0.10%），持续保持低位，对新加坡组屋市场购房者和S-REITs的融资成本构成支撑。</div>
+        <div class="item-meta"><span class="tag income">CPF Board</span>CPF Board · 2026 Q3</div>
+      </li>
+      <li>
+        <div class="item-title">低利率+避险情绪，亚洲REITs相对价值凸显</div>
+        <div class="item-summary">在新加坡SORA低至1.19%的背景下，S-REITs约5-6%的股息率提供了约400bp的利差。今日芯片股暴跌引发的Risk-Off情绪或加速资金向防御性REITs轮动。</div>
+        <div class="item-meta"><span class="tag income">综合判断</span>TradingEconomics · 2026-07-02</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value"><span class="up">黄金、新兴亚洲债券、META（云基础设施）、RDDT（AI应用层）</span></div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value"><span class="down">AI芯片（SK海力士、三星、美光-10.57%）、NBIS-17%、比特币</span></div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value"><span class="neutral">硬件承压，软件/平台相对抗跌</span> — 算力硬件遭抛售但AI应用层（Reddit+14%、Meta+9%）获资金青睐</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value"><span class="neutral">Risk-Off，防御主导</span> — 半导体拥挤交易快速瓦解，资金切换至黄金、亚洲债券等避险资产</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">雪球热帖 &amp; 热股</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/1034624503/397806348">K型经济</a></div>
+      <div class="item-summary">燕云1988 · 解析2020年疫情后Peter Atwater提出的K型复苏概念：经济触底后科技/高端制造向上、传统行业复苏缓慢的分化格局。当下AI芯片暴跌是否意味着K型上轨的松动？</div>
+      <div class="item-meta"><span class="tag">雪球</span>燕云1988 · 2026-07-02</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/4999611913/397876981">PCB 行业信息跟踪及物料信息更新</a></div>
+      <div class="item-summary">右侧蜡笔 · 沪电股份持仓跟踪：物料持续满产满销，新增扩建厂房已全部投产。PCB作为AI算力基础设施的上游环节，短期情绪受冲击但基本面仍强劲。</div>
+      <div class="item-meta"><span class="tag">雪球</span>右侧蜡笔 · 2026-07-02</div>
+    </li>
+  </ul>
+  <div class="stock-grid" style="margin-top:16px">
+    <div class="stock-chip">
+      <span class="name">N/A</span>
+      <span class="code">SZ001248</span>
+      <span class="pct up">+127.6%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">兆易创新</span>
+      <span class="code">SH603986</span>
+      <span class="pct down">-6.06%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">京东方A</span>
+      <span class="code">SZ000725</span>
+      <span class="pct down">-4.9%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">中际旭创</span>
+      <span class="code">SZ300308</span>
+      <span class="pct down">-3.45%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">多氟多</span>
+      <span class="code">SZ002407</span>
+      <span class="pct up">+0.18%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">腾讯控股</span>
+      <span class="code">00700</span>
+      <span class="pct up">+2.79%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">长电科技</span>
+      <span class="code">SH600584</span>
+      <span class="pct down">-6.11%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">紫金矿业</span>
+      <span class="code">SH601899</span>
+      <span class="pct up">+1.75%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">比亚迪</span>
+      <span class="code">SZ002594</span>
+      <span class="pct up">+3.89%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">东山精密</span>
+      <span class="code">SZ002384</span>
+      <span class="pct down">-8.67%</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1gojB6iEKV">我给8个顶级AI各10万炒A股，10天后谁赢了？</a></div>
+      <div class="item-summary">Byron爱睡觉 · 52,814次播放 · 47:14</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1S5XZBrEeA">你知道投资一个算力机房，最少要花多少钱吗？</a></div>
+      <div class="item-summary">AI算力通 · 213次播放 · 1:31</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV126736xEaA">国家能源局：AI生成5秒钟高清视频用电量，相当于给10部手机充电，将强化算电协同部署</a></div>
+      <div class="item-summary">观察者网 · 913,988次播放 · 0:18</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1DJTz67EpP">Meta开始卖算力，AI基础设施投入见顶了？</a></div>
+      <div class="item-summary">蛇口费雪和不二家 · 4,748次播放 · 6:13</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1XfEe6vEMj">普通人如何卖算力Token，是否真的可以赚钱？</a></div>
+      <div class="item-summary">AI-折腾 · 4,571次播放 · 4:47</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1yzJH69ECm">用AI炒股，分享Codex的AI基建思路</a></div>
+      <div class="item-summary">皮卡乒乓V · 3,063次播放 · 3:13</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1s6TF6hEHM">鹏城云脑Ⅲ霸榜！AI算力瓶颈改写</a></div>
+      <div class="item-summary">肥啾OwO · 14次播放 · 3:10</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率</td>
+        <td>美联储加息预期升温（10Y 4.44%），但Warsh鸽派讲话缓和极端预期；中国维持宽松；新加坡利率低位</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>AI 拥挤度</td>
+        <td>韩国芯片股-6%、美光-10.57%、NBIS-17%，杠杆ETF放大波动，拥挤交易正在快速瓦解</td>
+        <td><span class="risk-high">高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>比特币21月低点、亚洲股市普跌、VIX隐含波动率上升，恐慌情绪蔓延但黄金上涨显示避险有序</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>财报风险</td>
+        <td>Q2财报季即将开启，AI芯片股业绩将是焦点。当下估值调整或提前消化部分业绩不及预期风险</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">明日关注</div>
+  <ol class="focus">
+    <li><strong>韩国KOSPI是否超跌反弹</strong> — 单日-6%后技术性修复动能如何，SK海力士和三星电子是否有抄底资金进场，是判断AI芯片调整深度的关键信号。</li>
+    <li><strong>美国ISM制造业PMI（6月）</strong> — 若弱于预期，可能强化美联储暂停加息的理由，利好黄金和债券；若强于预期，加息恐慌可能延续。</li>
+    <li><strong>Meta云基础设施业务更多细节</strong> — META+8.81%后是否持续强势，其卖算力策略是否标志行业CapEx拐点，将影响整个AI基础设施板块定价。</li>
+    <li><strong>SK海力士杠杆ETF平仓进展</strong> — $13亿杠杆ETF的赎回/平仓压力是否释放完毕，直接决定韩国芯片股短期走向。</li>
+    <li><strong>中国AI/芯片标的独立性</strong> — A股兆易创新-6.06%、东山精密-8.67%，若次日出现独立于美股的修复行情，值得关注。</li>
+  </ol>
+</div>
+
+<footer>
+  2026-07-02 10:00 自动生成 · 数据来源：Bloomberg · Yahoo Finance · FRED · TradingEconomics · 雪球 · B站 · Reddit · CPF Board<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>

@@ -11,6 +11,19 @@ function devEditorPlugin() {
   return {
     name: 'dev-editor',
     configureServer(server) {
+      // 监听 src/data/zaobao 和 src/data/zhuanti，新增文件时触发整页刷新
+      // Astro v6 / Vite 6 不再自动 watch 这些 raw HTML 目录，getStaticPaths 不会重跑
+      const watchDirs = [
+        join(process.cwd(), 'src/data/zaobao'),
+        join(process.cwd(), 'src/data/zhuanti'),
+      ];
+      server.watcher.add(watchDirs);
+      server.watcher.on('add', (filePath) => {
+        if (watchDirs.some(dir => filePath.startsWith(dir))) {
+          server.hot.send({ type: 'full-reload' });
+        }
+      });
+
       // ideas.json 专用端点
       server.middlewares.use('/api/ideas', (req, res) => {
         const fullPath = join(process.cwd(), 'src/data/ideas.json');
