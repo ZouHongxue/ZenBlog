@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-07-05</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  /* ── News list ── */
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  /* ── Rates table ── */
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Hot stocks ── */
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  /* ── Risk table ── */
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  /* ── Section divider ── */
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  /* ── Tomorrow focus ── */
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  /* ── Rotation box ── */
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+
+  /* ── Market snapshot bar ── */
+  .snapshot-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .snap-item { display: flex; flex-direction: column; gap: 1px; }
+  .snap-label { font-size: 10px; color: #94a3b8; }
+  .snap-val { font-size: 13px; font-weight: 700; }
+  .snap-chg { font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📰 财经早报</h1>
+      <div class="date">2026-07-05 周日 · CN / SG / US · 美国独立日后首个交易日</div>
+    </div>
+    <span class="market-state">⚡ Risk-On 分化 | 蓝筹 &gt; 科技</span>
+  </div>
+  <div class="summary">
+    截至 7 月 4 日（独立日假期）收市，S&P 500 本周收涨 <strong>1.71%</strong> 报 7,483，道指涨 1.89% 报 52,900，Nasdaq 100 反跌 0.38% 至 29,329，科技大盘出现分化——美股 Q2 以 17 年来最强季度收官，但科技权重在周内被传统蓝筹超越。驱动逻辑：AI 基础设施资本开支叙事持续（科技巨头数据中心租约承诺累计 8,500 亿美元），同时弱就业数据压低加息预期，黄金突破 4,175 美元创历史新高，资金在 AI、黄金、大盘蓝筹三条主线并行流动。本周最大风险信号：Nasdaq 落后于 S&P、美债 10Y 逼近 4.5%，短期高利率预期仍具粘性。
+  </div>
+  <div class="snapshot-bar">
+    <div class="snap-item"><span class="snap-label">S&P 500</span><span class="snap-val">7,483.24</span><span class="snap-chg up">+1.71% 周</span></div>
+    <div class="snap-item"><span class="snap-label">Nasdaq 100</span><span class="snap-val">29,329.21</span><span class="snap-chg down">-0.38% 周</span></div>
+    <div class="snap-item"><span class="snap-label">道琼斯</span><span class="snap-val">52,900.07</span><span class="snap-chg up">+1.89% 周</span></div>
+    <div class="snap-item"><span class="snap-label">VIX</span><span class="snap-val">15.8</span><span class="snap-chg up">-2.6 pts</span></div>
+    <div class="snap-item"><span class="snap-label">黄金</span><span class="snap-val">$4,175</span><span class="snap-chg up">+2.14%</span></div>
+    <div class="snap-item"><span class="snap-label">原油 WTI</span><span class="snap-val">$68.78</span><span class="snap-chg neutral">中东风险</span></div>
+    <div class="snap-item"><span class="snap-label">美元指数</span><span class="snap-val">100.87</span><span class="snap-chg down">-0.48%</span></div>
+    <div class="snap-item"><span class="snap-label">BTC</span><span class="snap-val">$62,167</span><span class="snap-chg up">+3.58%</span></div>
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">12条</span></div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/articles/nvidia-stock-nearly-flat-2026-205000376.html">NVDA 2026 年至今几乎零涨幅——该离场还是加仓？</a></div>
+      <div class="item-summary">英伟达全年涨幅近零，估值已压缩至低于可口可乐（按 P/E 比较），市场开始讨论等待 $205–215 买点，部分分析师认为回调后仍是 AI 基建核心持仓。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span><span class="tag ai">Twitter</span> Motley Fool · Assistant Mentor · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://hackernoon.com/nvidia-china-chip-curbs-accelerate-domestic-ai-substitution">中国 AI 芯片国产替代加速，美国收紧前沿模型访问</a></div>
+      <div class="item-summary">HackerNoon 报道：中国在美对华芯片管制升级背景下，正加速 AI 芯片国产替代，同时中国企业赴美招募 AI 人才以争夺"超级 App"入口（CNBC）。A 股铖昌科技当日涨停 (+10%)、江波龙 (+3.14%) 为国产存储替代概念受益者。</div>
+      <div class="item-meta"><span class="tag ai">Twitter</span><span class="tag ai">CNBC</span> hackernoon · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title">美国科技巨头数据中心租约承诺累计 <strong>8,500 亿美元</strong>，同比+204%</div>
+      <div class="item-summary">Q1 2026 新增：Meta +790 亿（QoQ +76%，总量 ~1,830 亿）、微软 +410 亿（总量 ~1,970 亿）、甲骨文总量约 2,500 亿，含为 OpenAI 预留站点。AI 基础设施投入进入"高速轨道"新阶段。</div>
+      <div class="item-meta"><span class="tag ai">Twitter</span> Kobeissi Letter · PW Intelligence · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/articles/micron-stock-soared-nearly-700-224300289.html">Micron（MU）过去一年暴涨近 700%，拆股预期升温</a></div>
+      <div class="item-summary">MU 因业绩超预期大幅上涨，为 S&P 500 Q2 盈利增长贡献近 60% 的算法之一（与 NVDA、AVGO 并列）。分析师讨论：Micron 大涨是否为苹果供应链内存成本带来压力。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> Motley Fool · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/technology/articles/largest-data-center-project-ever-190000713.html">史上最大数据中心项目"正式宣告死亡"</a></div>
+      <div class="item-summary">Oilprice.com 报道，曾被视为史上规模最大的单一数据中心建设项目已正式取消，具体原因未披露（可能涉及能源/冷却/许可瓶颈）。侧面反映超大规模建设面临现实制约。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> Oilprice.com · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title">Palantir 与 Nvidia 强化国家安全合作</div>
+      <div class="item-summary">Palantir（PLTR）宣布深化与 Nvidia AI 的国家安全领域战略合作，军工+AI 叙事强化；当前 PLTR 建议买点区间 $165–175（Twitter 参考性观点，仅供参考）。</div>
+      <div class="item-meta"><span class="tag ai">Twitter</span> rswebsols · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title">英伟达 DGX Station 开始交付：748G 内存桌面超算，本地跑万亿参数大模型</div>
+      <div class="item-summary">新一代 DGX Station 实现 748GB 内存、2,070 TFLOPS 算力，开重量级 AI 工作负载下沉至本地的先河，可能影响云算力依赖结构。</div>
+      <div class="item-meta"><span class="tag ai">B站</span> 锋芒AI · 9,938播放</div>
+    </li>
+    <li>
+      <div class="item-title">Meta 考虑与三星合作定制 AI 芯片，规模约 10 万亿韩元</div>
+      <div class="item-summary">B 站消息：Meta 拟与三星合作生产定制 AI 芯片，打破对 NVDA + TSMC 的高度依赖；若落地将重塑 AI 芯片供应链格局，利好三星半导体、利空 NVDA 垄断叙事。</div>
+      <div class="item-meta"><span class="tag ai">B站</span> 小熊说天下 · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title">光通信隐藏王者：卓胜微切入高速电芯片与硅光赛道</div>
+      <div class="item-summary">雪球分析：卓胜微（手机射频前端龙头）切入高速电芯片、硅光配套及特色工艺平台，兼具量产经验与高频模拟设计能力，被认为有三倍预期空间，关注 A 股光通信产业链。</div>
+      <div class="item-meta"><span class="tag ai">雪球</span> 科技周期 · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/technology/articles/apple-reportedly-planning-5-iphones-203700373.html">苹果计划推出 5 款 iPhone，含 $2,500 折叠屏；Mac/iPad 已提价引股价大跌</a></div>
+      <div class="item-summary">苹果因全球内存危机已上调 Mac/iPad 价格，股价一度大跌（Yahoo Finance 6 月底报道）；同时 AAPL 拟于 2026 年推出折叠屏 iPhone，起价 $2,500，折叠机硬件备货或拉动 OLED/铰链供应链需求。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> Motley Fool · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title">Cathie Wood（ARK）买入 3,810 万美元"下跌大盘股"</div>
+      <div class="item-summary">ARK 基金在近期某科技大盘股下跌时大举买入，总额 3,810 万美元，被 TheStreet 视为逆势布局信号，具体标的为 ARKK 重仓科技股（未特指），可关注 ARKK 持仓变动。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> TheStreet · 1h ago · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title">S&P 500 Q2 盈利增长约 60% 来自 AI 基建股（NVDA / MU / AVGO）</div>
+      <div class="item-summary">据 Yahoo Finance 策略师估算，Q2 2026 标普成分企业盈利增长中近六成由 AI 基础设施三巨头贡献，其命运几乎等于整个指数的命运；Q3 能否延续将取决于 7 月财报季。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> · 5 days ago</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">💰 被动收入 &amp; 红利资产</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">新加坡 6M T-bill 止跌反弹，目前约 1.47%；最优 FD 涨至 1.60%</div>
+      <div class="item-summary">Financial Horse（Jun 28, 2026）：SG T-bill 从低点反弹，最优定存利率同步上升，中东冲突推高油价与通胀，叠加美联储暗示可能转向加息，新加坡利率下行趋势已结束，短期定存性价比改善。</div>
+      <div class="item-meta"><span class="tag income">Twitter</span> Financial Horse · 2026-06-28</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/articles/smartest-dividend-stock-buy-1-215500625.html">1,000 美元最值得买的红利股：NVDA 入围？</a></div>
+      <div class="item-summary">Motley Fool 认为当前 NVDA 的市盈率已低于可口可乐（KO），以 1,000 美元小额投资而言，既能参与 AI 红利又能享受成长性。KO 则被单独列为"每年 5,000 美元股息需持多少股"的经典红利标的。</div>
+      <div class="item-meta"><span class="tag income">Yahoo Finance</span> Motley Fool · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title">A 股保险股低至 6 折估值，股息率达 5.5%–6.0%，本周被机构接回</div>
+      <div class="item-summary">雪球作者 ericwarn 分析：头部保险公司已跌至 0.6 倍 PB，股息率高达 5.5%–6.0%，本周以定投方式买回。高股息防御属性在港股熊市背景下有相对收益逻辑。</div>
+      <div class="item-meta"><span class="tag income">雪球</span> ericwarn丁宁 · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title">巴菲特旗下伯克希尔持有字母表（GOOGL）约 410 亿美元，三种逻辑解析</div>
+      <div class="item-summary">Motley Fool 分析伯克希尔 GOOGL 头寸的可能逻辑：广告垄断护城河、YouTube 现金流机器、AI 基础设施（Google Cloud + Gemini）三层叙事，兼具成长与伪"红利"属性。</div>
+      <div class="item-meta"><span class="tag income">Yahoo Finance</span> Motley Fool · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title">JPMorgan 7 月精选高股息股 | 美国"Trump 账户"向儿童开放，配置 S&P 500 指数基金</div>
+      <div class="item-summary">CNBC 报道 JPMorgan 高股息精选名单（具体标的未披露），可关注 Pro 权限内容。同期，财政部推出针对未成年人的"Trump 账户"，默认配置 S&P 500 指数基金，符合巴菲特建议的指数化路线，长期影响被动资金规模。</div>
+      <div class="item-meta"><span class="tag income">CNBC</span><span class="tag income">Yahoo Finance</span> Fortune · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title">社会安全金（Social Security）2027 COLA 或创历史"Trump 涨幅"，但附带非预期后果</div>
+      <div class="item-summary">Motley Fool 分析：通胀高企将推动 2027 年 SS COLA 上升，被动收入受益者短期得益，但财政压力上升可能长期压缩福利可持续性，提醒依赖 SS 的退休资产规划人注意。</div>
+      <div class="item-meta"><span class="tag income">Yahoo Finance</span> Motley Fool · 15h ago</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">📊 利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span><br><small style="font-weight:400;color:#6b7280">（SORA，MAS API 未返回）</small></td>
+          <td class="rate-val">3.63% <small style="font-weight:400;color:#6b7280">有效联邦基金</small></td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val">~1.47% <small style="font-weight:400;color:#6b7280">6M T-bill（2026-06-28）</small></td>
+          <td class="rate-val">4.18% <small style="font-weight:400;color:#6b7280">2Y 国债（7/4周）</small></td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val">4.49% <small style="font-weight:400;color:#6b7280">Bloomberg 实时</small></td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val">最优 FD ~1.60%</td>
+          <td class="rate-val">6.43% <small style="font-weight:400;color:#6b7280">30Y 固定（Freddie Mac 7/2）</small></td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val"><span class="neutral">暂无可靠数据</span></td>
+          <td class="rate-val">~1.60% <small style="font-weight:400;color:#6b7280">最优 FD（Financial Horse）</small></td>
+          <td class="rate-val">银行优惠贷款 6.75%<br><small style="font-weight:400;color:#6b7280">（1Y T-bill 3.96%，7/2）</small></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    <strong>利率环境解读：</strong>美国 Fed Funds 有效利率 3.63%，弱就业数据（7/2）强化"暂停"而非加息预期，但 10Y 美债仍顽固守在 4.49%，显示市场对"高利率持续更久"的定价未完全消散。美国 30Y 房贷 6.43% 维持高位，对 REITs 形成持续压制（中性偏空）。新加坡方面：T-bill 利率已在 1.47% 止跌，FD 最优 1.60%，中东地缘风险使降息预期边际收窄，对 SG 储蓄用户利好但绝对收益仍低。中国利率当日无可靠数据来源更新，建议关注下周 MLF 操作公告。对红利/债券投资者整体判断：<span style="color:#2563eb;font-weight:600">中性</span>——美国长端利率高位震荡，SG 利率触底回升，债券持有人短期承压，适合分批建仓而非全仓进场。
+  </div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">🌍 宏观经济</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">美联储在弱就业 + 低油价下倾向"暂停"，加息概率下降</div>
+        <div class="item-summary">CNBC（7/3）：就业增长低于预期、油价走软，分析师称加息不大可能，下周服务业 PMI（7/6，前值 54.5）将是关键信号。</div>
+        <div class="item-meta"><span class="tag macro">CNBC</span> 2026-07-03</div>
+      </li>
+      <li>
+        <div class="item-title">最高法院保护 Fed 理事 Lisa Cook 职位，联储独立性获短期维护</div>
+        <div class="item-summary">5:4 裁决，暂时驳回特朗普解雇联储理事的请求，降低了政治干预货币政策的直接风险；同时最高法院扩大总统免除其他政府官员权力。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-07-01</div>
+      </li>
+      <li>
+        <div class="item-title">AI 能否取代石油，成为美联储下一个通胀担忧？</div>
+        <div class="item-summary">Yahoo Finance（6/27）：随着石油通胀逐渐消退，Fed 开始关注 AI 驱动的服务价格上涨和劳动力结构性变化，AI 通胀叙事正悄然进入政策视野。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> 2026-06-27</div>
+      </li>
+      <li>
+        <div class="item-title">2026 年中期选举年：S&P 500 历史平均仅 +4.5%，但次年回报率高达 +17%</div>
+        <div class="item-summary">AskLivermore（21K 浏览）：76 年历史中，中期选举后次年 S&P 500 89% 为正收益，平均涨 +17%；2026 年若震荡整理，2027 年或为真正的大牛市窗口。</div>
+        <div class="item-meta"><span class="tag macro">Twitter</span> AskLivermore · 2026-07-05</div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">🏠 房地产 &amp; REITs</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">美国 30Y 房贷 6.43%，七周低位；购房需求边际回暖</div>
+        <div class="item-summary">Freddie Mac（7/2）：30Y 固定利率从上周 6.49% 降至 6.43%，购房申请量微升，但绝对利率仍高，实质性回暖尚需利率进一步下行。</div>
+        <div class="item-meta"><span class="tag income">Freddie Mac</span> 2026-07-02</div>
+      </li>
+      <li>
+        <div class="item-title">S&P 500 REITs 成分股数量及当前分红状况</div>
+        <div class="item-summary">Twitter 用户咨询 S&P 500 含多少家房地产公司，折射 REITs 配置关注度上升。当前利率高位下 REITs 承压，但若 Fed 进入降息周期则为潜在补涨标的。</div>
+        <div class="item-meta"><span class="tag income">Twitter</span> 2026-07-05</div>
+      </li>
+      <li>
+        <div class="item-title">雪球：港股进入熊市，非 AI 资产持有人今年整体亏损</div>
+        <div class="item-summary">无敌的时间 Q2 总结："除持有 AI 的少数人外，大部分人或指数已进入熊市，港股尤甚"；泡泡玛特（09992）今日微跌 -0.07%，雪球热度仍高，关注消费复苏叙事。</div>
+        <div class="item-meta"><span class="tag income">雪球</span> 无敌的时间 · 2026-07-05</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">🔄 板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value">道琼斯蓝筹 · 黄金 · AI 基础设施建造商（数据中心 REIT / 能源）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value">Nasdaq 科技大盘股（相对走弱） · 港股消费 · A 股面板（京东方 -7.91%）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value"><span style="color:#d97706">⚡ 持续但分化</span> — 硬件（NVDA/MU/AVGO）仍为盈利驱动，但 Nasdaq 相对跑输 S&P，AI 软件/应用补涨信号初现（Palantir、CoreWeave）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value"><span style="color:#2563eb">大盘价值蓝筹 &gt; 成长科技</span>；黄金 + BTC 同涨，避险 + 流动性双属性并存；中期选举年季节性压力尚存</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">🔥 雪球热帖 &amp; 热股</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/5673225518/398395595">2026 上半年投资总结：账户收益 30%，绝大多数来自 AI</a></div>
+      <div class="item-summary">作者吕执着："上半年收益 30% 不到，不是惊人数字，但咬着牙扛出来的。"印证 A 股 AI 持股者与非 AI 持股者的巨大分化。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 吕执着 · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/9363345092/398418956">本周接回保险股：行业龙头低至 6 折，股息率 5.5%–6.0%</a></div>
+      <div class="item-summary">ericwarn 分析保险股低估值高股息，以定投方式分批建仓。在港股熊市背景下，保险股红利属性提供防御缓冲。</div>
+      <div class="item-meta"><span class="tag">雪球</span> ericwarn丁宁 · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/4164685232/398424112">光通信隐藏王者：卓胜微的三倍预期空间</a></div>
+      <div class="item-summary">科技周期分析卓胜微（A 股射频前端龙头）正切入高速电芯片 + 硅光赛道，与传统光模块公司形成差异竞争，被认为是下一阶段光通信最被低估的标的之一。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 科技周期 · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/2635780970/398419109">26Q2 总结：港股已进入熊市，AI 持仓者是少数赢家</a></div>
+      <div class="item-summary">"在牛市写总结一点意思都没有，但今年大部分人已在熊市，港股尤甚"，建议在熊市背景下放缓操作节奏，定期总结心路。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 无敌的时间 · 2026-07-05</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/1340904670/398437064">巴菲特谈看空交易：价值投资大师一生为何几乎不做空</a></div>
+      <div class="item-summary">陈嘉禾（九圜青泉首席投资官）梳理巴菲特做空逻辑，在 AI 市场热潮与高估值争议背景下，价值投资视角的理论提醒仍有参考意义。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 陈嘉禾 · 2026-07-05</div>
+    </li>
+  </ul>
+  <!-- 雪球热股（来源：Xueqiu API，2026-07-05）-->
+  <div class="stock-grid" style="margin-top:16px">
+    <div class="stock-chip">
+      <span class="name">铖昌科技（射频芯片）</span>
+      <span class="code">SZ001270</span>
+      <span class="pct up">+10.00%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">江波龙（存储芯片）</span>
+      <span class="code">SZ301308</span>
+      <span class="pct up">+3.14%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">荣昌生物（港股生物医药）</span>
+      <span class="code">09995.HK</span>
+      <span class="pct up">+9.68%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">京东方A（面板）</span>
+      <span class="code">SZ000725</span>
+      <span class="pct down">-7.91%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">比亚迪</span>
+      <span class="code">SZ002594</span>
+      <span class="pct up">+5.86%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">紫金矿业（黄金）</span>
+      <span class="code">SH601899</span>
+      <span class="pct up">+5.78%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">中船特气</span>
+      <span class="code">SH688146</span>
+      <span class="pct down">-9.55%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">兆易创新</span>
+      <span class="code">SH603986</span>
+      <span class="pct down">-2.45%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">泡泡玛特（港股）</span>
+      <span class="code">09992.HK</span>
+      <span class="pct neutral">-0.07%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">信维通信</span>
+      <span class="code">SZ300136</span>
+      <span class="pct up">+1.57%</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1d8T76cECi">Meta 算力过剩？一条标题党，带崩全球科技股！</a></div>
+      <div class="item-summary">淘沙博士 · 160,223 次播放 · 3:55</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1shBxBrEgQ">显卡 AI 算力天梯更新 | 显卡日报第 1519 期</a></div>
+      <div class="item-summary">冰糖shirley宝 · 48,607 次播放 · 2:20</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1KP7m6oEvg">英伟达 DGX Station 开始交付：748G 内存桌面超算，本地跑万亿参数大模型</a></div>
+      <div class="item-summary">锋芒AI · 9,938 次播放 · 1:30</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1B5To6yErp">这款 LPU 芯片速度比 GPU 快 20 倍 — Hefty LLM【中配】</a></div>
+      <div class="item-summary">黑纹白斑马 · 8,607 次播放 · 5:56</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV14mT466EYF">Meta 正考虑与三星合作，生产价值 10 万亿韩元的定制 AI 芯片</a></div>
+      <div class="item-summary">小熊说天下 · 322 次播放 · 0:30</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1hqTf6qE5P">预警！AI 硬件全线暴跌，显卡/算力逻辑变化</a></div>
+      <div class="item-summary">Ai观察员-小张 · 308 次播放 · 4:25</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1LwTW6yEf8">英伟达 AI 工厂新模式，重构全球算力商业模式！</a></div>
+      <div class="item-summary">视频健歌 · 132 次播放 · 1:06</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1KvMP6LELz">Meta 算力过剩并不意味着 AI 算力过剩</a></div>
+      <div class="item-summary">风禾向远 · 166 次播放 · 1:43</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">⚠️ 风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率风险</td>
+        <td>美联储暂停预期强化（弱就业），但 10Y 美债 4.49% 高位粘性仍强；美国 30Y 房贷 6.43% 压制 REITs 与住房市场</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>AI 拥挤度 / 估值风险</td>
+        <td>NVDA 年内几乎零涨幅说明市场消化中，MU +700% 反映局部过热；S&P 500 近 60% 盈利增长来自 AI 三巨头，集中度极高；史上最大数据中心项目"死亡"提示过度建设风险</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>VIX 15.8 低位，S&P Q2 +17% 后市场存在阶段性满仓风险；黄金与 BTC 同步反弹反映隐性避险情绪；中期选举年历史平均回报低（+4.5%）</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>地缘政治风险</td>
+        <td>中东冲突持续推高油价与通胀，对美联储形成双向压力；中美科技脱钩加速（芯片、AI 模型访问、人才争夺），供应链集中风险上升</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>财报风险</td>
+        <td>Q3 财报季 7 月启动，AI 三巨头承载市场近 60% 的盈利增长期望；服务业 PMI（7/6）与大行财报将定调下周市场方向；Nike EPS 本季超预期 +554%（正向信号）</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>港股 / A 股风险</td>
+        <td>港股非 AI 资产事实进入熊市（雪球用户反馈），A 股京东方 -7.91% 反映面板需求疲软；国产替代链（铖昌、江波龙）短期强势但受政策节奏影响大</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">🎯 明日关注（7/6 周一及本周）</div>
+  <ol class="focus">
+    <li><strong>美国服务业 PMI（7/6 10:00 AM ET，前值 54.5）</strong> — 前值高于荣枯线，若新读数走强则强化"高利率更久"预期，压制成长股；若走弱则为降息预期重燃催化剂，需密切跟踪</li>
+    <li><strong>大行财报季启动（高盛、摩根大通、花旗等预计 7/8–7/10）</strong> — 交易业务与投行收入将反映 Q2 市场强势是否传导至实体，利率敏感业务受益 vs 贷款减值风险</li>
+    <li><strong>NVDA / MU / AVGO 股价联动信号</strong> — 三支股票承载 S&P 500 约 60% 盈利增长预期，若本周有任一出现超预期利空（供应链、管制、竞争），或触发整体调整</li>
+    <li><strong>Meta 三星定制芯片进展</strong> — 若消息实质化（合同披露/三星确认），将重塑 AI 芯片供应链叙事，对 NVDA 形成竞争压力，短期利空 NVDA 但利好整个 AI 生态多元化</li>
+    <li><strong>SG T-bill 新一期发行结果</strong> — 关注是否进一步反弹超过 1.47%，结合中东油价走势判断 MAS 货币政策走向，对新加坡定存/储蓄产品定价有直接指引</li>
+  </ol>
+</div>
+
+<footer>
+  2026-07-05 10:00 自动生成 · 数据来源：Twitter · Reddit · 雪球 · B站 · FRED · Freddie Mac · US Treasury · Bloomberg · Yahoo Finance · CNBC · Financial Horse<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>

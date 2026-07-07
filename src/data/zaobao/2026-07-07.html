@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-07-07</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  /* ── News list ── */
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  /* ── Rates table ── */
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Hot stocks ── */
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  /* ── Risk table ── */
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  /* ── Section divider ── */
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  /* ── Tomorrow focus ── */
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  /* ── Rotation box ── */
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📰 财经早报</h1>
+      <div class="date">2026-07-07 · CN / SG / US</div>
+    </div>
+    <span class="market-state">⚡ AI存储承压 · 港股腾讯领涨</span>
+  </div>
+  <div class="summary">
+    Meta宣布出售多余算力、黑石暂停弗吉尼亚州850公顷数据中心项目，引发市场对AI资本开支可持续性的担忧，存储/内存板块遭遇剧烈抛售（SK Hynix港股ETF单日跌逾13%）。
+    与此同时，港股腾讯强势上涨逾4.6%，光模块龙头中际旭创小幅回升，显示资金在AI链条内部进行轮动——从存储硬件转向应用层与网络基础设施。
+    野村研报对Meta举措给出正面解读：卖算力是资源效率跃升而非需求见顶，三星随后宣布内存涨价，供给端收紧信号或为下一阶段存储股反弹提供支撑。
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">8 条</span></div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/7977283243/398500845">AI鬼故事之后，三星宣布内存涨价</a></div>
+      <div class="item-summary">Meta消息引发存储板块剧烈调整，但三星随后上调内存报价，暗示供给端已开始收紧。作者认为此次跌幅属情绪性超调，供需基本面并未恶化。SK Hynix港股ETF（07709）当日跌逾13%，江波龙（SZ301308）跌近6%。</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        淡淡的相思林 · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/3196557688/398589991">Meta"卖算力"不是需求见顶，而是资源优化的必然一跃</a></div>
+      <div class="item-summary">引用野村证券《Global Memory》研报：Meta对外出售多余算力是资源效率跃升的开端，绝非AI需求见顶预警。AI芯片算力利用率提升后，闲置产能回流市场属正常商业行为，不影响中长期资本开支趋势。</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        夸父逐日丶胤迹 · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/1438190065/398551188">随想306：AI正在复杂地重塑规则</a></div>
+      <div class="item-summary">黑石暂停弗吉尼亚州威廉王子县850公顷数据中心园区建设计划（项目代号未披露），该项目原为全球最大数据中心园区之一。作者认为这是AI重新定义基础设施投资边界的信号，而非行业需求见顶。</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        三石而立orz · 2026-07-06（周末）
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/2799488232/398491423">周末聊聊 Meta / 微软 / 小摩 7.6</a></div>
+      <div class="item-summary">市场围绕Meta算力出售争议分化：老派价投派认为是见顶信号，科技成长派认为是效率优化。作者指出2026年市场情绪较年初更为情绪化，非线性波动加剧，存储内部也出现分歧。</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        我怀念1998 · 2026-07-06（周末）
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/1701766657/398481972">科技退潮后，少数具备三季度利润弹性和事件催化共振的方向</a></div>
+      <div class="item-summary">AI整体板块经历上半年大涨后进入退潮期，作者筛选仍具备Q3利润弹性的细分方向：油运（运价仍有风险溢价）、部分算力基础设施、细分制造业。认为存储已透支，需等待新催化。</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        大国产业逻辑Paul哥 · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/2979842247/398656253">中际旭创 +2.15%：光模块逆势飘红</a></div>
+      <div class="item-summary">热股榜数据显示，中际旭创（SZ300308）当日上涨2.15%，为热门AI链条中少数逆势正收益标的，反映资金从存储向光器件/光互联方向切换。麦格米特（SZ002851）同日涨2.65%。</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球热股</span>
+        数据来源：雪球热股榜 · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/6087293231/398494337">铜：长期定价换锚，上半年AI错过者的转机</a></div>
+      <div class="item-summary">作者坦言上半年未布局AI硬科技而遗憾，转而分析铜的长期定价逻辑：AI数据中心、新能源车、电网升级三重需求叠加，铜可能成为替代AI存储股的新主线。紫金矿业（SH601899）同日跌1.27%但认为是入场机会。</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        黑貔貅俱乐部 · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/1643044849/398573175">（周记339）业绩暴涨600倍 · 下周新规落地</a></div>
+      <div class="item-summary">提及某标的Q2业绩同比暴涨600倍（具体标的未在摘要中披露）。同时提示下周将有新规实施（具体内容需关注正文），建议投资者提前关注政策窗口期。</div>
+      <div class="item-meta">
+        <span class="tag ai">雪球</span>
+        终身黑白 · 2026-07-07
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">💰 被动收入 &amp; 红利资产</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/2979842247/398656253">油运：逻辑不虚，价格可验证</a></div>
+      <div class="item-summary">霍尔木兹海峡风险溢价尚未完全消失，油运票价与货盘每日可跟踪。作者认为油运是目前少数"逻辑可验证+价格透明"的周期资产，适合作为被动收入型组合的卫星仓位。</div>
+      <div class="item-meta">
+        <span class="tag income">雪球</span>
+        风卷红旗过大关（油运估值分析） · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title">雅化集团（SZ002497）涨停 +10.0%</div>
+      <div class="item-summary">锂盐标的雅化集团当日涨停，具体催化暂无公告，市场猜测与锂价回升或政策预期有关。锂电池+锂盐方向值得关注，可作为新能源被动收入资产的关联参考。</div>
+      <div class="item-meta">
+        <span class="tag income">雪球热股</span>
+        数据来源：雪球热股榜 · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title">美联储利率环境：存款/债券配置窗口分析</div>
+      <div class="item-summary">美联储目标利率上限3.75%，美国2Y国债收益率4.14%、10Y收益率4.49%（来源：FRED，截至2026-07-02）。当前US收益率曲线趋近正常化（10Y−2Y约35bp），定存/短债仍具吸引力，REITs估值承压但利差有所收窄。</div>
+      <div class="item-meta">
+        <span class="tag income">FRED</span>
+        数据来源：Federal Reserve Bank of St. Louis · 2026-07-02
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/2386334596/398482344">低估等效于成长：被动收入视角的价值再认</a></div>
+      <div class="item-summary">从现金流折现模型出发，低估与成长在数学上等效。对于偏好被动收入的投资者而言，持续产生现金流且估值被市场忽视的红利资产，可能提供更稳健的长期回报，无需追逐热门AI成长股。</div>
+      <div class="item-meta">
+        <span class="tag income">雪球</span>
+        大地任我行 · 2026-07-07
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">📊 利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val">3.75% <span style="font-size:11px;color:var(--muted)">(目标上限)</span></td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val">4.14% <span style="font-size:11px;color:var(--muted)">(2Y 国债)</span></td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val">4.49% <span style="font-size:11px;color:var(--muted)">(10Y 国债)</span></td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val">6.43% <span style="font-size:11px;color:var(--muted)">(30Y 固定房贷)</span></td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+          <td class="rate-val neutral">暂无可靠数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    <strong>利率环境解读（仅基于 US 已确认数据）：</strong>
+    美联储目标利率3.75%，2Y/10Y国债分别为4.14%/4.49%，期限利差约35bp，收益率曲线已从深度倒挂转向正常化边缘。
+    当前美国实际利率偏高，对 REITs 和长久期债券仍构成压力，但随着降息预期逐渐形成，短债和CD（若利率维持）配置窗口正在收窄。
+    中国及新加坡利率数据今日未能获取，如需参考请直接查阅 PBOC / MAS 官网。
+    <br><span style="font-size:11px;color:var(--muted)">数据来源：FRED（Federal Reserve Bank of St. Louis），截至 2026-07-02</span>
+  </div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">🌍 宏观经济</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">市场在快速进化：2026上半年复盘</div>
+        <div class="item-summary">雪球用户愚老头总结：2026年H1呈"八亏一平一赚"格局，散户普遍亏损，AI/科技是唯一赚钱主线。2026年市场节奏较2025年明显加快，旧逻辑失效速度更快，要求投资者更及时调整认知框架。</div>
+        <div class="item-meta">
+          <span class="tag macro">雪球</span>
+          愚老头 · 2026-07-07
+        </div>
+      </li>
+      <li>
+        <div class="item-title">美国 Prime Rate 维持 6.75%</div>
+        <div class="item-summary">美联储基准利率稳定，Prime Rate维持6.75%（截至2026-07-02），市场对2026下半年降息预期分歧，但目前无明确降息时间表。高利率环境持续压制信贷敏感型行业。</div>
+        <div class="item-meta">
+          <span class="tag macro">FRED</span>
+          Federal Reserve · 截至 2026-07-02
+        </div>
+      </li>
+      <li>
+        <div class="item-title">锂电池行业：市场常见误区梳理</div>
+        <div class="item-summary">雪球作者柯中发布锂电池系列第四篇，聚焦市场对电池行业的两大常见误区。雅化集团当日涨停，与锂盐价格回升预期相关，宏观需求端来自储能+新能源车双驱动。</div>
+        <div class="item-meta">
+          <span class="tag macro">雪球</span>
+          柯中 · 2026-07-07
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">🏠 房地产 &amp; REITs</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">美国30年期固定房贷利率 6.43%</div>
+        <div class="item-summary">美国30年固定房贷利率从6.49%（6月25日）小幅下滑至6.43%（7月2日），略有缓和，但仍处历史偏高水平，对美国房地产市场交易量和REITs估值形成持续压力。</div>
+        <div class="item-meta">
+          <span class="tag income">FRED</span>
+          Federal Reserve · 截至 2026-07-02
+        </div>
+      </li>
+      <li>
+        <div class="item-title">黑石暂停弗吉尼亚州数据中心项目</div>
+        <div class="item-summary">黑石（Blackstone）宣布暂停其在弗吉尼亚州威廉王子县850公顷数据中心园区的建设计划，涉及工业REITs和数据中心REIT估值重估风险。这是全球最大数据中心园区计划之一，暂停消息对相关REITs构成短期负面信号。</div>
+        <div class="item-meta">
+          <span class="tag risk">雪球</span>
+          三石而立orz · 2026-07-06
+        </div>
+      </li>
+      <li>
+        <div class="item-title">中国及新加坡 REITs 数据</div>
+        <div class="item-summary">今日未能获取中国公募REITs、新加坡S-REITs具体行情数据，如需参考请直接查阅上交所/深交所 REITs 行情板块或 SGX 官网。</div>
+        <div class="item-meta">
+          <span class="tag">暂无可靠数据</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">🔄 板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value">港股互联网（腾讯 +4.69%）、光模块（中际旭创 +2.15%）、锂盐（雅化集团 +10%）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value">存储/内存（SK Hynix ETF −13.51%、江波龙 −5.66%、兆易创新 −1.42%）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value">⚠️ 内部分化 — 存储承压，光互联/云应用/港股互联网相对强势</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value">情绪型轮动加剧；价值搭档成长；AI链条内部结构性分化明显</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">🔥 雪球热帖 &amp; 热股</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/7977283243/398500845">AI鬼故事之后三星又涨价了</a></div>
+      <div class="item-summary">存储板块情绪性杀跌后，三星上调内存报价，供给收紧信号出现。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 淡淡的相思林 · 2026-07-07</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/3196557688/398589991">Meta"卖算力"不是需求见顶，而是资源优化的必然一跃</a></div>
+      <div class="item-summary">野村《Global Memory》研报解读，AI算力效率提升后闲置产能回流属正常商业行为。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 夸父逐日丶胤迹 · 2026-07-07</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/1438190065/398551188">随想306 AI正在复杂地重塑规则</a></div>
+      <div class="item-summary">黑石暂停弗吉尼亚州850公顷数据中心建设，AI重塑基础设施投资边界。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 三石而立orz · 2026-07-06</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/2799488232/398491423">周末聊聊Meta/微软/小摩7.6</a></div>
+      <div class="item-summary">市场对Meta算力事件争议分化，2026年市场风格较年初更为情绪化。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 我怀念1998 · 2026-07-06</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/6087293231/398494337">铜：长期定价换锚</a></div>
+      <div class="item-summary">AI数据中心+新能源双重需求，铜可能成为替代存储股的周期性主线。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 黑貔貅俱乐部 · 2026-07-07</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://xueqiu.com/2979842247/398656253">谈谈油运业的合理估值</a></div>
+      <div class="item-summary">油运兼具弱周期成长特征，紫金/洛钼等有色龙头为参照，霍尔木兹风险溢价仍存。</div>
+      <div class="item-meta"><span class="tag">雪球</span> 风卷红旗过大关 · 2026-07-07</div>
+    </li>
+  </ul>
+  <div class="stock-grid" style="margin-top:16px">
+    <div class="stock-chip">
+      <span class="name">腾讯控股</span>
+      <span class="code">00700 HK</span>
+      <span class="pct up">+4.69%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">雅化集团</span>
+      <span class="code">SZ002497</span>
+      <span class="pct up">+10.00%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">麦格米特</span>
+      <span class="code">SZ002851</span>
+      <span class="pct up">+2.65%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">中际旭创</span>
+      <span class="code">SZ300308</span>
+      <span class="pct up">+2.15%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">美光科技</span>
+      <span class="code">MU US</span>
+      <span class="pct up">+0.96%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">京东方A</span>
+      <span class="code">SZ000725</span>
+      <span class="pct down">−0.77%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">紫金矿业</span>
+      <span class="code">SH601899</span>
+      <span class="pct down">−1.27%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">兆易创新</span>
+      <span class="code">SH603986</span>
+      <span class="pct down">−1.42%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">江波龙</span>
+      <span class="code">SZ301308</span>
+      <span class="pct down">−5.66%</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">XL二南方海力士</span>
+      <span class="code">07709 HK</span>
+      <span class="pct down">−13.51%</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">今日暂无可靠数据</div>
+      <div class="item-summary">B站视频数据今日未能获取，如需参考请直接搜索 bilibili.com 相关关键词。</div>
+      <div class="item-meta"><span class="tag">暂无可靠数据</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">⚠️ 风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率风险</td>
+        <td>美联储目标利率3.75%，10Y收益率4.49%，降息预期尚无明确时间表，高利率环境持续但曲线正在正常化</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>AI 拥挤度</td>
+        <td>Meta出售算力 + 黑石暂停数据中心引发存储板块剧烈抛售，AI板块内部分化加剧，拥挤交易局部释放</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>SK Hynix ETF单日−13.51%显示情绪性过激，雪球帖子反映争议明显分化，2026年市场波动率较年初上升</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>财报风险</td>
+        <td>Q2财报季陆续开启，市场将检验AI资本开支投入产出比；下周新规落地（具体内容待跟踪）存在政策不确定性</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">🎯 明日关注</div>
+  <ol class="focus">
+    <li><strong>三星内存涨价传导</strong> — 观察三星涨价是否引发其他内存厂商跟涨，以及 HBM / DRAM 现货价格变化，判断存储板块情绪性超跌后能否迎来技术反弹</li>
+    <li><strong>Meta 算力出售细节落地</strong> — 关注 Meta 官方是否发布更多说明，以及机构报告是否进一步确认"效率优化"而非"需求萎缩"叙事</li>
+    <li><strong>雅化集团涨停原因追踪</strong> — 锂盐涨停催化尚未明朗（公告待核实），需确认是否有政策/价格/并购等实质性催化，警惕无基本面支撑的情绪性拉升</li>
+    <li><strong>下周新规落地</strong> — 雪球热帖提及"下周新规"，需跟踪证监会/行业监管动态，判断对市场流动性或特定板块的影响</li>
+    <li><strong>腾讯港股持续性</strong> — 腾讯单日+4.69%表现强势，关注是否有游戏版号、AI大模型进展或监管政策改善等催化，判断本轮上涨能否延续</li>
+  </ol>
+</div>
+
+<footer>
+  2026-07-07 自动生成 · 数据来源：雪球（热帖 / 热股）· FRED（Federal Reserve Bank of St. Louis）<br>
+  Twitter · Reddit · 小红书 · B站 · Bloomberg · Yahoo Finance 今日数据未能获取，相关板块标注"暂无可靠数据"<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>
