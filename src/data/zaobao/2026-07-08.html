@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-07-08</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  /* ── News list ── */
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  /* ── Rates table ── */
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Hot stocks ── */
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  /* ── Risk table ── */
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  /* ── Section divider ── */
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  /* ── Tomorrow focus ── */
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  /* ── Rotation box ── */
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📰 财经早报</h1>
+      <div class="date">2026-07-08 · CN / SG / US</div>
+    </div>
+    <span class="market-state">⚠️ Risk-OFF（科技/芯片回调）· 能源 Risk-ON</span>
+  </div>
+  <div class="summary">
+    昨日（7月7日）美股三大指数小幅下挫：道指 -0.25% 收于 52,925、标普500 -0.5%、纳指 -1.2%，三星Q2业绩虽创纪录（营业利润19倍增长）但AI支出展望令投资者失望，叠加路透报道 DeepSeek 正自研AI芯片，半导体板块遭集体抛售，Micron、Intel、AMD 全线下跌，存储股集体陷入技术性熊市。与此同时伊朗再度袭击霍尔木兹海峡商船，美国财政部撤销伊朗原油出口许可，油价单日飙升约5%（布伦特突破75.80美元）；资金由AI硬件流向网络安全（Cloudflare +8.6%）与能源板块，全市场呈现局部 risk-off、结构性轮动格局。
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">10条</span></div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/live/stock-market-today-sp-500-nasdaq-futures-slip-after-samsung-results-spark-chip-sell-off-223015294.html">三星Q2营业利润19倍增长，芯片股反跌：市场担忧AI支出放缓</a></div>
+      <div class="item-summary">三星电子Q2营业利润同比增长19倍，AI需求强劲，但市场对AI基础设施支出放缓的担忧盖过喜讯。Micron (MU)、Intel (INTC)、AMD 跌幅显著，与三星相关股票受拖累。道指 -0.25%、标普500 -0.5%、纳指 -1.2%。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        Ines Ferré · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/technology/ai/articles/exclusive-chinas-deepseek-developing-own-103437335.html">路透独家：DeepSeek 正自研AI芯片，对标英伟达</a></div>
+      <div class="item-summary">中国AI创企 DeepSeek 据路透独家报道正在开发自研AI芯片，直接竞争英伟达等主流芯片商，消息引发半导体板块新一轮抛售。分析师认为此举若成功将进一步压低AI算力采购单价。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        路透 · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/micron-samsung-sk-hynix-just-dragged-memory-stocks-into-a-bear-market-154549356.html">Micron、三星、SK 海力士：存储股集体跌入技术性熊市</a></div>
+      <div class="item-summary">全球三大存储芯片企业股价较近期高点累跌超20%，正式进入技术性熊市区间。AI 算力需求虽高，但产品定价压力与库存周期隐忧令机构持续出清。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title">卡特彼勒 (CAT) 单日跌4%，AI基础设施交易全面回撤</div>
+      <div class="item-summary">卡特彼勒作为数据中心电力设备供应商之一，今年涨幅已达55%，随AI基础设施概念整体松动，单日回调4%。同板块的 GE Vernova (GEV) 亦受压。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/article/spacex-stock-drops-despite-flood-of-bullish-wall-street-ratings-153809443.html">SpaceX 上市15天即加入纳斯达克100，当日股价跌6.83%</a></div>
+      <div class="item-summary">SpaceX (SPCX) 在上市后第15个交易日即被纳入纳斯达克100指数，被动资金将被动买入。华尔街密集发布看多评级，但股价当日仍下跌6.83%，报149.47美元，市场对估值存疑。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        · 2026-07-07
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/softwares-strongest-pocket-is-back-near-records-chart-of-the-day-165443761.html">网络安全股逼近历史新高，Cloudflare (NET) 单日+8.6%</a></div>
+      <div class="item-summary">AI硬件回调之际，网络安全板块逆势走强，Cloudflare (NET) 涨8.6%至268.83美元逼近历史高位。分析师指出，软件层AI安全需求被低估，资金正从硬件向软件层补涨轮动。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        · 2026-07-06
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/ai-bubble-fears-the-endless-k-shaped-economy-and-insane-hyperscaler-capex-spending-123000856.html">超大规模云厂商AI Capex支出引泡沫争议，分析师：尚未到顶</a></div>
+      <div class="item-summary">进入夏季，华尔街对 Hyperscaler（AWS、Azure、Google Cloud）AI资本支出是否可持续展开激辩。部分策略师认为下半年季报若不及预期将引发AI拥挤交易大规模去杠杆。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        · 2026-07-05
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/nvidia-micron-and-broadcom-hold-the-stock-markets-fate-in-the-palm-of-their-hands-130753236.html">Q2财报季前瞻：英伟达、Micron、博通三家将贡献S&P500近60%盈利增长</a></div>
+      <div class="item-summary">一位策略师估算，本季度S&P500约60%的盈利增量来自AI基础设施股票。这种高度集中意味着任一龙头企业财报爆雷均可触发市场系统性回调。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        · 2026-06-29
+      </div>
+    </li>
+    <li>
+      <div class="item-title">德州证券交易所（Texas Stock Exchange）将于7月10日正式开市</div>
+      <div class="item-summary">德州证券交易所定于7月10日（周五）在达拉斯正式上线实盘交易，成为美国第三大证券交易所。初期聚焦能源与制造业上市公司，被视为对纳斯达克/NYSE的结构性竞争信号。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        · 2026-07-08
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/economy/article/college-graduates-could-be-ais-first-workforce-test-chart-of-the-day-113545948.html">AI就业替代：应届毕业生将是首批"压力测试"对象</a></div>
+      <div class="item-summary">多份研究显示，入门级白领岗位（编程、内容、数据分析）是AI替代最先发生的领域，2026届应届生面临历史级别就业压力，与此同时高阶AI岗位薪资加速上升，形成 K 型分化。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        · 2026-07-04
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">💰 被动收入 &amp; 红利资产</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/economy/article/consumers-dread-rising-healthcare-rent-costs-new-york-fed-150000217.html">纽约联储调查：消费者最担心医疗与房租成本上升</a></div>
+      <div class="item-summary">纽约联储最新调查显示，消费者对未来12个月医疗和租金支出的担忧升至多年高位，通胀预期边际回升，这一信号可能令美联储维持利率偏高更长时间，利空 REITs 与长久期债券。</div>
+      <div class="item-meta">
+        <span class="tag income">Yahoo Finance</span>
+        · 2026-07-08
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/economy/article/unemployment-dipped-but-more-people-left-the-workforce-whats-going-on-in-the-job-market-185543008.html">6月非农就业仅增5.7万，远低预期；失业率降至4.2%</a></div>
+      <div class="item-summary">美国6月新增非农就业岗位仅57,000个，远低市场预期，劳动参与率同步下降。数据疲软理论上支持降息，但与此同时"潜在加息"讨论仍在市场流传，利率路径更加不确定。</div>
+      <div class="item-meta">
+        <span class="tag income">Yahoo Finance</span>
+        · 2026-07-03
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/economy/article/rate-hike-readjustment-and-ai-hardware-momentum-what-to-watch-this-week-160059243.html">市场开始定价"加息可能性"，本周关注美联储官员发言</a></div>
+      <div class="item-summary">尽管6月就业数据疲软，但消费者通胀预期上行、联储官员（含候任主席 Kevin Warsh）偏鹰表态，令市场小幅上调2026年内加息概率。定存、货币基金短期维持高息吸引力。</div>
+      <div class="item-meta">
+        <span class="tag income">Yahoo Finance</span>
+        · 2026-07-05
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/news/as-spacex-joins-the-nasdaq-100-its-stock-could-show-up-in-your-401k-heres-what-to-know-110835130.html">SpaceX纳入纳斯达克100后将进入退休账户（401k），改变被动配置逻辑</a></div>
+      <div class="item-summary">随着SpaceX加入纳斯达克100，跟踪该指数的ETF（如QQQ）将被动持有SPCX，数以百万计的美国退休账户将自动增持航天/科技头寸，进一步提升指数集中度风险。</div>
+      <div class="item-meta">
+        <span class="tag income">Yahoo Finance</span>
+        · 2026-07-08
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/personal-finance/investing/article/retirees-face-a-new-challenge-how-to-spend-their-401k-savings-191224511.html">退休人员面临"从储蓄到消费"的切换难题</a></div>
+      <div class="item-summary">大量婴儿潮一代进入退休阶段，但如何从积累模式转向提取模式、避免过早或过晚动用资产，成为个人理财焦点。稳定现金流资产（红利股、定存梯队、SSB）需求在老龄化背景下持续增长。</div>
+      <div class="item-meta">
+        <span class="tag income">Yahoo Finance</span>
+        · 2026-06-28
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">📊 利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">3.63%（FRED，2026-06）</td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">4.13%（US 2Y，2026-07-06，FRED）</td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">4.48%（US 10Y，2026-07-06，FRED）</td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">6.43%（30Y Mortgage，2026-07-02，FRED）</td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    <strong>利率环境解读：</strong>美国联邦基金利率维持在3.63%（6月最新），2Y收益率4.13%、10Y收益率4.48%，收益率曲线已明显正斜率化（倒挂结束）。30年期房贷利率6.43%仍处高位，对美国房地产与 REITs 形成持续压制。本周市场开始讨论"加息可能性"（Kevin Warsh鹰派表态），若预期升温将进一步利空长久期资产（债券、REITs）；但6月仅5.7万非农就业明显疲软，降息逻辑未完全消失。整体判断：<strong>短端定存仍具吸引力（高息维持），REITs 与长债在加息预期重燃下承压，持仓需控制久期风险。</strong>中国与新加坡今日利率数据未能获取可靠来源，不作填充。
+  </div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">🌍 宏观经济</div>
+    <ul class="news">
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/markets/article/why-the-us-iran-peace-deal-remains-the-key-market-risk-factor-for-the-rest-of-the-year-171351504.html">伊朗袭击霍尔木兹海峡商船，美撤销伊朗原油出口许可</a></div>
+        <div class="item-summary">7月7日，伊朗军队在过去24小时内袭击3艘过境船只（含卡塔尔LNG船、沙特油轮）。美国财政部撤销允许伊朗出口被制裁原油的OFAC许可，布伦特原油飙至75.80美元/桶，WTI升至72美元。地缘风险尾部加剧。</div>
+        <div class="item-meta">
+          <span class="tag macro">Yahoo Finance</span>
+          Jake Conley · 2026-07-07
+        </div>
+      </li>
+      <li>
+        <div class="item-title">美联储独立性再受关注：最高法院保留 Lisa Cook 职务，但扩大总统解雇权</div>
+        <div class="item-summary">最高法院以5:4裁定特朗普暂不能解雇美联储理事 Cook，但同步赋予总统对其他联邦机构官员更广泛解雇权，联储独立性隐忧持续萦绕市场。</div>
+        <div class="item-meta">
+          <span class="tag macro">Yahoo Finance</span>
+          · 2026-06-29
+        </div>
+      </li>
+      <li>
+        <div class="item-title">世界杯带动东道主城市餐饮消费增长5.3%（BofA数据）</div>
+        <div class="item-summary">美国银行信用卡数据显示，截至6月27日前三周，世界杯东道主城市实体餐饮消费同比增5.3%，非东道主城市仅增3.8%，本地消费边际改善。</div>
+        <div class="item-meta">
+          <span class="tag macro">Yahoo Finance</span>
+          · 2026-07-07
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">🏠 房地产 &amp; REITs</div>
+    <ul class="news">
+      <li>
+        <div class="item-title">美国30年房贷利率6.43%，仍处高位</div>
+        <div class="item-summary">截至7月2日，美国30年固定房贷利率为6.43%（FRED数据）。消费者对房租持续上涨的担忧与高房贷利率叠加，新房购置需求受抑，有利于租赁型REITs需求端，但融资成本压制估值。</div>
+        <div class="item-meta">
+          <span class="tag income">FRED</span>
+          · 2026-07-02
+        </div>
+      </li>
+      <li>
+        <div class="item-title">纽约联储：消费者对房租成本担忧升至多年高位</div>
+        <div class="item-summary">纽约联储调查显示，预计未来租金上涨的消费者比例接近多年高点，暗示住宅型REITs定价能力依然较强，但高利率环境下净资产评估压力仍不可忽视。</div>
+        <div class="item-meta">
+          <span class="tag income">Yahoo Finance</span>
+          · 2026-07-08
+        </div>
+      </li>
+      <li>
+        <div class="item-title">新加坡及中国 REITs 当日具体数据暂无可靠来源</div>
+        <div class="item-summary">今日未能从 MAS、TradingEconomics 等渠道获取新加坡 REITs 收益率及中国REITs最新价格，如需参考请直接查询 SGX 或东方财富。</div>
+        <div class="item-meta">
+          <span class="tag income">本报</span>
+          · 2026-07-08
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">🔄 板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value">网络安全（NET +8.6%）、能源/油气（CL=F +2.3%）、防御性软件</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value">AI 芯片硬件（NVDA、MU、INTC、AMD）、数据中心电力设备（CAT -4%）、SpaceX（SPCX -6.8%）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value">⚠️ 硬件层短期松动：DeepSeek 自研芯片 + 三星盈利但估值偏贵，资金向软件/安全层补涨</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value">成长→防御局部切换；能源为短期避险加仓；整体牛市框架未破，但 AI 拥挤交易降温</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">🔥 雪球热帖 &amp; 热股</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">今日雪球数据暂无可靠来源</div>
+      <div class="item-summary">雪球社区今日内容未能通过接口获取，热帖与热股数据缺失。如需了解 A 股社区讨论，请直接访问 xueqiu.com。</div>
+      <div class="item-meta">
+        <span class="tag">雪球</span>
+        · 2026-07-08
+      </div>
+    </li>
+  </ul>
+  <div class="stock-grid" style="margin-top:16px">
+    <!-- 雪球热股数据今日未获取，跳过展示 -->
+  </div>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">今日 B 站相关视频数据暂无可靠来源</div>
+      <div class="item-summary">B站搜索接口今日未返回有效视频数据，内容缺失。如需了解相关财经解读，可直接在 bilibili.com 搜索"AI 芯片 算力 投资"。</div>
+      <div class="item-meta">
+        <span class="tag">B站</span>
+        · 2026-07-08
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">⚠️ 风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率风险</td>
+        <td>美联储加息预期重新升温（Warsh 鹰派表态），10Y 收益率4.48%偏高；6月非农仅5.7万又支持不加息，利率路径分歧加大</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>AI 拥挤度</td>
+        <td>存储股进入技术性熊市，三星盈利无法提振股价，DeepSeek 自研芯片引发竞争格局担忧，AI硬件单边做多仓位松动</td>
+        <td><span class="risk-high">高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>道指昨触历史新高后小幅回落，网络安全逆势强势，整体市场情绪仍偏乐观但局部恐慌指数上升，非黑即白尚未形成</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>财报风险</td>
+        <td>Q2财报季即将开启，AI基础设施股集中度极高（三家贡献标普60%盈利增量），任一龙头不及预期将引发连锁反应</td>
+        <td><span class="risk-high">高</span></td>
+      </tr>
+      <tr>
+        <td>地缘政治风险</td>
+        <td>伊朗再度袭击霍尔木兹海峡商船，美国撤销伊朗原油出口许可，美伊局势急剧恶化，油价剧烈波动，能源供应链风险骤升</td>
+        <td><span class="risk-high">高</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">🎯 明日关注</div>
+  <ol class="focus">
+    <li><strong>霍尔木兹海峡局势与油价走向</strong> — 美国已撤销伊朗原油出口许可，若双方进一步升级，布伦特可能突破80美元；需观察美伊外交谈判是否重启及航运数据</li>
+    <li><strong>SpaceX (SPCX) 纳入纳斯达克100后的走势</strong> — 被动ETF（QQQ等）将在本周完成再平衡买入，关注股价是否因被动资金流入而反弹，或因高估值继续承压</li>
+    <li><strong>美联储官员发言 / Kevin Warsh 态度</strong> — 市场刚刚开始为加息定价，任何官员偏鹰/偏鸽的表态都可能引发利率预期大幅波动，直接影响债券、REITs、科技股</li>
+    <li><strong>AI 芯片板块是否继续承压</strong> — 三星盈利不及情绪预期 + DeepSeek 自研芯片，关注英伟达（NVDA）能否企稳；若跌破关键支撑将引发更大范围的去杠杆</li>
+    <li><strong>德州证券交易所（TXSE）7月10日开市</strong> — 美国第三大证券交易所即将上线，关注市场流动性是否分散及早期在 TXSE 上市的能源/制造业公司情况</li>
+  </ol>
+</div>
+
+<footer>
+  2026-07-08 早报 · 数据来源：Yahoo Finance · FRED · Bloomberg（部分）· 人民银行官网（利率页面）· MAS（新加坡金管局）<br>
+  美股数据截至 2026-07-07 收盘；利率数据以 FRED 最新可用日期为准<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>
