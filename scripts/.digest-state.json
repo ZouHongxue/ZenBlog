@@ -1,0 +1,90 @@
+{
+  "https://news.ycombinator.com/rss": {
+    "lastGuid": "https://www.economist.com/interactive/finance-and-economics/2026/07/02/is-the-economist-always-wrong",
+    "lastFetched": "2026-07-08T03:20:01.581Z"
+  },
+  "https://techcrunch.com/feed/": {
+    "lastGuid": "https://techcrunch.com/?p=3137907",
+    "lastFetched": "2026-07-08T03:20:01.761Z"
+  },
+  "https://www.theverge.com/rss/full.xml": {
+    "lastGuid": "https://www.theverge.com/gadgets/962514/meta-privacy-light-tampering-smart-glasses-update",
+    "lastFetched": "2026-07-08T03:20:01.838Z"
+  },
+  "https://www.engadget.com/rss-full.xml": {
+    "lastGuid": "https://www.engadget.com/2210223/meta-built-an-ai-detection-tool-to-id-images-and-video-created-with-its-new-models/",
+    "lastFetched": "2026-07-08T03:20:01.922Z"
+  },
+  "https://venturebeat.com/feed/": {
+    "lastGuid": "BAwq525ONz96mOsewfHp2",
+    "lastFetched": "2026-07-08T03:20:02.008Z"
+  },
+  "https://www.producthunt.com/feed": {
+    "lastGuid": "https://www.producthunt.com/products/ai-emaily-unified-ai-inbox",
+    "lastFetched": "2026-07-08T03:20:02.082Z"
+  },
+  "https://blog.samaltman.com/posts.atom": {
+    "lastGuid": "https://blog.samaltman.com/2279512",
+    "lastFetched": "2026-07-08T03:20:03.107Z"
+  },
+  "https://www.ben-evans.com/benedictevans?format=rss": {
+    "lastGuid": "50363cf324ac8e905e7df861:5055cb1de4b0a751cabaedd5:6a0f6b82429a9e65af96189c",
+    "lastFetched": "2026-07-08T03:20:03.526Z"
+  },
+  "https://steveblank.com/feed/": {
+    "lastGuid": "https://steveblank.com/?p=34071",
+    "lastFetched": "2026-07-08T03:20:03.971Z"
+  },
+  "https://blog.pragmaticengineer.com/rss/": {
+    "lastGuid": "6a46b160d2d7770001b1479c",
+    "lastFetched": "2026-07-08T03:20:04.046Z"
+  },
+  "https://jvns.ca/atom.xml": {
+    "lastGuid": "https://jvns.ca/blog/2026/05/15/moving-away-from-tailwind--and-learning-to-structure-my-css-/",
+    "lastFetched": "2026-07-08T03:20:04.140Z"
+  },
+  "https://danluu.com/atom.xml": {
+    "lastGuid": "https://danluu.com/ai-coding/",
+    "lastFetched": "2026-07-08T03:20:05.689Z"
+  },
+  "https://overreacted.io/rss.xml": {
+    "lastGuid": "https://overreacted.io/there-are-no-instances-in-atproto/",
+    "lastFetched": "2026-07-08T03:20:05.777Z"
+  },
+  "https://blog.cloudflare.com/rss/": {
+    "lastGuid": "3xHevpKOOM76zUSrlPcQno",
+    "lastFetched": "2026-07-08T03:20:06.220Z"
+  },
+  "https://stripe.com/blog/feed.rss": {
+    "lastGuid": "https://stripe.com/blog/trends-from-hitec",
+    "lastFetched": "2026-07-08T03:20:06.280Z"
+  },
+  "http://feeds.bbci.co.uk/news/rss.xml": {
+    "lastGuid": "https://www.bbc.co.uk/news/articles/cjdg4y3g0z7o#0",
+    "lastFetched": "2026-07-08T03:20:06.373Z"
+  },
+  "https://www.theguardian.com/world/rss": {
+    "lastGuid": "https://www.theguardian.com/global-development/2026/jul/07/catnip-lotion-as-effective-as-deet-at-repelling-mosquitoes-study-finds",
+    "lastFetched": "2026-07-08T03:20:06.469Z"
+  },
+  "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml": {
+    "lastGuid": "https://www.nytimes.com/2026/07/07/us/politics/us-strikes-iran-tanker-attacks.html",
+    "lastFetched": "2026-07-08T03:20:06.528Z"
+  },
+  "https://feeds.a.dj.com/rss/RSSWorldNews.xml": {
+    "lastGuid": "WP-WSJ-0002354638",
+    "lastFetched": "2026-07-08T03:20:07.329Z"
+  },
+  "http://rss.cnn.com/rss/edition.rss": {
+    "lastGuid": "https://edition.cnn.com/webview/politics/live-news/trump-indictment-stormy-daniels-news-04-03-23/index.html",
+    "lastFetched": "2026-07-08T03:20:22.614Z"
+  },
+  "https://www.scmp.com/rss/91/feed": {
+    "lastGuid": "https://www.scmp.com/news/asia/southeast-asia/article/3359793/rainy-holidays-ac-exports-thailand-eyes-red-hot-business-europe-heatwave?utm_source=rss_feed",
+    "lastFetched": "2026-07-08T03:20:23.096Z"
+  },
+  "https://rss.dw.com/rdf/rss-en-all": {
+    "lastGuid": "https://www.dw.com/en/iran-war-us-launches-fresh-strikes-after-attacks-in-hormuz/live-77869350?maca=en-rss-en-all-1573-rdf",
+    "lastFetched": "2026-07-08T03:20:23.195Z"
+  }
+}

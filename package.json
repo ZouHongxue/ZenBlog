@@ -13,6 +13,7 @@
     "@astrojs/rss": "^4.0.7",
     "tailwindcss": "4.0.17",
     "@tailwindcss/vite": "4.0.17",
-    "@tailwindcss/typography": "^0.5.15"
+    "@tailwindcss/typography": "^0.5.15",
+    "rss-parser": "^3.13.0"
   }
 }

@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 
-import { readFileSync, writeFileSync, readdirSync, copyFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync, copyFileSync, existsSync, mkdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 import { execSync } from 'child_process';
@@ -16,6 +16,7 @@ function devEditorPlugin() {
       const watchDirs = [
         join(process.cwd(), 'src/data/zaobao'),
         join(process.cwd(), 'src/data/zhuanti'),
+        join(process.cwd(), 'src/data/digest'),
       ];
       server.watcher.add(watchDirs);
       server.watcher.on('add', (filePath) => {
@@ -112,6 +113,74 @@ function devEditorPlugin() {
           }
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ ok: true, copied, skipped }));
+        } catch (e) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: false, error: String(e) }));
+        }
+      });
+
+      // RSS 资讯抓取端点：跑 scripts/generate-digest.mjs 的核心逻辑，
+      // 生成 src/data/digest/YYYY-MM-DD.html 并尝试 git commit（跟 sync-zaobao 一样，
+      // 只有在真实的本地 dev server 里跑才会成功抓到网并提交）。
+      // 如果当天文件已存在且没带 force:true，直接返回 needsConfirm，不做任何抓取，
+      // 前端弹 confirm() 确认后带 force:true 重新调用一次才会真正覆盖。
+      server.middlewares.use('/api/generate-digest', (req, res) => {
+        if (req.method !== 'POST') { res.writeHead(405); res.end(); return; }
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', () => {
+          (async () => {
+            try {
+              let force = false;
+              try { force = JSON.parse(body || '{}').force === true; } catch {}
+              const mod = await import('./scripts/generate-digest.mjs?t=' + Date.now());
+              const result = await mod.runDigest({ force });
+              if (result.needsConfirm) {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ ok: true, needsConfirm: true, date: result.date }));
+                return;
+              }
+              if (result.totalItems > 0) {
+                const cwd = process.cwd();
+                try {
+                  execSync('git add src/data/digest/', { cwd });
+                  execSync(`git commit -m "content: RSS digest ${result.date}"`, { cwd });
+                } catch (gitErr) {
+                  console.warn('[generate-digest] git commit 失败（可能无变更）:', String(gitErr).split('\n')[0]);
+                }
+              }
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ ok: true, totalItems: result.totalItems }));
+            } catch (e) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ ok: false, error: String(e) }));
+            }
+          })();
+        });
+      });
+
+      // 删除某一天的资讯精选（dev 模式下 /digest 列表页的删除按钮用）
+      server.middlewares.use('/api/delete-digest', (req, res) => {
+        if (req.method !== 'POST') { res.writeHead(405); res.end(); return; }
+        const url = new URL(req.url, 'http://localhost');
+        const name = url.searchParams.get('name') || '';
+        if (!name || !/^[\w-]+$/.test(name)) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: false, error: 'Invalid name' }));
+          return;
+        }
+        const filePath = join(process.cwd(), 'src/data/digest', `${name}.html`);
+        try {
+          if (existsSync(filePath)) unlinkSync(filePath);
+          const cwd = process.cwd();
+          try {
+            execSync(`git add src/data/digest/${name}.html`, { cwd });
+            execSync(`git commit -m "chore: remove digest ${name}"`, { cwd });
+          } catch (gitErr) {
+            console.warn('[delete-digest] git commit 失败（可能无变更）:', String(gitErr).split('\n')[0]);
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true }));
         } catch (e) {
           res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ ok: false, error: String(e) }));

@@ -1,0 +1,28 @@
+[
+  { "name": "Hacker News", "url": "https://news.ycombinator.com/rss", "category": "科技动态" },
+  { "name": "TechCrunch", "url": "https://techcrunch.com/feed/", "category": "科技动态" },
+  { "name": "The Verge", "url": "https://www.theverge.com/rss/full.xml", "category": "科技动态" },
+  { "name": "Engadget", "url": "https://www.engadget.com/rss-full.xml", "category": "科技动态" },
+  { "name": "VentureBeat", "url": "https://venturebeat.com/feed/", "category": "科技动态" },
+
+  { "name": "Product Hunt", "url": "https://www.producthunt.com/feed", "category": "创业与产品" },
+  { "name": "Sam Altman", "url": "https://blog.samaltman.com/posts.atom", "category": "创业与产品" },
+  { "name": "Benedict Evans", "url": "https://www.ben-evans.com/benedictevans?format=rss", "category": "创业与产品" },
+  { "name": "Steve Blank", "url": "https://steveblank.com/feed/", "category": "创业与产品" },
+
+  { "name": "The Pragmatic Engineer", "url": "https://blog.pragmaticengineer.com/rss/", "category": "工程博客" },
+  { "name": "Julia Evans", "url": "https://jvns.ca/atom.xml", "category": "工程博客" },
+  { "name": "Dan Luu", "url": "https://danluu.com/atom.xml", "category": "工程博客" },
+  { "name": "Dan Abramov (Overreacted)", "url": "https://overreacted.io/rss.xml", "category": "工程博客" },
+  { "name": "Cloudflare Blog", "url": "https://blog.cloudflare.com/rss/", "category": "工程博客" },
+  { "name": "Stripe Blog", "url": "https://stripe.com/blog/feed.rss", "category": "工程博客" },
+
+  { "name": "BBC News", "url": "http://feeds.bbci.co.uk/news/rss.xml", "category": "国际新闻" },
+  { "name": "The Guardian - World", "url": "https://www.theguardian.com/world/rss", "category": "国际新闻" },
+  { "name": "NYT - Top Stories", "url": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml", "category": "国际新闻" },
+  { "name": "WSJ - World News", "url": "https://feeds.a.dj.com/rss/RSSWorldNews.xml", "category": "国际新闻" },
+  { "name": "Washington Post - World", "url": "http://feeds.washingtonpost.com/rss/world", "category": "国际新闻" },
+  { "name": "CNN - Edition", "url": "http://rss.cnn.com/rss/edition.rss", "category": "国际新闻" },
+  { "name": "South China Morning Post", "url": "https://www.scmp.com/rss/91/feed", "category": "国际新闻" },
+  { "name": "Deutsche Welle (EN)", "url": "https://rss.dw.com/rdf/rss-en-all", "category": "国际新闻" }
+]

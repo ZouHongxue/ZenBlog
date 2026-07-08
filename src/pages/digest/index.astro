@@ -1,0 +1,212 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { readFileSync, readdirSync, existsSync } from 'fs';
+import { join } from 'path';
+const isDev = import.meta.env.DEV;
+
+const digestDir = join(process.cwd(), 'src/data/digest');
+const files = existsSync(digestDir)
+  ? readdirSync(digestDir).filter(f => f.endsWith('.html')).sort().reverse()
+  : [];
+
+function decodeHtml(s: string) {
+  return s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+}
+
+function parsePreview(name: string) {
+  try {
+    const html = readFileSync(join(digestDir, `${name}.html`), 'utf-8');
+    const sections = [...html.matchAll(/<div class="card-title">(.*?)<span class="count">/gs)]
+      .map(m => decodeHtml(m[1].replace(/<[^>]*>/g, '').trim()));
+    const headlines = [...html.matchAll(/class="item-title">\s*(?:<a[^>]*>)?(.*?)(?:<\/a>)?\s*<\/div>/gs)]
+      .map(m => decodeHtml(m[1].replace(/<[^>]*>/g, '').trim()))
+      .filter(Boolean)
+      .slice(0, 4);
+    return { sections, headlines };
+  } catch { return { sections: [], headlines: [] }; }
+}
+
+const digests = files.map(f => {
+  const name = f.replace('.html', '');
+  const date = name.slice(0, 10); // 支持 YYYY-MM-DD 或 YYYY-MM-DD-HHmm 两种文件名
+  const { sections, headlines } = parsePreview(name);
+  return { name, date, sections, headlines };
+});
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<BaseLayout title="资讯" description="RSS 订阅的科技、创业与国际新闻摘要。">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-14">
+
+    <div class="mb-10 reveal">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-xs font-semibold text-blue-500 tracking-wider uppercase">RSS Digest</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">资讯</h1>
+        {isDev && (
+          <button id="gen-digest-btn"
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-dashed border-blue-400 dark:border-blue-600 text-xs text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            立即抓取
+          </button>
+        )}
+      </div>
+      <p class="text-sm text-gray-400 dark:text-gray-500 mt-2">订阅的科技、创业、工程博客与国际新闻 RSS 摘要。</p>
+    </div>
+
+    <div class="divide-y divide-gray-100 dark:divide-white/[0.06]">
+      {digests.map((b, i) => {
+        const d = new Date(b.date);
+        const dateStr = d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+        const weekday = d.toLocaleDateString('zh-CN', { weekday: 'long' });
+        return (
+          <div class={`group flex items-start gap-5 py-6 hover:bg-blue-50/50 dark:hover:bg-blue-950/10 -mx-3 px-3 rounded-xl transition-colors reveal reveal-delay-${Math.min(i+1,5)}`}>
+            <a href={`${base}digest/${b.name}`} class="flex items-start gap-5 flex-1 min-w-0">
+              <!-- 日期 -->
+              <div class="shrink-0 w-14 text-center pt-0.5">
+                <div class="text-2xl font-bold text-blue-500 tabular-nums leading-none">{d.getDate()}</div>
+                <div class="text-xs text-gray-400 dark:text-gray-600 mt-0.5">{d.toLocaleDateString('zh-CN', { month: 'short' })}</div>
+                <div class="text-xs text-gray-300 dark:text-gray-700 mt-0.5">{weekday.replace('星期', '')}</div>
+              </div>
+
+              <!-- 内容 -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-2">
+                  <h2 class="text-base font-semibold text-gray-800 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    资讯精选 · {dateStr}
+                  </h2>
+                </div>
+                {b.sections.length > 0 && (
+                  <div class="flex flex-wrap gap-1.5 mb-2">
+                    {b.sections.map(s => (
+                      <span class="text-xs text-blue-600 dark:text-blue-500 bg-blue-50 dark:bg-blue-950/30 px-2 py-0.5 rounded-full">{s}</span>
+                    ))}
+                  </div>
+                )}
+                {b.headlines.length > 0 && (
+                  <ul class="space-y-0.5">
+                    {b.headlines.map(h => (
+                      <li class="text-xs text-gray-500 dark:text-gray-500 truncate before:content-['·'] before:mr-1.5 before:text-blue-400">{h}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 dark:text-gray-700 group-hover:text-blue-400 shrink-0 mt-1 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+
+            {isDev && (
+              <button
+                class="digest-delete-btn shrink-0 mt-1 p-1.5 rounded-md text-gray-300 dark:text-gray-700 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                data-name={b.name}
+                title="删除这条资讯">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            )}
+          </div>
+        );
+      })}
+    </div>
+
+    {digests.length === 0 && (
+      <div class="text-center py-20 text-gray-400 dark:text-gray-600 text-sm">
+        暂无资讯摘要。{isDev ? '点击上方"立即抓取"生成第一份。' : ''}
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<script>
+  const obs = new IntersectionObserver(
+    es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } }),
+    { threshold: 0.05 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Dev: 立即抓取 RSS。如果当天已经存在，先弹确认，同意了再带 force:true 重新调用一次。
+  const genBtn = document.getElementById('gen-digest-btn') as HTMLButtonElement | null;
+
+  async function callGenerate(force: boolean) {
+    const r = await fetch('/api/generate-digest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ force }),
+    });
+    return r.json();
+  }
+
+  genBtn?.addEventListener('click', async () => {
+    genBtn.textContent = '抓取中…（可能需要几十秒）';
+    genBtn.style.opacity = '0.6';
+    try {
+      let data = await callGenerate(false);
+      if (data.ok && data.needsConfirm) {
+        const confirmed = confirm(`今天（${data.date}）的资讯已经存在，是否覆盖？`);
+        if (!confirmed) {
+          genBtn.textContent = '已取消';
+          setTimeout(resetBtn, 2000);
+          return;
+        }
+        data = await callGenerate(true);
+      }
+      if (data.ok) {
+        genBtn.textContent = data.totalItems > 0
+          ? `已生成 ${data.totalItems} 条内容 ✓`
+          : '最近 7 天没有新内容';
+        genBtn.style.color = '#16a34a';
+        genBtn.style.borderColor = '#16a34a';
+        if (data.totalItems > 0) setTimeout(() => location.reload(), 800);
+      } else {
+        genBtn.textContent = '抓取失败';
+        genBtn.style.color = '#dc2626';
+        console.error(data.error);
+      }
+    } catch (e) {
+      genBtn.textContent = '出错了';
+      console.error(e);
+    }
+    setTimeout(resetBtn, 4000);
+
+    function resetBtn() {
+      if (genBtn) {
+        genBtn.textContent = '立即抓取';
+        genBtn.style.opacity = '1';
+        genBtn.style.color = '';
+        genBtn.style.borderColor = '';
+      }
+    }
+  });
+
+  // Dev: 删除某一天的资讯
+  document.querySelectorAll<HTMLButtonElement>('.digest-delete-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const name = btn.dataset.name;
+      if (!name) return;
+      if (!confirm(`确定删除「${name}」这条资讯吗？`)) return;
+      btn.disabled = true;
+      try {
+        const r = await fetch(`/api/delete-digest?name=${encodeURIComponent(name)}`, { method: 'POST' });
+        const data = await r.json();
+        if (data.ok) {
+          location.reload();
+        } else {
+          alert('删除失败: ' + data.error);
+          btn.disabled = false;
+        }
+      } catch (err) {
+        alert('删除出错');
+        btn.disabled = false;
+      }
+    });
+  });
+</script>

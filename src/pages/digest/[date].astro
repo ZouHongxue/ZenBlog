@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { readFileSync, readdirSync, existsSync } from 'fs';
+import { join } from 'path';
+
+export async function getStaticPaths() {
+  const digestDir = join(process.cwd(), 'src/data/digest');
+  const files = existsSync(digestDir) ? readdirSync(digestDir).filter(f => f.endsWith('.html')) : [];
+  return files.map(f => ({ params: { date: f.replace('.html', '') } }));
+}
+
+const { date } = Astro.params;
+const digestDir = join(process.cwd(), 'src/data/digest');
+let rawHtml = readFileSync(join(digestDir, `${date}.html`), 'utf-8');
+
+// 在 </body> 前注入高度上报脚本（跟 zaobao 详情页同一套方案）
+const heightScript = `
+<script>
+(function() {
+  function send() {
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.documentElement.offsetHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    parent.postMessage({ type: 'digest-h', h: h }, '*');
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function() { send(); setTimeout(send, 200); });
+  }
+  window.addEventListener('load', function() { send(); setTimeout(send, 500); });
+  if (window.ResizeObserver && document.body) {
+    new ResizeObserver(send).observe(document.body);
+  }
+})();
+<\/script>
+`;
+rawHtml = rawHtml.replace(/<\/body>/i, heightScript + '</body>');
+
+const dateOnly = date.slice(0, 10);
+const d = new Date(dateOnly);
+const dateStr = d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<BaseLayout title={`资讯 ${date}`} description={`资讯精选 ${dateStr}`}>
+
+  <!-- 面包屑导航 -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-6 pb-3 flex items-center gap-3">
+    <a href={`${base}digest`}
+      class="inline-flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-600 hover:text-blue-500 transition-colors group">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+      资讯列表
+    </a>
+    <span class="text-gray-200 dark:text-gray-800">·</span>
+    <span class="text-xs text-gray-400 dark:text-gray-600">{dateStr}</span>
+  </div>
+
+  <!-- 正文：iframe 完全隔离 CSS -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-16">
+    <iframe
+      id="digest-frame"
+      srcdoc={rawHtml}
+      title={`资讯精选 ${date}`}
+      scrolling="no"
+      style="width:100%; border:none; display:block; min-height:600px;"
+    />
+  </div>
+
+</BaseLayout>
+
+<script>
+  window.addEventListener('message', function(e) {
+    if (!e.data || e.data.type !== 'digest-h') return;
+    var frame = document.getElementById('digest-frame') as HTMLIFrameElement | null;
+    if (frame && e.data.h > 0) {
+      var cur = parseInt(frame.style.height) || 0;
+      if (e.data.h > cur) frame.style.height = e.data.h + 'px';
+    }
+  });
+</script>
