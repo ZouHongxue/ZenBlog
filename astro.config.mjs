@@ -119,6 +119,42 @@ function devEditorPlugin() {
         }
       });
 
+      // 通用 git commit 端点（供沙箱 Claude 通过 curl 调用，以本地用户身份执行 git）
+      // POST /api/git-commit  Body: { "files": ["path/to/file"], "message": "commit msg" }
+      server.middlewares.use('/api/git-commit', (req, res) => {
+        if (req.method !== 'POST') { res.writeHead(405); res.end(); return; }
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', () => {
+          try {
+            const { files, message } = JSON.parse(body);
+            if (!message || !Array.isArray(files) || files.length === 0) {
+              res.writeHead(400, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ ok: false, error: 'files and message required' }));
+              return;
+            }
+            // 安全校验：只允许提交 src/ 和根目录白名单文件，禁止路径穿越
+            const allowed = files.every(f =>
+              typeof f === 'string' && !f.includes('..') &&
+              (f.startsWith('src/') || ['astro.config.mjs', 'package.json', '.gitignore', 'CLAUDE.md'].includes(f))
+            );
+            if (!allowed) {
+              res.writeHead(403, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ ok: false, error: 'path not allowed' }));
+              return;
+            }
+            const cwd = process.cwd();
+            execSync(`git add ${files.map(f => JSON.stringify(f)).join(' ')}`, { cwd });
+            execSync(`git commit -m ${JSON.stringify(message)}`, { cwd });
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: true }));
+          } catch (e) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: false, error: String(e).split('\n')[0] }));
+          }
+        });
+      });
+
       // RSS 资讯抓取端点：跑 scripts/generate-digest.mjs 的核心逻辑，
       // 生成 src/data/digest/YYYY-MM-DD.html 并尝试 git commit（跟 sync-zaobao 一样，
       // 只有在真实的本地 dev server 里跑才会成功抓到网并提交）。
