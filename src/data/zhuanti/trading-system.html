@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>交易体系专题：踩坑复盘与知识框架</title>
+<meta name="description" content="三个市场(A股/港股/美股)、两套系统(趋势/回归)的完整框架，附个人踩坑记录。整理自 2026 年 6-7 月系列讨论。">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222536;
+    --surface3: #2a2d3e;
+    --border: #2e3147;
+    --text: #e2e4f0;
+    --muted: #7c82a3;
+    --accent1: #6c8cff;
+    --accent2: #ff6b9d;
+    --accent3: #43d9ad;
+    --accent4: #f7c948;
+    --accent5: #ff8c5a;
+    --accent6: #b67aff;
+    --red: #ff5a5a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'PingFang SC', 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  /* ── Header ── */
+  header {
+    padding: 64px 40px 48px;
+    max-width: 960px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: var(--accent4);
+    margin-bottom: 16px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.25;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, var(--accent4) 0%, var(--accent5) 60%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 580px;
+    line-height: 1.7;
+  }
+
+  .meta-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+
+  .chip-market { color: var(--accent1); border-color: rgba(108,140,255,0.3); background: rgba(108,140,255,0.08); }
+  .chip-system { color: var(--accent3); border-color: rgba(67,217,173,0.3); background: rgba(67,217,173,0.08); }
+  .chip-date   { color: var(--muted);   border-color: var(--border);           background: var(--surface2); }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-top: 48px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent4);
+    background: rgba(247,201,72,0.1);
+    border: 1px solid rgba(247,201,72,0.2);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* ── 两套系统对比表 ── */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  thead th:nth-child(2) { color: var(--accent3); }
+  thead th:nth-child(3) { color: var(--accent1); }
+
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+
+  tbody td {
+    padding: 10px 16px;
+    vertical-align: top;
+    color: var(--muted);
+    background: var(--surface);
+    line-height: 1.6;
+  }
+
+  tbody td:first-child {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+    background: var(--surface2);
+    width: 130px;
+  }
+
+  /* 持仓快照表 */
+  .snapshot-table tbody td:first-child { width: 100px; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .badge-trend   { color: var(--accent3); background: rgba(67,217,173,0.1); border: 1px solid rgba(67,217,173,0.25); }
+  .badge-return  { color: var(--accent1); background: rgba(108,140,255,0.1); border: 1px solid rgba(108,140,255,0.25); }
+  .badge-warning { color: var(--accent5); background: rgba(255,140,90,0.1);  border: 1px solid rgba(255,140,90,0.25); }
+
+  /* ── 铁律卡 ── */
+  .rule-card {
+    background: rgba(247,201,72,0.06);
+    border: 1px solid rgba(247,201,72,0.25);
+    border-left: 3px solid var(--accent4);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .rule-card strong { color: var(--accent4); }
+
+  /* ── 教训卡 ── */
+  .lesson-card {
+    background: rgba(255,90,90,0.05);
+    border: 1px solid rgba(255,90,90,0.2);
+    border-left: 3px solid var(--red);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .lesson-card strong { color: var(--text); }
+
+  /* ── 坑卡 ── */
+  .pit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pit-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent5), var(--red));
+  }
+
+  .pit-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent5);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pit-num {
+    font-size: 11px;
+    background: rgba(255,140,90,0.12);
+    border: 1px solid rgba(255,140,90,0.3);
+    color: var(--accent5);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .pit-row {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 4px 12px;
+    font-size: 13.5px;
+    margin-bottom: 6px;
+  }
+
+  .pit-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-top: 2px;
+  }
+
+  .pit-text { color: var(--muted); line-height: 1.65; }
+
+  /* ── 知识点 ── */
+  .knowledge-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+
+  .knowledge-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .knowledge-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent6);
+    background: rgba(182,122,255,0.1);
+    border: 1px solid rgba(182,122,255,0.25);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .knowledge-body {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .knowledge-body strong { color: var(--text); font-weight: 600; }
+  .knowledge-body em { color: var(--accent3); font-style: normal; }
+
+  .knowledge-body ol, .knowledge-body ul {
+    padding-left: 20px;
+    margin: 10px 0;
+  }
+
+  .knowledge-body li { margin-bottom: 6px; }
+
+  /* ── 行为总结 ── */
+  .behavior-card {
+    background: rgba(182,122,255,0.06);
+    border: 1px solid rgba(182,122,255,0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .behavior-card strong { color: var(--text); }
+
+  /* ── 十条戒律 ── */
+  .commandments {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-top: 8px;
+  }
+
+  .commandment {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .commandment:last-child { border-bottom: none; }
+
+  .commandment-num {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--accent4);
+    min-width: 24px;
+    padding-top: 2px;
+    tabular-nums: true;
+  }
+
+  .commandment-text {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .commandment-text strong { color: var(--text); }
+
+  /* ── 注脚 ── */
+  .footnote {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 40px 20px 32px; }
+    .container { padding: 0 20px 60px; }
+    .pit-card, .knowledge-item { padding: 18px 16px; }
+    .commandments { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="label">专题 · 交易体系</div>
+  <h1>踩坑复盘与知识框架</h1>
+  <p class="subtitle">三个市场、两套系统的完整框架，附个人踩坑记录。整理自 2026 年 6-7 月系列讨论。</p>
+  <div class="meta-chips">
+    <span class="chip chip-market">A 股</span>
+    <span class="chip chip-market">港股</span>
+    <span class="chip chip-market">美股</span>
+    <span class="chip chip-system">趋势跟踪系统</span>
+    <span class="chip chip-system">价值回归系统</span>
+    <span class="chip chip-date">2026-07</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- 第一部分：两套系统 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">Part 01</span>
+      <span class="section-title">两套系统总纲</span>
+    </div>
+
+    <p style="color:var(--muted);font-size:14px;margin-bottom:16px;line-height:1.75;">
+      一切规则的前提：<strong style="color:var(--text)">趋势跟踪系统和价值/回归系统是两套自洽但不能混用的系统。</strong>绝大多数亏损来自杂交：用趋势系统入场，跌了切换成价值系统的说辞豁免止损，再用赌徒方式加仓。
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>趋势跟踪系统（右侧）</th>
+            <th>价值 / 回归系统（左侧）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>加仓方向</td><td>只加盈利仓，金字塔式</td><td>越跌越买（限预设档位）</td></tr>
+          <tr><td>证伪信号</td><td>价格结构破坏</td><td>基本面逻辑破坏</td></tr>
+          <tr><td>止损</td><td>紧，按价格，硬执行</td><td>极宽或无价格止损，按逻辑止损</td></tr>
+          <tr><td>适配标的</td><td>任何有趋势品种，含杠杆工具</td><td>只限不归零、低杠杆、有均值锚的标的</td></tr>
+          <tr><td>适配资金</td><td>都可以</td><td>只限长钱、现金账户</td></tr>
+          <tr><td>持仓周期</td><td>以周计</td><td>以年计</td></tr>
+          <tr><td>死法</td><td>震荡市反复止损（慢性失血）</td><td>逻辑错判 + 重仓（急性死亡）</td></tr>
+          <tr><td>我的账户</td><td>美股（SOXL / RAM / 个股）</td><td>A 股分红组、港股收息仓</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule-card">
+      <strong>铁律：</strong>每个标的入场当天确定归属系统，永不跨系统引用理由。<br>
+      · 禁止用"基本面向上"豁免杠杆仓的止损<br>
+      · 禁止用"跌破均线"砍掉收息仓的正常波动
+    </div>
+  </div>
+
+  <!-- 第二部分：踩坑记录 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">Part 02</span>
+      <span class="section-title">踩坑记录（按时间序）</span>
+    </div>
+
+    <div class="pit-card">
+      <div class="pit-title"><span class="pit-num">坑 1</span>RAM 浮亏时想补仓</div>
+      <div class="pit-row">
+        <div class="pit-label">表现</div>
+        <div class="pit-text">两倍杠杆 DRAM ETF 浮亏，以"内存基本面向上"为由想摊平</div>
+      </div>
+      <div class="pit-row">
+        <div class="pit-label">病理</div>
+        <div class="pit-text">① 摊平念头产生于浮亏之后，非预设计划；② 用长期基本面逻辑给路径敏感的杠杆工具加注，论据与标的错配；③ 保证金账户，时间不属于自己</div>
+      </div>
+      <div class="lesson-card"><strong>教训：</strong>杠杆 ETF 把方向错误和路径错误变成两个独立亏损源。持有它时趋势标准要比现货更严。</div>
+    </div>
+
+    <div class="pit-card">
+      <div class="pit-title"><span class="pit-num">坑 2</span>现金流 NF 浮亏 10% 时想补仓（坑 1 的复发）</div>
+      <div class="pit-row">
+        <div class="pit-label">表现</div>
+        <div class="pit-text">"位置较低了，可以多加一点"</div>
+      </div>
+      <div class="pit-row">
+        <div class="pit-label">病理</div>
+        <div class="pit-text">与坑 1 完全同构——浮亏触发、无事前分档、有一个听起来合理的理由</div>
+      </div>
+      <div class="pit-row">
+        <div class="pit-label">新发现</div>
+        <div class="pit-text">买入时以为是收息压舱石，实际是全组合周期浓度最高的资产（自由现金流指数按现金流金额加权，前十大权重超 50%，全是海油/海控/潍柴类周期股；2026 上半年回撤超 25%，超过中证红利的 16%）</div>
+      </div>
+      <div class="lesson-card"><strong>教训：</strong>"我看错了它是什么"和"它变坏了"在操作上等价——先重新立论，再谈加仓。</div>
+    </div>
+
+    <div class="pit-card">
+      <div class="pit-title"><span class="pit-num">坑 3</span>因"错过低点"而不敢买真正想买的长电</div>
+      <div class="pit-row">
+        <div class="pit-label">表现</div>
+        <div class="pit-text">长电刚从低点涨回来，于是想等</div>
+      </div>
+      <div class="pit-row">
+        <div class="pit-label">病理</div>
+        <div class="pit-text">锚定效应的反向版。决定不买的依据是一个没有参与过的历史价格。折算成股息率，那个"错过"一年不到 20 个基点，对五年持仓是噪音。</div>
+      </div>
+      <div class="lesson-card"><strong>教训：</strong>唯一有意义的比较是"今天的价格 vs 我要求的回报"，不是"今天 vs 我错过的昨天"。</div>
+    </div>
+
+    <div class="pit-card">
+      <div class="pit-title"><span class="pit-num">坑 4</span>因子暗仓重叠（结构性）</div>
+      <div class="pit-row">
+        <div class="pit-label">表现</div>
+        <div class="pit-text">分红组合表面 6 个持仓，实际有效持仓约 3 个——神华(28%) + 现金流NF(19%) + 100红利(10%) 三重叠加同一个周期/红利因子，合计近六成</div>
+      </div>
+      <div class="pit-row">
+        <div class="pit-label">同时</div>
+        <div class="pit-text">仓位排序与资产质量排序倒挂（永续置信度最高的长电只占 6%，最弱的周期残差占最大仓）</div>
+      </div>
+      <div class="lesson-card"><strong>教训：</strong>真实敞口 = 显性持仓 + ETF 穿透。加仓前先算因子合并敞口。</div>
+    </div>
+
+    <div class="behavior-card">
+      <strong>行为模式总结（比单个坑重要）</strong><br>
+      补仓冲动出现两次，均满足：<strong>浮亏持仓 + 无事前计划 + 合理化理由</strong>。<br><br>
+      修法：<strong>交易后悔矩阵</strong>——每笔平仓记录「是否按计划 × 盈亏」四象限；"违计划 + 盈利"是最危险象限（强化坏习惯）。把"补仓冲动"也记录，三个月后统计冲动与浮亏幅度的相关性。修改冲动和亏损相关、和信息事件不相关 = 情绪化铁证。
+    </div>
+  </div>
+
+  <!-- 第三部分：核心知识点 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">Part 03</span>
+      <span class="section-title">核心知识点</span>
+    </div>
+
+    <div class="knowledge-item">
+      <div class="knowledge-title"><span class="knowledge-num">01</span>止盈止损 vs 追涨杀跌：界限是决策时点</div>
+      <div class="knowledge-body">
+        同一动作，事前计划的叫纪律，盘中冲动的叫追杀。检验问句：<strong>"除了价格本身，我还知道了什么新东西？"</strong><br><br>
+        三判据：<strong>可证伪性</strong>（能否写出"如果 X 发生我就错了"）、<strong>对称性</strong>（事前对涨跌都有预案）、<strong>重复性</strong>（同信号 100 次做 100 次同样动作）<br><br>
+        止损买的是"错误的上限"，杀跌付的是"情绪的溢价"。恐慌峰值与价格极值在时间上重合，所以散户总卖在地板上。
+      </div>
+    </div>
+
+    <div class="knowledge-item">
+      <div class="knowledge-title"><span class="knowledge-num">02</span>趋势判断五层框架（可靠性递减）</div>
+      <div class="knowledge-body">
+        <ol>
+          <li><strong>市场结构</strong>：HH+HL=上升；趋势死于结构破坏（低点跌破前低），不死于下跌</li>
+          <li><strong>多周期共振</strong>：周线定方向、日线找结构、小时找入场，只做三周期一致</li>
+          <li><strong>均线系统</strong>：滞后是买确定性的费用；均线的价值是"定义"趋势结束而非预测</li>
+          <li><strong>量价</strong>：上涨放量回调缩量=健康；末端加速+天量长上影=派发</li>
+          <li><strong>宽度与情绪</strong>：指数新高但创新高家数萎缩=内部衰竭；<strong>波动率聚集（短期多次 ±5% 大阳大阴）是趋势晚期体温</strong></li>
+        </ol>
+        <br>
+        关键悖论：确认度和赔率成反比。不问"趋势会不会继续"，问<em>"趋势结束时我怎么知道"</em>。
+      </div>
+    </div>
+
+    <div class="knowledge-item">
+      <div class="knowledge-title"><span class="knowledge-num">03</span>量化绞杀的精确边界</div>
+      <div class="knowledge-body">
+        <strong>会被绞：</strong>共识止损位（猎杀地图）、日内-几天级公开信号、反应速度竞争<br><br>
+        <strong>不会被绞：</strong><em>结构性风险溢价</em>（趋势跟踪赚的是"忍受难受"的行为溢价，无法被套利）、周线以上级别趋势<br><br>
+        工程修正：止损位去共识化（1.5-2 倍 ATR 外 + 缩仓补偿）、收盘价确认代替触价即出、突破改回踩入场、扫损长影线反做<br><br>
+        真对手：量化收摩擦税（理发），自己收行为税（截肢）。<strong>散户的护城河 = 拉长周期 + 无人问责的回撤耐受。</strong>
+      </div>
+    </div>
+
+    <div class="knowledge-item">
+      <div class="knowledge-title"><span class="knowledge-num">04</span>越跌越买的四个资格条件（缺一不可）</div>
+      <div class="knowledge-body">
+        <ol>
+          <li>补仓计划先于下跌存在（含最终证伪线）</li>
+          <li>弹药有限分档、总额封顶</li>
+          <li>标的有不归零保证（宽基 > 监管型公用 > 龙头 > 一般个股；杠杆 ETF 永久不合格）</li>
+          <li>资金性质匹配（长钱 + 现金账户；保证金账户里没有"长期投资"，时间由对手方定义）</li>
+        </ol>
+        <br>
+        <div class="rule-card">价格下跌本身是信息，贝叶斯上应下修置信度。检验：<strong>"若我现在空仓，这个价格我会买这么多吗？"</strong></div>
+      </div>
+    </div>
+
+    <div class="knowledge-item">
+      <div class="knowledge-title"><span class="knowledge-num">05</span>修改计划的元规则（新变量应对）</div>
+      <div class="knowledge-body">
+        变量分级：<strong>事实增量</strong>（真变量，必须响应）/ <strong>价格移动</strong>（计划应已包含）/ <strong>情绪叙事</strong>（信息量为零）<br><br>
+        检验问句："这个变量若发生在建仓前，会改变建仓决定吗？"<br><br>
+        程序法：<strong>减仓从宽，加仓从严</strong>（不对称授权）；修改必须在场外收盘后；合法修改同时动逻辑/目标/仓位/止损四要素，非法修改只放宽止损一个；书面时间戳留痕<br><br>
+        计划的本质是权力分配：冷静的你给情绪中的你预设授权边界。
+      </div>
+    </div>
+
+    <div class="knowledge-item">
+      <div class="knowledge-title"><span class="knowledge-num">06</span>利好钝化观察卡（每周日十分钟）</div>
+      <div class="knowledge-body">
+        <ol>
+          <li>本周利好清单（事件 + 级别）</li>
+          <li>每个利好：首日涨幅 / 第 3 日留存率 / 收盘分位（连续 3 次留存率 &lt;30% = 预设减仓触发）</li>
+          <li>指数创新高时成分股新高家数</li>
+          <li>相对强度（板块/大盘）创新高、走平还是回落（RS 走平领先绝对顶部数周）</li>
+          <li>本周最重利空跌幅 vs 最重利好涨幅（两方向反应系数交换 = 周期换挡完成）</li>
+        </ol>
+        <br>
+        <div class="rule-card">最诚实的顶部信号：<strong>好消息不再推动上涨。</strong>"beat and drop" = 利好出尽教科书形态。</div>
+      </div>
+    </div>
+
+    <div class="knowledge-item">
+      <div class="knowledge-title"><span class="knowledge-num">07</span>新高入场的质检（追高的反义词是"有止损依托的入场"）</div>
+      <div class="knowledge-body">
+        52 周新高效应：恐高导致新高股被系统性低估，上方零套牢盘<br><br>
+        <strong>好新高：</strong>离基底 5% 以内、放量、板块同步、第 1-2 个基底<br>
+        <strong>坏新高：</strong>垂直段追入、缩量、第 4-5 个基底、宽度萎缩<br><br>
+        仓位由止损距离倒算，恐惧自动消失；突破买与回踩买是胜率赔率互换。高低不由价格刻度定义，由风险结构定义。
+      </div>
+    </div>
+
+    <div class="knowledge-item">
+      <div class="knowledge-title"><span class="knowledge-num">08</span>分红股的永续框架（Gordon: P = D / (r − g)）</div>
+      <div class="knowledge-body">
+        四个断裂点：D 无契约保障（汇丰 2020 停息）/ g 可为负且 (r−g) 极敏感 / 久期 ≈ 1/(r−g) 超长，利率敞口巨大 / 单一公司会死<br><br>
+        置信度排序：宽基指数 > 监管型公用事业/REIT > 龙头银行 > 一般高息股<br><br>
+        用法：反解隐含 g 检验市场定价；股息率越高越要怀疑市场在给 g 定负值（高息 = 价值陷阱预警）<br><br>
+        港股通红利税 20-28% 不可退，A 股持有超一年免税——<strong>收息仓位 A 股结构性优于港股通。</strong>收息是回报的形式，不是风险的豁免。
+      </div>
+    </div>
+
+    <div class="knowledge-item">
+      <div class="knowledge-title"><span class="knowledge-num">09</span>回归系统的五条参数（正式版）</div>
+      <div class="knowledge-body">
+        <ol>
+          <li><strong>准入名单</strong>：质量门禁（D 存续 + 均值锚）通过才有"越跌越买"资格；杠杆工具永久除名</li>
+          <li><strong>网格用股息率/估值分位画，不用成本价</strong>——成本不该出现在任何规则里。示例（长电）：股息率 ≥4% 加档 / 3.5-4% 持有区 / ≤3% 分批减</li>
+          <li><strong>两级封顶</strong>：单标的预算上限 + 因子合并敞口上限</li>
+          <li><strong>削减规则对称参数化</strong>，防止被"再等等"腐蚀</li>
+          <li><strong>年度逻辑体检</strong>：报季逐个复核 D 的存续性；逻辑破坏移出名单，移出即卖不论盈亏——回归系统唯一的止损是止论点</li>
+        </ol>
+        <br>
+        系统的意义：把"我感觉低了"翻译成"股息率到了 4%"，让规则在情绪最差的那天替你执行。<br>
+        <div class="lesson-card">警惕机械回归的死法：<strong>拔掉鲜花浇灌杂草</strong>（权重持续从健康资产流向病弱资产），质量门禁是解药。</div>
+      </div>
+    </div>
+
+    <div class="knowledge-item">
+      <div class="knowledge-title"><span class="knowledge-num">10</span>杠杆 ETF 使用守则（归趋势系统管）</div>
+      <div class="knowledge-body">
+        只做趋势确认段，持有以周计；只加盈利仓；硬价格止损；仓位 = 普通仓的 1/3<br><br>
+        每日重置 → 震荡损耗（volatility decay）：方向对路径错照样亏<br><br>
+        它强行把持有人拖回日内战场，放弃散户最大的周期护城河——所以只配短打。
+      </div>
+    </div>
+  </div>
+
+  <!-- 第四部分：持仓快照 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">Part 04</span>
+      <span class="section-title">持仓复核结论快照 <span style="font-size:12px;font-weight:400;color:var(--muted)">2026-07 · 数据会过期</span></span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="snapshot-table">
+        <thead>
+          <tr>
+            <th>标的</th>
+            <th>系统归属</th>
+            <th>复核结论</th>
+            <th>监控线</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>长江电力</td>
+            <td><span class="badge badge-return">回归/收息</span></td>
+            <td>最优。2026-2030 年 70% 分红有书面承诺</td>
+            <td>无（唯一可考虑加仓标的，按股息率网格）</td>
+          </tr>
+          <tr>
+            <td>招商银行</td>
+            <td><span class="badge badge-return">回归/收息</span></td>
+            <td>息差 Q4 企稳，分红 35%，ROE 缓降</td>
+            <td>ROE 底线 10%；分红率是否维持</td>
+          </tr>
+          <tr>
+            <td>中国神华</td>
+            <td><span class="badge badge-return">回归/收息</span></td>
+            <td>比预想稳：长协 92% + 分红承诺 65% + 现金 1185 亿 + 资产注入</td>
+            <td>秦港 5500 大卡持续 &lt;600 元；2027 后承诺续签</td>
+          </tr>
+          <tr>
+            <td>中国平安</td>
+            <td><span class="badge badge-return">回归/收息</span></td>
+            <td>修正为改善通道：NBV +29.3%，分红 14 年递增</td>
+            <td>NBV 回落至个位数；分红递增中断</td>
+          </tr>
+          <tr>
+            <td>100 红利</td>
+            <td><span class="badge badge-return">回归/收息</span></td>
+            <td>风格逆风正常回撤，机制缺陷已知（股息率选股买在周期顶）</td>
+            <td>与神华、现金流NF 合并计敞口</td>
+          </tr>
+          <tr>
+            <td>现金流 NF</td>
+            <td><span class="badge badge-warning">降级：周期进攻仓</span></td>
+            <td>误判修正：非压舱石。加仓需重新立论 + 分档 + 风格确认信号</td>
+            <td>PPI 转负；ETF 净赎回是否终结</td>
+          </tr>
+          <tr>
+            <td>SOXL</td>
+            <td><span class="badge badge-trend">趋势</span></td>
+            <td>晚周期特征（波动率聚集 + Meta 出租算力裂缝）：冻结加仓、收紧移动止盈</td>
+            <td>7-8 月财报季 hyperscaler capex 指引</td>
+          </tr>
+          <tr>
+            <td>RAM</td>
+            <td><span class="badge badge-trend">趋势</span></td>
+            <td>亏损仓禁止摊平；按趋势规则设硬止损或离场</td>
+            <td>价格止损，不适用逻辑豁免</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 附：十条戒律 -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">附录</span>
+      <span class="section-title">十条一句话戒律</span>
+    </div>
+
+    <div class="commandments">
+      <div class="commandment"><div class="commandment-num">01</div><div class="commandment-text">决策发生在事前的叫纪律，发生在盘中的叫情绪</div></div>
+      <div class="commandment"><div class="commandment-num">02</div><div class="commandment-text">你的成本价对市场的信息量为零，不许出现在任何规则里</div></div>
+      <div class="commandment"><div class="commandment-num">03</div><div class="commandment-text">价格下跌本身是信息，假装没看见不是坚定是失明</div></div>
+      <div class="commandment"><div class="commandment-num">04</div><div class="commandment-text">只有写得出证伪线的仓位才是仓位，否则是许愿</div></div>
+      <div class="commandment"><div class="commandment-num">05</div><div class="commandment-text">减仓从宽，加仓从严；修改计划在场外，执行计划在场内</div></div>
+      <div class="commandment"><div class="commandment-num">06</div><div class="commandment-text">好消息不再推动上涨，比任何坏消息都诚实</div></div>
+      <div class="commandment"><div class="commandment-num">07</div><div class="commandment-text">高低由风险结构定义，不由价格刻度定义</div></div>
+      <div class="commandment"><div class="commandment-num">08</div><div class="commandment-text">工具没有原罪，错配才有；每个标的入场当天上户口</div></div>
+      <div class="commandment"><div class="commandment-num">09</div><div class="commandment-text">拔掉鲜花浇灌杂草是回归系统的天然倾向，质量门禁是解药</div></div>
+      <div class="commandment"><div class="commandment-num">10</div><div class="commandment-text">系统的意义不是预测，是把你从每次"要不要"的临场审讯里赦免出来</div></div>
+    </div>
+  </div>
+
+  <p class="footnote">本文档为个人交易框架整理，不构成投资建议。数据截至 2026 年 7 月，使用前请核实最新数字。</p>
+
+</div>
+</body>
+</html>
