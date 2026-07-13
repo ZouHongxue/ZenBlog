@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-07-13</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  /* ── News list ── */
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  /* ── Rates table ── */
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Hot stocks ── */
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  /* ── Risk table ── */
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  /* ── Section divider ── */
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  /* ── Tomorrow focus ── */
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  /* ── Rotation box ── */
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📰 财经早报</h1>
+      <div class="date">2026-07-13 · CN / SG / US</div>
+    </div>
+    <span class="market-state">AI 主线震荡 · 等待 TSMC 催化</span>
+  </div>
+  <div class="summary">
+    美股上周窄幅收涨（S&amp;P 500 +0.4%，纳斯达克 +0.3%），半导体板块经历三星财报不及预期引发的卖盘冲击后，随 SK Hynix 美股上市（募资 265 亿美元）回稳，但 NVDA 过去一月仍累跌逾 13%，市场对 AI 资本支出可持续性分歧明显。资金呈现"回防"迹象，部分轮向美国 REITs（H1 累涨 18%）与新加坡高息资产；本周核心事件为 7 月 16 日 TSMC Q2 财报，分析师预期营收同比+33% 至约 400 亿美元，结果将决定 AI 主线能否重新凝聚共识。
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">10 条</span></div>
+  <ul class="news">
+
+    <li>
+      <div class="item-title"><a href="https://www.cnbc.com/2026/07/07/chip-stocks-ai-selloff-samsung.html">三星 Q2 财报大幅低于预期，引爆芯片股连锁卖盘</a></div>
+      <div class="item-summary">三星 HBM 出货量与盈利能力均不及市场预期，投资者担忧整个 AI 供应链需求被高估，引发半导体板块集中抛售，Intel 单日跌逾 21%，Nvidia、AMD 同步下挫，合计蒸发逾万亿美元市值。</div>
+      <div class="item-meta"><span class="tag ai">CNBC</span><span class="tag risk">风险事件</span> CNBC Markets Desk · 2026-07-07</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://trendspider.com/blog/market-update-into-july-13th-2026/">SK Hynix 美股首秀大涨 13%，史上最大外资美股 IPO 募资 265 亿美元</a></div>
+      <div class="item-summary">韩国内存巨头 SK Hynix 以代码 SKHY 正式登陆纳斯达克，首日上涨约 13%，成为史上最大外资美股上市项目（超越阿里巴巴）。作为英伟达 HBM 芯片第一供应商，SK Hynix IPO 被市场解读为 AI 基础设施需求仍健在的信心信号。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span><span class="tag ai">CNBC</span> Yahoo Finance / CNBC · 2026-07-10</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://www.techtimes.com/articles/320142/20260711/tsmc-q2-earnings-july-16-three-cowos-signals-that-test-ais-spending-ceiling.htm">TSMC Q2 财报定档 7 月 16 日，市场预期营收 ~400 亿美元（同比+33%）</a></div>
+      <div class="item-summary">华尔街预期 TSMC Q2 营收约 400 亿美元（去年同期 300.7 亿美元），每 ADR 盈利约 3.80-3.83 美元。CoWoS 先进封装产能指引及 2nm 量产进度将是本次电话会议核心看点，结果有望决定 AI 芯片主线能否重新聚集共识。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span><span class="tag ai">TechTimes</span> TechTimes · 2026-07-11</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://intellectia.ai/blog/nvidia-stock-analysis-july-2026">NVIDIA 过去 30 日累跌 13.1%，估值 4.7 万亿美元，AI 拥挤度警报再亮</a></div>
+      <div class="item-summary">NVDA 市值约 4.7 万亿美元，占 S&amp;P 500 权重 7.5%，超过能源+公用事业两个板块合计。近期回调被部分机构定性为"中周期重置"，但市场已开始质疑超大型科技公司合计 6500 亿美元的 2026 年 AI 资本开支能否持续兑现。</div>
+      <div class="item-meta"><span class="tag ai">Intellectia</span><span class="tag risk">风险警示</span> Intellectia AI · 2026-07</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://futurumgroup.com/insights/nvidia-q4-fy-2026-earnings-highlight-durable-ai-infrastructure-demand/">NVIDIA FY2026 全年数据中心营收同比+92%，已获超 1 万亿美元订单承诺</a></div>
+      <div class="item-summary">NVIDIA Q4 FY2026 数据中心营收单季达 752 亿美元（同比+92%），全年营收 159.4 亿美元（同比+65%），全年已确认来自微软、亚马逊、谷歌、Meta 的芯片采购承诺超过 1 万亿美元。</div>
+      <div class="item-meta"><span class="tag ai">Futurum Group</span> Futurum Group · 2026-Q1</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/articles/tsmc-vs-nvidia-ai-semiconductor-190000743.html">TSMC vs NVIDIA：AI 芯片投资如何选？过去 30 日 TSMC +4.5% vs NVDA -13.1%</a></div>
+      <div class="item-summary">TSMC 控制全球晶圆代工约 75% 市场份额，2026 年营收预期增速逾 30%，HPC 占 Q1 收入 61%。相对 NVDA 的高估值波动，TSMC 被部分机构视为更稳健的 AI 基础设施受益标的，本月表现形成鲜明对比。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> Yahoo Finance · 2026-07</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://www.forbes.com/sites/petercohan/2026/07/08/intel-stock-down-21-inside-the-july-2026-semiconductor-selloff/">Intel 单日暴跌 21%，半导体卖盘进一步蔓延</a></div>
+      <div class="item-summary">7 月 8 日 Intel 股价单日跌逾 21%，触发止损卖盘，半导体 ETF 随之出现大额赎回。分析人士认为 Intel 跌势与 AI 算力需求无直接关联，更多反映其自身结构性竞争劣势，但对整体板块情绪构成拖累。</div>
+      <div class="item-meta"><span class="tag ai">Forbes</span><span class="tag risk">风险事件</span> Forbes · 2026-07-08</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://edition.cnn.com/2026/07/09/investing/ai-chip-stocks-market-volatility">AI 芯片最热行情降温，投资者开始追问"下一步是什么"</a></div>
+      <div class="item-summary">CNN Business 分析本轮 AI 芯片调整的深层逻辑：超大型科技公司资本开支激增 80% 至 6500 亿美元，但变现路径尚不清晰，叠加通胀高企令利率难以大幅下行，"高成长高估值"叙事正面临再定价压力。</div>
+      <div class="item-meta"><span class="tag ai">CNN Business</span> CNN Business · 2026-07-09</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://www.axios.com/2026/07/01/semiconductor-ai-stocks-chips">半导体股创有史以来最佳季度表现后进入调整</a></div>
+      <div class="item-summary">Axios 报道 Q2 2026 半导体板块创季度历史最优表现，但随即在 7 月初进入获利回吐阶段。AI 芯片市场规模预测：2026 年约 1000 亿美元，2040 年或达 2.1 万亿美元（CAGR 24.29%）。</div>
+      <div class="item-meta"><span class="tag ai">Axios</span> Axios · 2026-07-01</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://sixsigmaresearch.com/p/preview-of-the-week-ahead-wc-july-006">本周前瞻（W/C 7月13日）：TSMC 财报为最大催化，关注 AI 资本支出指引</a></div>
+      <div class="item-summary">7 月 13 日起当周的核心事件：TSMC Q2 财报（7/16）、美国 6 月 CPI（预计 7/15 公布）、FOMC 7 月会议前最后一批宏观数据。市场普遍认为 TSMC 财报或重新决定 AI 主线方向。</div>
+      <div class="item-meta"><span class="tag ai">Six Sigma Research</span> Six Sigma Research · 2026-07-13</div>
+    </li>
+
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">💰 被动收入 &amp; 红利资产</div>
+  <ul class="news">
+
+    <li>
+      <div class="item-title"><a href="https://www.janushenderson.com/en-us/investor/article/reit-halftime-report-off-to-a-strong-start-to-2026/">美国 REITs H1 累涨 18%，所有子板块全面正收益</a></div>
+      <div class="item-summary">iREIT 上半年各子板块全面录得正收益，工业、医疗、住宅 REIT 领跑。利率高位回落预期下，此前因估值压制长期落后的 REITs 开始补涨，Realty Income (O) 股息率约 5%，部分抵押型 REIT 股息率逾 14%。</div>
+      <div class="item-meta"><span class="tag income">Janus Henderson</span><span class="tag income">NerdWallet</span> Janus Henderson · 2026-07</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://mysweetretirement.com/singapore-reits-passive-income-july-2026">新加坡 S-REITs 散户净流入 9.25 亿新元，数据中心/工业子板块领涨</a></div>
+      <div class="item-summary">年初至今散户通过 SGX 净买入 S-REITs 超 9.25 亿新元，资金主要流入 Ascendas REIT（股息率 7.53%）、ESR REIT（9.53%）等工业/物流/数据中心方向；商业办公 REIT 因租金需求分化承压，呈 K 形分化。</div>
+      <div class="item-meta"><span class="tag income">My Sweet Retirement</span><span class="tag income">MySE Investing</span> MySweetRetirement · 2026-07</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://investmentmoats.com/saving-and-investing-my-money/singapore-savings-bonds-ssb-july-2026/">新加坡储蓄债券（SSB）7 月期：首年 1.46%，10 年均 2.11%，免税可随时赎回</a></div>
+      <div class="item-summary">SBJUL26（GX26070F）于 7 月 1 日发行，第一年利率 1.46%，随年限递增至 10 年均值 2.11%。利息免税、无锁定期（任意月份赎回，回收全额本金+应计利息），适合短至中期现金管理。</div>
+      <div class="item-meta"><span class="tag income">Investment Moats</span><span class="tag income">DividendParadise</span> Investment Moats · 2026-07</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://growbeansprout.com/t-bill-allotment-2-jul-2026">新加坡 6 个月 T-bill 收益率升至 1.50%，与最优存款利率持平</a></div>
+      <div class="item-summary">7 月 2 日拍卖截止收益率升至 1.50%（年初以来新高），7 月 9 日报 1.49%。目前 1.50% 与最优 6 个月定存利率持平，12 个月定存最高约 1.60%（Singapura Finance 特别利率 1.55%）。</div>
+      <div class="item-meta"><span class="tag income">Growbeansprout</span><span class="tag income">TheFinance.sg</span> Growbeansprout · 2026-07-10</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://247wallst.com/investing/2026/07/03/3-reits-to-buy-for-passive-income-in-july/">利率高位渐见顶，REITs 被动收入价值重估</a></div>
+      <div class="item-summary">分析师指出，美联储 3.5-3.75% 利率已对 REITs 估值充分压制；一旦通胀趋缓，降息路径重新打开，REITs 将因再融资成本下降而最先受益。工业型 REIT 平均股息率约 5.4%，医疗 REIT 约 4.4%。</div>
+      <div class="item-meta"><span class="tag income">24/7 Wall St.</span> 24/7 Wall St. · 2026-07-03</div>
+    </li>
+
+    <li>
+      <div class="item-title"><a href="https://www.stashaway.sg/r/singapore-fixed-deposit-rates">新加坡各银行 7 月定存利率速览：最优 1Y 达 1.60%</a></div>
+      <div class="item-summary">截至 7 月，新加坡主要银行 12 个月定存最高约 1.60% p.a.，6 个月约 1.50%。综合 T-bill（1.50%）、SSB（年均 2.11%）、FD（最高 1.60%）比较，SSB 仍以免税+弹性赎回占优，适合 3 年以上资金。</div>
+      <div class="item-meta"><span class="tag income">StashAway</span> StashAway Singapore · 2026-07</div>
+    </li>
+
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">📊 利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val">MLF 暂无可靠数据</td>
+          <td class="rate-val">SORA 1.08%</td>
+          <td class="rate-val">Fed Funds 3.50–3.75%</td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val">1Y LPR 3.00%</td>
+          <td class="rate-val">6M T-bill 1.50%</td>
+          <td class="rate-val">2Y UST 4.21%</td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val">10Y CGT ~1.73%</td>
+          <td class="rate-val">10Y SGS ~2.81%（SSB Y10）</td>
+          <td class="rate-val">10Y UST 4.56%</td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val">5Y LPR 3.50%</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">30Y 固定 6.49–6.58%</td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">最优 FD 1.60%</td>
+          <td class="rate-val">暂无可靠数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    <strong>利率环境解读：</strong>中国利率体系整体宽松（1Y LPR 3.00%，10Y 国债仅 1.73%），对债券持仓有利但存款收益极低，国内 REITs 与红利股相对吸引力上升。新加坡 SORA 1.08% 已是低位，T-bill 1.50% 为年初以来高点但仍温和，S-REITs 融资成本压力可控，股息收益率 7-9% 的优质标的利差空间充足。美国利率最高（Fed 3.75%，10Y 4.56%），通胀 4.2% 仍显著高于 2% 目标，年内或再度加息，对美国 REITs 和长久期债券构成压制，但高息 REIT 若能锁定低成本负债则仍值得关注。综合判断：当前利率环境对新加坡 REITs 及中国红利资产偏中性至利好，对美国长端债券偏利空。
+  </div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">🌍 宏观经济</div>
+    <ul class="news">
+
+      <li>
+        <div class="item-title"><a href="https://www.federalreserve.gov/newsevents/pressreleases/monetary20260617a.htm">美联储连续第四次维持利率不变，Warsh 移除前瞻指引转向"纯数据依赖"</a></div>
+        <div class="item-summary">Fed Funds 维持 3.50–3.75%，新主席 Warsh 在 6 月会议后声明不再给出前瞻利率路径，改为逐次会议评估。9 名官员预期年内至少加息一次，9 名预期不变或降息，市场定价 7 月 28-29 日 FOMC 大概率维持不变。</div>
+        <div class="item-meta"><span class="tag macro">Federal Reserve</span><span class="tag macro">Forbes</span> FederalReserve.gov · 2026-06-17</div>
+      </li>
+
+      <li>
+        <div class="item-title"><a href="https://www.gomarkets.com/en/articles/us-market-drivers-july-2026">美国 5 月 CPI 同比+4.2%，核心 CPI 同比+2.9%，通胀风险再度升温</a></div>
+        <div class="item-summary">5 月 CPI 4.2% 为 2023 年 4 月以来最大 12 个月涨幅，部分机构预警全年 CPI 可能超预期突破 4%。油价波动（中东局势）与关税成本传导是主要上行风险。职业预测师调查将 2026 年 CPI 均值上调至 3.5%。</div>
+        <div class="item-meta"><span class="tag macro">GoMarkets</span><span class="tag macro">Philly Fed</span> GoMarkets · 2026-07</div>
+      </li>
+
+      <li>
+        <div class="item-title"><a href="https://www.cnbc.com/2026/07/08/stock-market-today-live-updates.html">美伊紧张局势反复，油价冲高后回落，市场情绪有所修复</a></div>
+        <div class="item-summary">美伊双方确认将继续和谈，油价从周中高点回落，帮助缓和通胀预期，股市随之反弹。原油价格波动仍是二季度最大宏观变量之一，持续影响能源成本与 CPI 走向。</div>
+        <div class="item-meta"><span class="tag macro">CNBC</span> CNBC · 2026-07-08</div>
+      </li>
+
+      <li>
+        <div class="item-title"><a href="https://english.www.gov.cn/archive/statistics/202605/20/content_WS6a0d5ceec6d00ca5f9a0b1f1.html">中国 LPR 连续 13 个月按兵不动，1Y 3.00%、5Y 3.50% 维持不变</a></div>
+        <div class="item-summary">人民银行 6 月维持 1 年期 LPR 3.00%、5 年期 3.50% 不变，中东风险与经济动能减弱促使央行继续观望。中国 10 年期国债收益率降至约 1.73%，反映市场对经济复苏的低预期。</div>
+        <div class="item-meta"><span class="tag macro">中国政府网</span><span class="tag macro">TradingEconomics</span> gov.cn · 2026-06</div>
+      </li>
+
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏠 房地产 &amp; REITs</div>
+    <ul class="news">
+
+      <li>
+        <div class="item-title"><a href="https://www.washingtontimes.com/news/2026/jul/9/average-30-year-us-mortgage-rate-increases-649-pushing-homebuyers/">美国 30 年房贷利率升至 6.49–6.58%，购房成本压力创年内次高</a></div>
+        <div class="item-summary">受 UST 收益率上行拖累，30 年固定房贷本周平均 6.49-6.58%，贷款人月供压力明显。高利率持续抑制成屋周转，新房供应缓解有限，美国房价支撑仍强但成交量低迷。</div>
+        <div class="item-meta"><span class="tag income">Washington Times</span><span class="tag income">Money.com</span> Washington Times · 2026-07-09</div>
+      </li>
+
+      <li>
+        <div class="item-title"><a href="https://mysweetretirement.com/singapore-reits-passive-income-july-2026">新加坡 S-REITs 呈 K 形分化：数据中心/工业领涨，办公商业承压</a></div>
+        <div class="item-summary">iEdge S-REIT 指数 Q1 温和回升，数据中心与工业/物流子板块受 AI 算力需求支撑持续走强；零售与写字楼 REIT 面临远程办公与消费降级双重压力，分化仍将延续。Ascendas REIT 股息率 7.53%。</div>
+        <div class="item-meta"><span class="tag income">MySweetRetirement</span> MySweetRetirement · 2026-07</div>
+      </li>
+
+      <li>
+        <div class="item-title"><a href="https://www.nerdwallet.com/investing/learn/reit-investing">美国 REIT H1 全面正收益（+18%），利率见顶预期驱动估值修复</a></div>
+        <div class="item-summary">从历史低估值起步，叠加降息预期支撑，美国 REITs 上半年全面跑赢大盘均值。工业 REIT 平均股息率 5.42%，医疗 REIT 4.43%，抵押型 REIT 最高逾 14%。若年内加息成真，长久期 REIT 估值面临二次压制风险。</div>
+        <div class="item-meta"><span class="tag income">NerdWallet</span><span class="tag income">Janus Henderson</span> NerdWallet · 2026-07</div>
+      </li>
+
+      <li>
+        <div class="item-title"><a href="https://www.fool.com/investing/2026/07/09/prediction-tsmc-stock-is-going-to-soar-after-july/">AI 数据中心 REIT 受算力需求支撑，成 S-REITs 最强子板块</a></div>
+        <div class="item-summary">AI 训练与推理对算力密集型数据中心的持续需求，驱动新加坡数据中心 REIT 成为年内最强子板块，租金收缴率高、空置率低。与此同时，ESR REIT 股息率达 9.53%，对被动收入投资者具有显著吸引力。</div>
+        <div class="item-meta"><span class="tag income">Motley Fool</span><span class="tag income">SGInvestors</span> Motley Fool · 2026-07-09</div>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">🔄 板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value">REITs（美国/新加坡）、AI 基础设施（TSMC、SK Hynix）、现金替代品（T-bill、SSB）</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value">高估值 AI 软件、NVIDIA 等 AI 算力龙头、Intel 等传统半导体</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value">⚠️ 震荡整理 — 三星财报触发去拥挤，TSMC 7/16 财报是下一个方向性催化</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value">从"高 Beta AI 进攻"转向"质量筛选 + 分红防御"，风险偏好中性偏谨慎</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">🔥 雪球热帖 &amp; 热股</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">雪球社区数据</div>
+      <div class="item-summary">暂无可靠数据（今日雪球接口未返回有效内容）</div>
+      <div class="item-meta"><span class="tag">雪球</span></div>
+    </li>
+  </ul>
+  <div class="stock-grid" style="margin-top:16px">
+    <div class="stock-chip">
+      <span class="name">暂无可靠数据</span>
+      <span class="code">—</span>
+      <span class="pct neutral">—</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">B站视频数据</div>
+      <div class="item-summary">暂无可靠数据（今日 B 站接口未返回有效内容）</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">⚠️ 风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率风险</td>
+        <td>美国通胀 4.2%，美联储新主席移除前瞻指引，年内加息预期重燃；10Y 收益率 4.56% 对长端资产估值构成持续压制</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>AI 拥挤度</td>
+        <td>NVDA 过去 30 日跌 13.1%，三星财报触发去拥挤；超大型科技公司资本开支 6500 亿美元变现路径存疑，市场分歧显著加大</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>SK Hynix IPO 成功提振信心，市场已从周中低点反弹；整体情绪中性，TSMC 财报前观望气氛浓厚，非极端恐慌</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>财报风险</td>
+        <td>TSMC Q2 财报（7/16）预期极高（营收同比+33%），一旦指引保守或 CoWoS 产能未达预期，将引发新一轮 AI 硬件抛售；同期多家美国大型银行也将陆续公布财报</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>地缘政治风险</td>
+        <td>美伊和谈继续，短期油价冲击暂缓；但中东局势仍不稳定，一旦谈判破裂将再度推升通胀预期</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">🎯 明日关注</div>
+  <ol class="focus">
+    <li><strong>TSMC Q2 财报（7 月 16 日）</strong> — 市场预期营收约 400 亿美元（同比+33%）、每 ADR 盈利约 3.80 美元；CoWoS 先进封装产能指引及 2026 全年展望是核心看点，结果将决定 AI 硬件主线方向</li>
+    <li><strong>美国 6 月 CPI 数据（预计 7 月 15 日公布）</strong> — 上月 4.2%，若继续上行将强化年内加息预期，对科技股及 REIT 估值带来新一轮压制</li>
+    <li><strong>FOMC 7 月 28-29 日会议预期变化</strong> — 密切跟踪本周官员讲话与通胀数据对 CME FedWatch 加息概率的影响，若升至 30% 以上需警惕长端利率再次上行</li>
+    <li><strong>S&P 500 能否守住 7,500 点整数关</strong> — 上周收报 7,543，TSMC 财报若不及预期将对整体指数形成向下压力，需观察 AI 板块调整是否向价值股蔓延</li>
+    <li><strong>新加坡下一次 T-bill 拍卖结果</strong> — 关注收益率是否继续走高，直接影响 SSB / FD / S-REITs 的相对吸引力比较，以及 SORA 曲线短端走势</li>
+  </ol>
+</div>
+
+<footer>
+  2026-07-13 自动生成 · 数据来源：Yahoo Finance · CNBC · Bloomberg · Federal Reserve · TradingEconomics · Growbeansprout · Investment Moats · Janus Henderson · Intellectia · Forbes · CNN Business · Axios<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>
