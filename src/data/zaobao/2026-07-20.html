@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-07-20</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  /* ── News list ── */
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  /* ── Rates table ── */
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Hot stocks ── */
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  /* ── Risk table ── */
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  /* ── Section divider ── */
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  /* ── Tomorrow focus ── */
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  /* ── Rotation box ── */
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📰 财经早报</h1>
+      <div class="date">2026-07-20 · CN / SG / US</div>
+    </div>
+    <span class="market-state">⚡ Risk-Off · 芯片承压 · 财报周开启</span>
+  </div>
+  <div class="summary">
+    上周半导体板块遭遇 3.3 万亿美元估值蒸发，纳斯达克周跌超 3%，导火索是中国开源大模型 Kimi K3（2.8 万亿参数、百万 token 上下文）引爆算力需求下修担忧，芯片指数已逼近熊市区间。本周进入大科技密集财报期，Alphabet、Tesla 等核心标的将逐一交卷，市场等待验证 AI 资本开支的回报；与此同时，美伊霍尔木兹海峡局势升级推动油价突破 90 美元，美联储主席 Warsh 维持鹰派立场（"通胀零容忍"），降息预期持续受压。资金从 AI 算力硬件流出，向能源、防御和现金类资产转移；国内 WAIC 2026 大会（7/17–7/20）强化具身智能与 AI Agent 产业落地叙事，DeepSeek V4 满血版曝光在即，开源竞争再度成为核心变量。
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">20条</span></div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/the-33-trillion-chip-sell-off-is-nearing-a-bear-market-chart-of-the-day-100000286.html">芯片板块 3.3 万亿美元蒸发，接近熊市区间</a></div>
+      <div class="item-summary">纳指上周跌逾 3%，费城半导体指数从高点累计跌幅超 20%。分析师警告，若 Alphabet 等财报不及预期，可能触发新一轮抛售。</div>
+      <div class="item-meta"><span class="tag risk">Yahoo Finance</span> Yahoo Finance · 2026-07-18</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/semiconductor-stocks-keep-falling-as-investors-go-risk-off-chinese-startup-releases-powerful-new-ai-model-130920103.html">中国 Moonshot 新一代开源模型引爆芯片卖盘</a></div>
+      <div class="item-summary">Kimi（月之暗面）发布下一代开源大模型，引发投资者对 AI 算力需求下修的担忧，半导体股被动风险资产定价下调。</div>
+      <div class="item-meta"><span class="tag risk">Yahoo Finance</span> Yahoo Finance · 2026-07-18</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.aibase.com/zh/news/29663">Kimi K3：2.8 万亿参数、100 万 token 上下文，全球开源最强</a></div>
+      <div class="item-summary">月之暗面正式推出开源大模型 Kimi K3，参数规模 2.8 万亿，上下文窗口 100 万 token，超越此前开源模型天花板，对 GPU 算力采购逻辑构成冲击。</div>
+      <div class="item-meta"><span class="tag ai">AIBase</span><span class="tag ai">36Kr</span> 月之暗面 · 2026-07-17</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://36kr.com/p/3902097586800259">DeepSeek V4"满血版"曝光，最快明日发布</a></div>
+      <div class="item-summary">36Kr 热榜头条。DeepSeek 新一代旗舰模型参数与能力细节已在社区流出，若今明两日正式发布，可能引发新一轮 AI 芯片需求重估讨论。</div>
+      <div class="item-meta"><span class="tag ai">36Kr</span> 36Kr热榜 · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.aibase.com/zh/news/29673">智谱 AI ARR 达 10 亿美元，5 个月增长 15 倍</a></div>
+      <div class="item-summary">智谱 AI 以 Coding 赛道为核心突破口，年化营收 ARR 半年内从不足 1 亿美元飙升至 10 亿美元，成为中国 AI 商业化最快路径之一。</div>
+      <div class="item-meta"><span class="tag ai">AIBase</span> 智谱AI · 2026-07-17</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://36kr.com/p/3903383663478403">WAIC 2026：从卷参数到实体 AI，具身智能成主旋律</a></div>
+      <div class="item-summary">2026 世界人工智能大会（上海，7/17–7/20）现场聚焦 AI 进入产业深处，具身智能、工业机器人、AI Agent 落地成讨论热点，"参数竞赛"叙事降温。</div>
+      <div class="item-meta"><span class="tag ai">36Kr</span> 36Kr · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://36kr.com/p/3903164634679175">Kimi 逼得 OpenAI 和 Claude 双双改变定价策略</a></div>
+      <div class="item-summary">月之暗面激进降价策略倒逼 OpenAI 罕见认错、Claude 重置额度，全球 AI 定价战进入新阶段，ToB 客户成本边际下降。</div>
+      <div class="item-meta"><span class="tag ai">36Kr</span> 36Kr热榜 · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://36kr.com/p/3901396207584902">腾讯云 ADP 4.0 海外版发布，企业级智能体正式出海</a></div>
+      <div class="item-summary">WAIC 2026 现场，腾讯云发布智能体开发平台 ADP 4.0 海外版，围绕触达、交互、生态、连接四大能力升级，向全球市场推进。</div>
+      <div class="item-meta"><span class="tag ai">36Kr</span> 腾讯云 · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/wallstreetbets/comments/1v16env/">Alphabet 本周三财报，市场预期创纪录盈利但担忧下跌</a></div>
+      <div class="item-summary">WSB 热议：Google 本季广告营收及 AI 云业务有望创历史新高，但过去几个季度屡屡出现"超预期→股价下跌"模式，情绪分歧。</div>
+      <div class="item-meta"><span class="tag ai">Reddit</span> NonimiJewelry · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/earnings-need-to-be-strong-wall-street-assesses-next-catalyst-for-ai-trade-120841127.html">Wall Street：需要强劲财报来支撑 AI 交易的下一个催化剂</a></div>
+      <div class="item-summary">分析师指出，AI 主线在芯片卖压下面临信任危机，Alphabet/Meta/微软/亚马逊的云 AI 营收数据将成为短期关键验证点。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> Yahoo Finance · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://36kr.com/p/3902109371450759">SK 海力士崛起史：HBM 存储控制全球 AI 算力命脉</a></div>
+      <div class="item-summary">深度报道揭示 SK 海力士如何通过 HBM（高带宽内存）垄断 AI 算力关键零部件，英伟达 GPU 出货量几乎全部依赖其供应，形成事实上的技术护城河。</div>
+      <div class="item-meta"><span class="tag ai">36Kr</span> 36Kr热榜 · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/big-banks-record-wall-street-profits-are-increasingly-tied-to-ai-115540382.html">大型银行 Q2 利润与 AI 深度绑定，JPMorgan 创史上最高季度净利</a></div>
+      <div class="item-summary">摩根大通 Q2 营收再创美国银行史上最高季度净利润，AI 驱动的投行业务和交易收益是核心拉动，但也意味着银行盈利对 AI 生态系统健康度高度敏感。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> Yahoo Finance · 2026-07-19</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/news/ibm-stock-plummets-more-than-25-on-q2-earnings-warning-150605880.html">IBM 股价历史性暴跌超 25%：Q2 盈警暴露传统 IT 与 AI 裂痕</a></div>
+      <div class="item-summary">IBM 发布 Q2 盈利预警，股价单日跌幅创历史之最。分析人士指出，这揭示了"传统企业软件"与"AI 原生"之间日益扩大的商业模式鸿沟。</div>
+      <div class="item-meta"><span class="tag risk">Yahoo Finance</span> Yahoo Finance · 2026-07-15</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/netflixs-growth-slowdown-exposes-a-classic-shareholder-trap-chart-of-the-day-120918891.html">Netflix Q3 营收预期偏低，增长放缓叙事抬头</a></div>
+      <div class="item-summary">Netflix Q2 EPS 超预期但 Q3 营收指引偏保守，市场对其"从增长型转为成熟型公司"的担忧加剧，提示科技成长股估值需动态审视。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> Yahoo Finance · 2026-07-17</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://36kr.com/p/3899612612494976">红熊 AI 完成数亿元 A+ 轮融资，投后估值接近 30 亿元</a></div>
+      <div class="item-summary">红熊 AI（基于"记忆科学"的 AI 平台）15 个月内完成第 6 轮融资，本轮由浙江九纬、嘉兴彰元联合老股东参投，资金用于 To B 深化与 To C 扩展。</div>
+      <div class="item-meta"><span class="tag ai">36Kr</span> 36Kr · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://36kr.com/p/3903220264404608">月之暗面（Kimi）最快 6 个月内赴港上市</a></div>
+      <div class="item-summary">36Kr 早报引援消息：月之暗面正在推进港交所上市流程，最快年内完成，届时将成为中国 AI 独角兽首批港股 IPO 标的之一。</div>
+      <div class="item-meta"><span class="tag ai">36Kr</span> 36Kr · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://36kr.com/p/3903220264404608">长鑫科技（CXMT）IPO 中签号公布，共约 770 万个</a></div>
+      <div class="item-summary">中国自主 DRAM 内存芯片厂长鑫科技 A 股 IPO 中签结果揭晓，中签号约 770.22 万个，半导体国产替代逻辑延续。</div>
+      <div class="item-meta"><span class="tag ai">36Kr</span> 36Kr · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://36kr.com/p/3900918550546308">Fable 5 官宣永久可用，Claude 旗舰模型开放格局改变</a></div>
+      <div class="item-summary">Anthropic 旗舰模型 Fable 5 宣布永久开放访问权限，此前曾有时间限制。与 Kimi、DeepSeek 等开源策略共同塑造全球顶级模型竞争新格局。</div>
+      <div class="item-meta"><span class="tag ai">36Kr</span> 36Kr热榜 · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.aibase.com/zh/news/29689">影视飓风 AI 课程首日售出 10 万份，单日营收超 490 万元</a></div>
+      <div class="item-summary">知名科技博主"影视飓风"推出 49 元 AI 课程，上线首日即售罄 10 万份，AI 内容付费变现迎来爆发节点，大众 AI 教育市场需求旺盛。</div>
+      <div class="item-meta"><span class="tag ai">AIBase</span> AIBase · 2026-07-17</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://36kr.com/p/3902307386722179">预言"互联网泡沫"的峰会开始讨论"AI 泡沫"</a></div>
+      <div class="item-summary">曾在 2000 年前后预警互联网泡沫的知名投资峰会，本届将 AI 泡沫风险列为核心议题，引发市场对 AI 估值体系系统性重估的讨论。</div>
+      <div class="item-meta"><span class="tag risk">36Kr</span> 36Kr热榜 · 2026-07-20</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">💰 被动收入 &amp; 红利资产</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/economy/policy/article/warshs-statement-to-congress-fed-has-no-tolerance-for-persistently-elevated-inflation-123000475.html">美联储主席 Warsh：对持续性通胀保持"零容忍"</a></div>
+      <div class="item-summary">Warsh 国会证词措辞强硬，明确表示在通胀真正回落至目标前不会降息。Fed Funds 利率维持 3.63%（FRED，2026-06），短期降息预期持续受压，高息持币逻辑延续。</div>
+      <div class="item-meta"><span class="tag income">Yahoo Finance</span> Yahoo Finance · 2026-07-16</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/economy/article/what-happened-to-inflation-in-june-data-expected-to-show-moderating-price-growth-180813780.html">6 月 CPI 3.5%（好于预期 3.8%），通胀边际降温</a></div>
+      <div class="item-summary">核心 CPI YoY 2.6%（预期 2.8%），能源价格回落是主要驱动。通胀数据边际改善，理论上有利于债券多头和 REITs，但 Warsh 的鹰派立场限制了降息预期的升温幅度。[来源：Yahoo Finance / FRED]</div>
+      <div class="item-meta"><span class="tag income">Yahoo Finance</span> Yahoo Finance · 2026-07-14</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/real-estate/article/foreclosures-hit-highest-level-since-2019-sparking-interest-from-bargain-hunters-162602374.html">美国法拍屋数量达 2019 年来最高，抄底机会浮现</a></div>
+      <div class="item-summary">高利率（30 年期抵押贷款 6.55%）持续压制购房需求，法拍屋数量攀升至近 7 年高点，部分价值投资者开始关注折价资产机会，但风险仍需甄别区域供需。</div>
+      <div class="item-meta"><span class="tag income">Yahoo Finance</span> Yahoo Finance · 2026-07-19</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/economy/article/can-the-australian-model-rescue-the-us-retirement-system-trump-seems-to-think-so-120923475.html">澳大利亚强制养老储蓄模式引发美国养老改革讨论</a></div>
+      <div class="item-summary">特朗普政府正考虑引入澳大利亚超级年金（Superannuation）机制，要求雇主强制缴纳部分薪资用于员工退休账户，或深刻改变美国 401k 生态和 REITs 长期资金来源。</div>
+      <div class="item-meta"><span class="tag income">Yahoo Finance</span> Yahoo Finance · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/investing/comments/1v14932/fixed_deposits_in_european_banks/">欧洲 2 年期固定存款选择：Raisin 等平台适合小额锁定</a></div>
+      <div class="item-summary">Reddit r/investing 用户讨论欧洲定存平台，2 年锁定期可有效隔离冲动消费；欧洲部分银行仍提供高于通胀的存款利率，适合短期资金停泊。</div>
+      <div class="item-meta"><span class="tag income">Reddit</span> user_agreement_null · 2026-07-20</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/the-sp-500-is-breaking-the-earnings-playbook-chart-of-the-day-115602014.html">S&amp;P 500 正在打破传统财报季定价模式</a></div>
+      <div class="item-summary">分析师指出 S&P 500 盈利预期与实际走势的关系正在异化：超预期已不自动带来上涨，市场更关注前瞻指引。对红利股持有者而言，业绩稳定性溢价上升。</div>
+      <div class="item-meta"><span class="tag income">Yahoo Finance</span> Yahoo Finance · 2026-07-19</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">📊 利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val"><span class="neutral">3.63%</span> <small style="font-weight:400;color:#6b7280">（2026-06，FRED）</small></td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val"><span class="neutral">4.16%</span> <small style="font-weight:400;color:#6b7280">（2Y，2026-07-16，FRED）</small></td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val"><span class="neutral">4.57%</span> <small style="font-weight:400;color:#6b7280">（2026-07-16，FRED）</small></td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val"><span class="down">6.55%</span> <small style="font-weight:400;color:#6b7280">（30Y Mortgage，2026-07-16，FRED）</small></td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    <strong>利率环境解读：</strong>美国收益率曲线正常化（2Y 4.16% vs 10Y 4.57%，期限利差 +41bp），说明市场对长端有一定通胀溢价预期；Fed 主席 Warsh 鹰派立场（"通胀零容忍"）令短期降息预期受压，6 月 CPI 好于预期（3.5% vs 3.8%）提供微弱对冲。高利率环境下：<strong>定存</strong>仍具吸引力（美元高息）；<strong>债券</strong>中性偏利多（若通胀继续降温），但 Warsh 鹰派言论抵消部分预期；<strong>REITs</strong> 继续承压（30Y 抵押贷款 6.55% 创近期新高，融资成本高企）。中国与新加坡当日利率数据未能获取，建议参阅 PBOC 官网及 MAS 官网。
+  </div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">🌍 宏观经济</div>
+    <ul class="news">
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/markets/article/strait-of-hormuz-oil-flows-fall-toward-pre-peace-deal-levels-as-war-reignites-172923974.html">美伊战争再起，美国封锁霍尔木兹海峡，油价突破 90 美元</a></div>
+        <div class="item-summary">美国重启霍尔木兹海峡封锁并对过境货物征收 20% 附加费，原油跳升至 90 美元上方，能源通胀压力回升，加大 Fed 控制通胀难度。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span><span class="tag risk">Reddit WSB</span> 2026-07-13–07-20</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/economy/article/what-happened-to-inflation-in-june-data-expected-to-show-moderating-price-growth-180813780.html">6 月 CPI：YoY 3.5%（预期 3.8%），核心 CPI 2.6%（预期 2.8%）</a></div>
+        <div class="item-summary">通胀数据好于预期，主要由能源价格回落驱动。但霍尔木兹危机或导致 7 月能源数据反弹，降息路径依然不明朗。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> Yahoo Finance · 2026-07-14</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/economy/policy/article/warshs-statement-to-congress-fed-has-no-tolerance-for-persistently-elevated-inflation-123000475.html">美联储 Warsh 国会证词：对通胀"零容忍"，不急于降息</a></div>
+        <div class="item-summary">新任 Fed 主席 Warsh 强调货币政策独立性，对通胀持强硬立场，明显比前任更鹰派。民主党议员质疑其与特朗普的关系，但政策信号清晰：维持高息。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> Yahoo Finance · 2026-07-16</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/markets/article/jpmorgan-notches-the-highest-quarterly-profit-in-us-banking-history-110031854.html">摩根大通 Q2 刷新美国银行史上最高季度净利润</a></div>
+        <div class="item-summary">AI 驱动的投行交易收益、利差收入双双创记录。大型银行盈利韧性强，但同时也意味着对 AI 生态健康度的高度依赖。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> Yahoo Finance · 2026-07-15</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/economy/article/tariff-refunds-accelerated-sharply-in-june-as-the-us-paid-out-almost-50-billion-to-businesses-185847171.html">关税退款 6 月加速，美国向企业返还近 500 亿美元</a></div>
+        <div class="item-summary">贸易摩擦持续但退款通道打开，部分企业获得实质性减负。宏观上带来一次性财政扩张效应，短期刺激消费需求。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> Yahoo Finance · 2026-07-14</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://36kr.com/p/3903220264404608">西班牙 1:0 阿根廷，夺 2026 世界杯冠军</a></div>
+        <div class="item-summary">体育赛事参考：世界杯决赛落幕，西班牙队夺冠。对博彩、直播、广告等相关板块有短期情绪影响。</div>
+        <div class="item-meta"><span class="tag">36Kr</span> 36Kr · 2026-07-20</div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">🏠 房地产 &amp; REITs</div>
+    <ul class="news">
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/real-estate/article/foreclosures-hit-highest-level-since-2019-sparking-interest-from-bargain-hunters-162602374.html">美国法拍屋数量达 2019 年来最高，抄底机会与风险并存</a></div>
+        <div class="item-summary">高利率压制购房需求，部分超贷业主还款困难，法拍屋供给上升。价值投资者开始审视折价资产，但区域供需差异显著，需谨慎甄别。</div>
+        <div class="item-meta"><span class="tag income">Yahoo Finance</span> Yahoo Finance · 2026-07-19</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://fred.stlouisfed.org/series/MORTGAGE30US">美国 30 年期抵押贷款利率升至 6.55%（近期新高）</a></div>
+        <div class="item-summary">FRED 最新周度数据（2026-07-16）显示抵押贷款成本持续攀升，对住宅 REITs 融资成本和新开发项目回报率形成直接压力，整体利空 REITs。</div>
+        <div class="item-meta"><span class="tag income">FRED</span> FRED · 2026-07-16</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/economy/article/can-the-australian-model-rescue-the-us-retirement-system-trump-seems-to-think-so-120923475.html">美国养老金制度改革探讨，潜在利好 REITs 长期资金面</a></div>
+        <div class="item-summary">若美国引入类澳式强制养老储蓄，将为 REITs、股票、债券市场引入持续性长钱。但立法路径复杂，短期影响有限，中长期值得持续跟踪。</div>
+        <div class="item-meta"><span class="tag income">Yahoo Finance</span> Yahoo Finance · 2026-07-20</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">🔄 板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value">能源（油价$90+）· 防御板块 · 大型银行</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value">AI 算力硬件（芯片）· 高估值成长股 · 半导体设备</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value"><span class="neutral">承压调整中</span> — 开源竞争+财报不确定性双压，短期风险偏高，等待 Alphabet 财报验证</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value">Risk-Off · 防御转向 · 财报博弈期 · 等待验证</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">🔥 雪球热帖 &amp; 热股</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">热帖数据</div>
+      <div class="item-summary">暂无可靠数据</div>
+      <div class="item-meta"><span class="tag">雪球</span></div>
+    </li>
+  </ul>
+  <div class="stock-grid" style="margin-top:16px">
+    <div class="stock-chip">
+      <span class="name">热股数据</span>
+      <span class="code">—</span>
+      <span class="pct neutral">暂无可靠数据</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1ahjA6qEwc">用最好的动画为你讲解——HBM 的原理</a></div>
+      <div class="item-summary">Redknot-乔红 · 1,115,500 次播放</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1ehEg6qEZb">告别算力焦虑！中国 AI 不再靠英伟达，华为做对了什么？</a></div>
+      <div class="item-summary">老石谈芯 · 453,248 次播放</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1CVRXBdEu7">【零基础必看】B站最好的 AI 产业链分析——从 Token 到多模态，五层蛋糕结构</a></div>
+      <div class="item-summary">AI大模型小海 · 44,555 次播放</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV16cKG6QEC5">华为昇腾 950 超节点真机亮相 WAIC，能打过英伟达吗？</a></div>
+      <div class="item-summary">龙科多工作室 · 39,717 次播放</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV16BkEBtEjW">老张公开课：算力、GPU、AI 服务器详解（上）</a></div>
+      <div class="item-summary">It_server技术分享 · 32,083 次播放</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV16PHezPERQ">基金经理带你看懂算力产业链——包含哪些环节？</a></div>
+      <div class="item-summary">易方达基金 · 27,362 次播放</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">⚠️ 风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率风险</td>
+        <td>美联储 Warsh 鹰派，Fed Funds 3.63%；美伊冲突推升油价破 $90，通胀反弹风险上升；6 月 CPI 好于预期但仅提供有限缓冲</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>AI 拥挤度</td>
+        <td>芯片板块 $3.3 万亿蒸发、已近熊市区间；Kimi K3、DeepSeek V4 开源竞争加剧算力需求下修担忧；AI 估值仍处于历史高位</td>
+        <td><span class="risk-high">高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>Risk-Off 模式，纳指上周跌超 3%；WSB 社区讨论"明日操作"说明短线博弈情绪浓；但通胀数据好于预期提供情绪底部支撑</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>财报风险</td>
+        <td>本周 Alphabet（周三）、Tesla 密集报告；IBM 盈警已引发市场警惕；Netflix 指引偏弱；市场对"超预期→继续下跌"的担忧上升</td>
+        <td><span class="risk-high">高</span></td>
+      </tr>
+      <tr>
+        <td>地缘政治风险</td>
+        <td>美伊霍尔木兹海峡冲突升级；美国对过境货物征 20% 附加费；原油供给不确定性加大，能源通胀尾部风险显著</td>
+        <td><span class="risk-high">高</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">🎯 明日关注（2026-07-21）</div>
+  <ol class="focus">
+    <li><strong>Alphabet Q2 财报（本周三）</strong> — 关注 Google Cloud AI 营收增速、搜索广告是否受 AI 助手冲击、Gemini 货币化进展；结果将决定 AI 交易下一步方向，是整个财报季的风向标</li>
+    <li><strong>DeepSeek V4 是否发布</strong> — 36Kr 爆料最快"明日"发布；若今明两日正式上线，可能再度压制 AI 芯片需求叙事，引发 NVDA 等新一轮波动</li>
+    <li><strong>芯片股能否企稳</strong> — 费城半导体指数已近熊市区间，观察 NVDA 支撑位是否守住、成交量是否放缩；若继续放量下跌则意味着卖压未出尽</li>
+    <li><strong>霍尔木兹海峡油价动态</strong> — 美伊冲突每日都有新进展，油价能否维持 90 美元上方将直接影响通胀预期和能源板块走向</li>
+    <li><strong>Kimi K3 / 月之暗面港股 IPO 进展</strong> — Kimi 既是技术主线（开源竞争），也是港股 AI IPO 催化剂；需跟踪其招股说明书进展和市场对中国 AI 独角兽估值的定价逻辑</li>
+  </ol>
+</div>
+
+<footer>
+  2026-07-20 自动生成 · 数据来源：Yahoo Finance · Reddit (r/investing, r/wallstreetbets) · 36Kr · AIBase · B站 · FRED<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>
