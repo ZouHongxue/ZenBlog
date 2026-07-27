@@ -11,17 +11,26 @@ function devEditorPlugin() {
   return {
     name: 'dev-editor',
     configureServer(server) {
-      // 监听 src/data/zaobao 和 src/data/zhuanti，新增文件时触发整页刷新
-      // Astro v6 / Vite 6 不再自动 watch 这些 raw HTML 目录，getStaticPaths 不会重跑
+      // 监听 src/data/zaobao、src/data/zhuanti、src/data/digest，新增文件时重启 dev server
+      // 注意：这几个目录下的动态路由 [date]/[slug] 用 getStaticPaths 生成，
+      // Astro 只在 dev server 启动时跑一次该函数来确定路由清单。
+      // 之前用 hot.send({type:'full-reload'}) 只是刷新浏览器，并不会让 Astro
+      // 重新计算路由清单，所以新文件依然 404——必须真正 restart() 才能生效。
       const watchDirs = [
         join(process.cwd(), 'src/data/zaobao'),
         join(process.cwd(), 'src/data/zhuanti'),
         join(process.cwd(), 'src/data/digest'),
       ];
       server.watcher.add(watchDirs);
+      let restartTimer = null;
       server.watcher.on('add', (filePath) => {
         if (watchDirs.some(dir => filePath.startsWith(dir))) {
-          server.hot.send({ type: 'full-reload' });
+          // 防抖：同步端点一次可能新增多个文件，避免连续触发多次 restart
+          clearTimeout(restartTimer);
+          restartTimer = setTimeout(() => {
+            console.log('[dev-editor] 检测到新文件，重启 dev server 以刷新路由...');
+            server.restart();
+          }, 300);
         }
       });
 
