@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-08-18</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  /* ── News list ── */
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  /* ── Rates table ── */
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Hot stocks ── */
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  /* ── Risk table ── */
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  /* ── Section divider ── */
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  /* ── Tomorrow focus ── */
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  /* ── Rotation box ── */
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📰 财经早报</h1>
+      <div class="date">2026-08-18 · CN / SG / US</div>
+    </div>
+    <span class="market-state">谨慎中性 · 长端承压</span>
+  </div>
+  <div class="summary">
+    美股周一小幅回落，30 年期美债收益率升至 2007 年以来最高，长端利率是当前市场最大压制因素；AI 主线情绪未散，英伟达为 OpenAI 俄亥俄州数据中心提供 1050 亿美元融资的消息继续发酵，但临近财报（NVDA 本周将成焦点）已出现"利好出尽"担忧。资金呈"科技内部分化 + 回避利率敏感资产"格局：AI 算力/半导体设备仍获追捧，长久期债券、REITs 及高估值防御股承压。中美利率背离加剧——中国 10Y 国债跌至 1.67% 一年新低（经济数据疲弱），美债长端却创新高，Jackson Hole 前市场对 9 月更多是"按兵不动"甚至有加息声音。<strong>判断：短期 risk-off 偏谨慎，AI 结构性行情延续但拥挤度高，逢关键数据宜控仓位。</strong>
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">9 条</span></div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/technology/article/nvidia-inks-105-billion-deal-for-openai-data-center-190524832.html">英伟达为 OpenAI 俄亥俄州数据中心提供 1050 亿美元融资，黄仁勋否认"循环投资"</a></div>
+      <div class="item-summary">英伟达以融资形式支持 OpenAI 在俄亥俄州建设超大规模数据中心，规模高达 1050 亿美元。黄仁勋回应外界"厂商为客户提供资金买自家芯片"的循环质疑，称并非左手倒右手。市场关注 AI 资本开支的可持续性与厂商信用敞口。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        <span class="tag ai">Reddit</span>
+        r/business · 3 小时前
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/article/nvidia-bulls-may-have-a-small-problem-on-their-hands-142341243.html">华尔街预期英伟达又一超预期季度，但过高预期埋下"利好出尽"隐患</a></div>
+      <div class="item-summary">分析指出，NVDA 财报临近，市场对营收/指引的乐观定价已相当充分，即便再度超预期，也可能触发"sell-the-news"回调。多头需警惕预期差收窄。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        Yahoo Markets · 4 天前
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/article/nvidias-70-billion-bet-on-openai-anthropic-and-others-could-pay-off-big-for-shareholders-150039868.html">英伟达对 OpenAI、Anthropic 等约 700 亿美元战略投资，或为股东带来又一次大回报</a></div>
+      <div class="item-summary">英伟达通过对头部 AI 实验室的股权投资，间接绑定算力需求与生态。若这些标的估值继续抬升，投资收益将成为额外利润来源，但也放大了 AI 板块的相互关联风险。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        Yahoo Markets · 5 天前
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/soxl/comments/1vr4edq/why_is_soxl_up_today_8172026/">SOXL 半导体三倍做多 ETF 昨日走强，社区讨论驱动因素</a></div>
+      <div class="item-summary">8/17 半导体板块相对强势带动 SOXL 上涨，社区归因于 AI 基建订单及算力需求预期。杠杆 ETF 活跃度上升，反映散户对芯片主线仍偏乐观，但也意味情绪拥挤。</div>
+      <div class="item-meta">
+        <span class="tag ai">Reddit</span>
+        r/soxl · 1 天前
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/SNDK_Stock/comments/1vr07xg/top_trending_stock_on_reddit/">SanDisk（SNDK）成 Reddit 热议存储股，AI 带动存储需求叙事升温</a></div>
+      <div class="item-summary">存储芯片受 AI 数据中心扩容拉动，SNDK 登上社区热榜（score 32）。存储链条被视为 AI 算力资本开支的"补涨"方向之一。</div>
+      <div class="item-meta">
+        <span class="tag ai">Reddit</span>
+        r/SNDK_Stock · 1 天前
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/MU_Stock/comments/1vrct00/">美光（MU）出现"看空噪音"，多头社区回应存储周期分歧</a></div>
+      <div class="item-summary">围绕美光的看空声音增多（帖子 score 6），焦点在存储价格周期与 AI HBM 需求能否延续。存储股波动加大，是当前半导体内部分化的缩影。</div>
+      <div class="item-meta">
+        <span class="tag ai">Reddit</span>
+        r/MU_Stock · 今日
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/tech-stocks-are-getting-cheaper-even-as-earnings-stay-strong-chart-of-the-day-100000044.html">科技股估值回落，盈利却依旧强劲——"股价便宜化"信号</a></div>
+      <div class="item-summary">图表显示部分科技龙头盈利维持强势，但股价 / 估值倍数走低，意味市场对未来增长预期趋于保守。对价值型科技配置或是逢低机会，但需甄别基本面。</div>
+      <div class="item-meta">
+        <span class="tag ai">Yahoo Finance</span>
+        Yahoo Markets · 5 天前
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/ClaudeAI/comments/1vqhazp/">Anthropic 传出洽购 Decart，AI 应用层整合加速</a></div>
+      <div class="item-summary">社区热议 Anthropic 拟收购 Decart（score 51），若成行将强化其应用与推理生态。AI 头部厂商并购频繁，反映竞争从模型向应用与算力垂直整合延伸。</div>
+      <div class="item-meta">
+        <span class="tag ai">Reddit</span>
+        r/ClaudeAI · 今日
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/TradingEdge/comments/1vqr10g/">08/17 盘前新闻综述：AI 基建订单、财报季与利率同框主导情绪</a></div>
+      <div class="item-summary">TradingEdge 盘前汇总（score 28）显示，AI 数据中心资本开支、大盘财报与长端利率共同左右盘面，市场在"AI 乐观"与"利率警惕"之间摇摆。</div>
+      <div class="item-meta">
+        <span class="tag ai">Reddit</span>
+        r/TradingEdge · 1 天前
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">💰 被动收入 &amp; 红利资产</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/bondmarket/comments/">"美债收益率是不是要完蛋了？"——债券社区热议长端抛售</a></div>
+      <div class="item-summary">30 年期美债拍卖以 2007 年以来最高借贷成本发行，长端收益率飙升引发债市社区激烈讨论（score 761）。对持有长久期债券/债基的被动收入投资者是账面利空，但也意味着新配置的票息更高。</div>
+      <div class="item-meta">
+        <span class="tag income">Reddit</span>
+        r/bondmarket · 近期热帖
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/ProfessorFinance/comments/">美国以 2001 年以来最高成本发售 30 年期国债</a></div>
+      <div class="item-summary">财政部长债发行成本创逾二十年新高（score 393），反映期限溢价回升与财政供给压力。长端利率高企对 REITs、公用事业等利率敏感型红利资产构成估值压制。</div>
+      <div class="item-meta">
+        <span class="tag income">Reddit</span>
+        r/ProfessorFinance · 近期热帖
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/whitecoatinvestor/comments/1vrcxjk/">高收入者规划 50 岁退休：现金流与被动收入配置引讨论</a></div>
+      <div class="item-summary">一位年营收约 150 万美元的独立执业者分享 50 岁退休计划（score 7），社区聚焦税务、指数基金与分红资产的现金流搭建，是典型 FIRE / 被动收入实操案例。</div>
+      <div class="item-meta">
+        <span class="tag income">Reddit</span>
+        r/whitecoatinvestor · 今日
+      </div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/passive_income/comments/">r/passive_income 高热讨论：被动收入构建路径</a></div>
+      <div class="item-summary">被动收入社区一帖获 438 赞，围绕分红、租金与副业现金流的可持续性展开。反映高利率环境下，投资者对"稳定票息 + 现金流"资产的关注度居高不下。</div>
+      <div class="item-meta">
+        <span class="tag income">Reddit</span>
+        r/passive_income · 近期热帖
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">📊 利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val">1Y LPR 3.00%</td>
+          <td class="rate-val">MAS 汇率政策<br>（无政策利率）</td>
+          <td class="rate-val">3.63%（EFFR，7月）</td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val">2Y 1.23% · 52W 1.20%</td>
+          <td class="rate-val">6M T-bill 1.58%<br>12M 1.68%</td>
+          <td class="rate-val">4.17%（2Y）</td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val">1.67% <span class="down">↓</span></td>
+          <td class="rate-val">2.34% <span class="up">↑</span></td>
+          <td class="rate-val">4.68% <span class="up">↑</span></td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val">5Y LPR 暂无可靠数据</td>
+          <td class="rate-val">HDB 2.60%（挂钩 CPF）</td>
+          <td class="rate-val">6.67%（30Y 房贷）</td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">暂无可靠数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">
+    <strong>解读（中性偏分化）：</strong>中美利率显著背离。美国长端走高（10Y 4.68%、30Y 创 2007 年来新高），Jackson Hole 前市场倾向 9 月按兵不动、甚至有加息声音——<strong>利好新入场的定存/短债票息，利空长久期债券与 REITs</strong>（估值受贴现率压制）。中国 10Y 跌至 1.67% 一年新低，7 月固投、工业、社零全面走弱，宽松预期升温——<strong>利空中资定存收益，利好中资长债价格与红利低波（低利率下高股息稀缺性凸显）</strong>。新加坡短端 T-bill 回落至 1.5–1.7%，SGS 长端 2.34% 温和上行，整体<strong>中性</strong>：定存吸引力边际下降，REITs 受本地长端小幅抬升略有压力但幅度有限。</div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">🌍 宏观经济</div>
+    <ul class="news">
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/markets/live/stock-market-today-monday-august-17-dow-sp-500-nasdaq-oil-treasurys-094421171.html">美股周一收跌，30 年期美债收益率触及 2007 年以来最高</a></div>
+        <div class="item-summary">长端利率飙升压制风险偏好，期限溢价回升与财政供给担忧是主因。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> Yahoo Markets · 6 小时前</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/economy/policy/article/markets-bet-on-a-pause-for-september-but-fed-hawks-may-not-be-swayed-ahead-of-jackson-hole-175928197.html">市场押注 9 月按兵不动，但 Jackson Hole 前鹰派或未被说服</a></div>
+        <div class="item-summary">即将公布的通胀数据可能强化加息一方论据，本周 Jackson Hole 年会成关键指引。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> Yahoo Economy · 3 天前</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/economy/article/goldman-sachs-warns-of-consumer-spending-slowdown-as-tax-refund-boost-fades-125557282.html">高盛警告退税提振消退后，美国消费支出面临放缓</a></div>
+        <div class="item-summary">消费动能减弱叠加高利率，或拖累下半年增长，本周大型零售商财报是验证窗口。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> Yahoo Economy · 12 小时前</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://tradingeconomics.com/china/government-bond-yield">中国 7 月经济数据全面走弱，10Y 国债跌至一年低位</a></div>
+        <div class="item-summary">前 7 月固定资产投资同比降 6.7%（预期 -6.2%），工业增加值放缓至 4.5%，社零仅增 0.6%，失业率升至 5.2%，市场预期更多稳增长刺激。</div>
+        <div class="item-meta"><span class="tag macro">TradingEconomics</span> 国家统计局 · 今日</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://www.reddit.com/r/stocks/comments/">日元套息交易终将解除，市场担忧潜在踩踏</a></div>
+        <div class="item-summary">r/stocks 热帖（score 703）警示日元 carry trade 若逆转或引发跨市场波动，叠加日本货币与债务矛盾激化。</div>
+        <div class="item-meta"><span class="tag macro">Reddit</span> r/stocks · 近期热帖</div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">🏠 房地产 &amp; REITs</div>
+    <ul class="news">
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/real-estate/article/the-market-for-older-condos-is-cratering-as-buyers-shun-rising-hoa-fees-172954085.html">美国老旧公寓市场遇冷，买家回避飙升的 HOA 物业费</a></div>
+        <div class="item-summary">高企的持有成本与利率共同压制次新/老旧公寓需求，住宅 REITs 与地产链承压，凸显利率敏感型不动产的结构性分化。</div>
+        <div class="item-meta"><span class="tag income">Yahoo Finance</span> Yahoo Real Estate · 2 天前</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://tradingeconomics.com/singapore/government-bond-yield">新加坡 SGS 长端 2.34%，短端 T-bill 回落至 1.5–1.7%</a></div>
+        <div class="item-summary">本地长端温和上行、短端下行，S-REITs 融资成本压力总体可控；短债收益回落使高息 REITs 相对吸引力边际回升。</div>
+        <div class="item-meta"><span class="tag income">TradingEconomics</span> SGS · 今日</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/markets/live/stock-market-today-monday-august-17-dow-sp-500-nasdaq-oil-treasurys-094421171.html">美债长端创新高，压制 REITs 估值</a></div>
+        <div class="item-summary">30Y 美债收益率升至 2007 年来最高，贴现率上行直接压制美国 REITs 板块估值，利率敏感度高的商业地产尤为承压。</div>
+        <div class="item-meta"><span class="tag income">Yahoo Finance</span> Yahoo Markets · 6 小时前</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">🔄 板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value">AI 算力/半导体（英伟达、存储 SNDK/MU）、AI 应用整合、中资红利低波</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value">长久期美债/债基、利率敏感型 REITs、高估值消费/老旧地产</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value">仍是主线，但拥挤度高、临近 NVDA 财报有"利好出尽"风险</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value">谨慎防御 + 结构性成长；回避长久期，偏好短端票息与现金流</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">🔥 全球社区热帖 &amp; 焦点标的</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/ValueInvesting/comments/1vqjlpv/">价值投资社区精选：18 篇投资研究写作合集</a></div>
+      <div class="item-summary">r/ValueInvesting 汇总 18 篇个股/行业深度研究（score 28），在高利率与 AI 泡沫争议并存的当下，价值挖掘与安全边际讨论回暖。</div>
+      <div class="item-meta"><span class="tag">Reddit</span> r/ValueInvesting · 近期热帖</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/wallstreetbets_wins/comments/1vquuvx/">复盘：标普 500 过去 5/10/15/20 年表现最佳个股</a></div>
+      <div class="item-summary">长周期赢家清单显示科技与消费龙头长期复利效应显著（score 13），提醒短期波动中坚持长期主线的价值。</div>
+      <div class="item-meta"><span class="tag">Reddit</span> r/wallstreetbets_wins · 近期</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/key-checks-from-walmart-and-the-big-box-stores-what-to-watch-this-week-100000135.html">本周焦点：沃尔玛等大型零售商财报占据日程</a></div>
+      <div class="item-summary">大型商超财报将检验美国消费韧性，是判断"消费放缓"叙事与 Q3 增长的关键窗口。</div>
+      <div class="item-meta"><span class="tag">Yahoo Finance</span> Yahoo Markets · 1 天前</div>
+    </li>
+  </ul>
+  <div class="stock-grid" style="margin-top:16px">
+    <div class="stock-chip">
+      <span class="name">英伟达</span>
+      <span class="code">NVDA</span>
+      <span class="pct neutral">财报临近 · 焦点</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">SanDisk</span>
+      <span class="code">SNDK</span>
+      <span class="pct up">社区热度↑</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">美光</span>
+      <span class="code">MU</span>
+      <span class="pct neutral">多空分歧</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">半导体3X做多</span>
+      <span class="code">SOXL</span>
+      <span class="pct up">走强</span>
+    </div>
+    <div class="stock-chip">
+      <span class="name">耐克</span>
+      <span class="code">NKE</span>
+      <span class="pct down">距高点 -80%</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1RAgJ6MEKg">"算力金属"身价飙升，揭秘 AI 背后的"硬通货"</a></div>
+      <div class="item-summary">央视新闻 · 43540 次播放 · 3:2</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1Ptgg6cE17">英伟达、开源模型、AI 应用们的新战争！</a></div>
+      <div class="item-summary">涌现EmergenceHK · 16366 次播放 · 21:17</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1DDui6jEzw">"保姆级"拆解：超大型数据中心到底长啥样？电力、散热、核心机房层层剥开算力基建的机会与挑战</a></div>
+      <div class="item-summary">弘凌的小酒馆 · 16849 次播放 · 6:57</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1UKuu6aE5d">中国发布 10 万亿参数 AI 模型，震惊全球！</a></div>
+      <div class="item-summary">AI-seeker · 25112 次播放 · 30:56</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1sQgV63Efe">深扒 AMD 最新收购：3 个细节看懂 Taalas 芯片——一颗一辈子只能跑一个模型的 AI 芯片</a></div>
+      <div class="item-summary">CortexLab · 5057 次播放 · 11:53</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1LPuP6bEf4">下半年算力租赁或大幅飙升？拆解 7 家算力资产化浪潮中的底层公司</a></div>
+      <div class="item-summary">韭菜花之春 · 6188 次播放 · 9:13</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">⚠️ 风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率</td>
+        <td>美债长端创 2007 年来新高，30Y 拍卖成本逾二十年最高，Jackson Hole 前存加息声音；期限溢价上行压制风险资产估值</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>AI 拥挤度</td>
+        <td>AI 算力/算力资产化叙事高度集中，杠杆 ETF（SOXL）活跃，英伟达 700 亿/1050 亿投资形成生态互相关联，一致预期偏高</td>
+        <td><span class="risk-high">高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>周一小幅回落、长端承压，AI 乐观与利率警惕拉锯；日元套息解除担忧升温，情绪偏谨慎但未恐慌</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+      <tr>
+        <td>财报风险</td>
+        <td>NVDA 财报临近存"利好出尽"隐忧，沃尔玛等大型零售商财报将检验消费韧性，高盛警告消费放缓</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">🎯 明日关注</div>
+  <ol class="focus">
+    <li><strong>美债 30Y / 10Y 收益率走向</strong> — 若长端继续冲高，风险资产估值与 REITs 将进一步承压，是当前最重要的盘面变量。</li>
+    <li><strong>Jackson Hole 央行年会信号</strong> — 关注对 9 月议息（按兵不动 vs. 加息）的措辞指引，直接影响利率预期与市场风格。</li>
+    <li><strong>沃尔玛等大型零售商财报</strong> — 验证"消费放缓"叙事，是判断美国 Q3 增长与防御板块配置的关键。</li>
+    <li><strong>英伟达财报预期与半导体情绪</strong> — 临近发布，关注 SOXL/SNDK/MU 等 AI 链标的能否延续强势，警惕"sell-the-news"。</li>
+    <li><strong>中国稳增长政策动向</strong> — 7 月数据全面走弱，10Y 国债破 1.67%，关注是否有降准/降息或财政加码，影响中资红利与长债定价。</li>
+  </ol>
+</div>
+
+<footer>
+  2026-08-18 10:00 自动生成 · 数据来源：Twitter · Reddit · 小红书 · 雪球 · B站 · FRED · MAS · PBC · Bloomberg · Yahoo Finance<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>
