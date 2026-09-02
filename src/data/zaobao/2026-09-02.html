@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财经早报 2026-09-02</title>
+<style>
+  :root {
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --tag-bg: #f3f4f6;
+    --header-bg: #0f172a;
+    --header-text: #f1f5f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg);
+    padding: 24px 16px 48px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .date { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .market-state {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    white-space: nowrap;
+  }
+  .summary {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  /* ── News list ── */
+  ul.news { list-style: none; }
+  ul.news li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+  ul.news li:last-child { border-bottom: none; }
+  .item-title { font-weight: 500; font-size: 13.5px; }
+  .item-title a { color: var(--text); text-decoration: none; }
+  .item-title a:hover { color: var(--accent); }
+  .item-summary { font-size: 12.5px; color: #4b5563; }
+  .item-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--muted);
+  }
+  .tag.ai { background: #eff6ff; color: #1d4ed8; }
+  .tag.macro { background: #f0fdf4; color: #15803d; }
+  .tag.income { background: #fefce8; color: #a16207; }
+  .tag.risk { background: #fef2f2; color: #b91c1c; }
+
+  /* ── Rates table ── */
+  .rates-wrap { overflow-x: auto; }
+  table.rates {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 480px;
+  }
+  table.rates th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  table.rates td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.rates tr:last-child td { border-bottom: none; }
+  table.rates td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .rate-val { font-weight: 600; }
+  .rates-insight {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #374151;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Hot stocks ── */
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .stock-chip {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stock-chip .name { font-size: 12px; color: var(--muted); }
+  .stock-chip .code { font-size: 13px; font-weight: 700; }
+  .stock-chip .pct { font-size: 13px; font-weight: 600; }
+
+  /* ── Risk table ── */
+  table.risk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.risk th {
+    background: var(--tag-bg);
+    text-align: left;
+    padding: 7px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+  }
+  table.risk td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.risk tr:last-child td { border-bottom: none; }
+  .risk-low    { color: #15803d; font-weight: 600; }
+  .risk-mid    { color: #d97706; font-weight: 600; }
+  .risk-midhigh{ color: #ea580c; font-weight: 600; }
+  .risk-high   { color: #dc2626; font-weight: 600; }
+
+  /* ── Section divider ── */
+  .section-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) { .section-group { grid-template-columns: 1fr; } }
+
+  /* ── Tomorrow focus ── */
+  ol.focus { padding-left: 20px; }
+  ol.focus li { padding: 5px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  ol.focus li:last-child { border-bottom: none; }
+
+  /* ── Rotation box ── */
+  .rotation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 540px) { .rotation-grid { grid-template-columns: 1fr; } }
+  .rotation-item {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .rotation-item .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .rotation-item .value { font-size: 13px; font-weight: 600; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .neutral { color: var(--neutral); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📰 财经早报</h1>
+      <div class="date">2026-09-02 · CN / SG / US</div>
+    </div>
+    <span class="market-state">⚠️ Risk-off · 地缘 + 利率双压</span>
+  </div>
+  <div class="summary">
+    美股承压走低，纳指领跌，避险情绪明显升温。驱动因素为美国对伊朗动武推升油价、10Y 美债收益率升至 4.75%，叠加新任美联储主席 Warsh 鹰派表态（"通胀仍偏高"）令加息预期重新抬头。资金从高估值 AI 硬件与成长股流出，转向能源、防御及现金类短债；软件板块延续 8 月强势。综合判断：短线以规避利率与地缘尾部风险为主，AI 主线内部分化加剧而非单边扩张。
+  </div>
+</div>
+
+<!-- ══ AI & 科技股 ══ -->
+<div class="card">
+  <div class="card-title">📈 AI &amp; 科技股 <span class="count">13 条</span></div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/CRWV/comments/1w4v3cl/dell_q2_609b_ai_server_orders_95b_backlog/">Dell Q2 财报：AI 服务器订单 609 亿美元，积压订单达 950 亿美元</a></div>
+      <div class="item-summary">推理与 neocloud 需求持续加速，印证 AI 基础设施资本开支仍处扩张期，硬件端订单能见度高。</div>
+      <div class="item-meta"><span class="tag ai">Reddit</span> r/CRWV · Lucid_Dreamer5 · 9/1</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/NVDA_Stock/comments/1w4v5jn/nvidia_pours_35b_into_chipmaking_partner_mediatek/">英伟达向芯片合作伙伴联发科投资 35 亿美元</a></div>
+      <div class="item-summary">英伟达持续以资本绑定上下游生态，强化供应链话语权，市场解读为对 ASIC/定制芯片竞争的前瞻布局。</div>
+      <div class="item-meta"><span class="tag ai">Reddit</span> r/NVDA_Stock · LinkedInNews · 9/1</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/software-stocks-crushed-chips-in-august-history-says-september-gets-tougher-chart-of-the-day-100000653.html">软件股 8 月创 2002 年以来第二好月度表现，芯片股仅小幅收涨</a></div>
+      <div class="item-summary">AI 交易主线由硬件向软件迁移的迹象明确；历史统计显示 9 月软件板块通常趋于承压，补涨可持续性存疑。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> · 9/1</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/all-about-acceleration-after-nvidia-earnings-the-tech-trade-is-getting-more-segmented-114905135.html">英伟达财报后，科技交易愈发分化</a></div>
+      <div class="item-summary">市场不再"一荣俱荣"，资金开始在算力硬件、云厂商、软件应用之间做结构性甄别，板块内部离散度上升。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> · 8/31</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/wall-street-is-turning-nvidias-ai-chips-into-a-new-futures-market-chart-of-the-day-115118331.html">华尔街正把英伟达 AI 芯片变成新期货市场：CME 挂牌 GPU 租赁价格指数</a></div>
+      <div class="item-summary">CME 推出英伟达 GPU 租赁价格指数，算力开始金融化定价，或影响所有 AI 玩家的成本与套保逻辑。[Yahoo / B站]</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span><span class="tag ai">B站</span> · 8/30</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/article/nvidia-is-looking-more-like-the-central-bank-of-ai-213156835.html">英伟达越来越像"AI 界的央行"：为买不起算力的客户提供融资</a></div>
+      <div class="item-summary">英伟达以投资/融资方式支撑增长最快的 AI 客户，形成自我循环生态，但也放大了对少数买家的敞口风险。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> · 8/27</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/markets/stocks/article/nvidia-tops-q2-expectations-offers-strong-q3-outlook-revenue-96-billion-112502189.html">英伟达 Q2 超预期、Q3 指引强劲，营收约 960 亿美元</a></div>
+      <div class="item-summary">财报后一度回落，随后盘后反弹逾 4%；强指引确认需求，但高预期下股价对边际利好钝化。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> · 8/27</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/TechSavvyNexus/comments/1w4uhew/semicon_taiwan_2026_opens_as_copackaged_optics/">SEMICON Taiwan 2026 开幕：共封装光学（CPO）从原型走向量产</a></div>
+      <div class="item-summary">CPO 进入量产阶段，光互连成为算力扩张的关键瓶颈突破口，利好光模块/激光芯片产业链。</div>
+      <div class="item-meta"><span class="tag ai">Reddit</span> r/TechSavvyNexus · ifysalabas · 9/1</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/siverssemiconductors/comments/1w4x27e/the_explosion_in_ai_inference_usage_points_to_a/">AI 推理用量爆发：OpenRouter 周 token 量达 113 万亿，同比增 25 倍</a></div>
+      <div class="item-summary">单月环比翻倍（57→113 万亿/周），主要由多步骤 AI Agent 驱动，指向真实推理需求而非简单对话，利好光互连与算力。</div>
+      <div class="item-meta"><span class="tag ai">Reddit</span> r/siverssemiconductors · Difficult_Goal_9160 · 9/2</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/technology/article/musk-vs-altman-spacex-stock-in-focus-as-openai-ends-cursor-access-to-ai-models-142228912.html">OpenAI 切断 Cursor 模型访问，Musk"毫不在意"</a></div>
+      <div class="item-summary">AI 应用层竞争加剧，模型厂商开始收紧对第三方工具的接口，反映生态话语权博弈升温。</div>
+      <div class="item-meta"><span class="tag ai">Yahoo Finance</span> · 8/31</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1UVtM6CEKm">2026.09.01 闭门会议核心拆解——AI 投资逻辑迁移：从硬件算力向软件应用轮动</a></div>
+      <div class="item-summary">国内投研视角同样确认硬件→软件轮动主题，与美股软件跑赢芯片相互印证。</div>
+      <div class="item-meta"><span class="tag ai">B站</span> 财经速达 · 9/1</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1Qqt369EA2">手机集体涨价背后：AI 算力挤占存储，半导体供需逻辑已变</a></div>
+      <div class="item-summary">AI 算力抢占存储/晶圆产能，推动消费电子成本上行，半导体供需从周期底部转向结构性紧张。</div>
+      <div class="item-meta"><span class="tag ai">B站</span> 苏木的行业投研 · 9/1</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/WhatTrumpHasDone/comments/1w4vstz/pentagon_official_overseeing_military_ai_sold/">监管军用 AI 的五角大楼官员抛售相关 AI 公司数百万美元股票</a></div>
+      <div class="item-summary">政商利益冲突话题再起，或引发对国防 AI 采购合规与相关标的的短期舆情扰动。</div>
+      <div class="item-meta"><span class="tag ai">Reddit</span> r/WhatTrumpHasDone · John3262005 · 9/1</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 被动收入 & 红利 ══ -->
+<div class="card">
+  <div class="card-title">💰 被动收入 &amp; 红利资产</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://finance.yahoo.com/real-estate/article/more-than-i-expected-to-pay-rents-are-rising-at-the-fastest-rate-in-over-a-year-160229184.html">美国租金以一年多来最快速度上涨</a></div>
+      <div class="item-summary">租金重新加速对住宅类 REITs 现金流构成支撑，但也意味着通胀黏性，与利率上行环境形成对冲交织。</div>
+      <div class="item-meta"><span class="tag income">Yahoo Finance</span> · 8/31</div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.reddit.com/r/leanfire/comments/1w4wgr5/leanfire_youve_never_looked_so_good/">r/leanfire：短债/现金类收益走高，精简 FIRE 路径吸引力上升</a></div>
+      <div class="item-summary">在利率上行、股市波动加大背景下，社区讨论重回"稳健被动收入 + 低支出"策略，现金类资产受青睐。</div>
+      <div class="item-meta"><span class="tag income">Reddit</span> r/leanfire · cowgod180 · 9/1</div>
+    </li>
+    <li>
+      <div class="item-title">利率上行下的配置提示：新入场短债/定存收益吸引，存量长久期承压</div>
+      <div class="item-summary">美 2Y 升至 4.34%、10Y 4.75%，新配置短端美债/CD 票息占优；但存量长债与高杠杆 REITs 面临估值下修压力。[基于 FRED 数据]</div>
+      <div class="item-meta"><span class="tag income">FRED</span> · 分析师整理 · 9/1</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 利率速览 ══ -->
+<div class="card">
+  <div class="card-title">📊 利率速览</div>
+  <div class="rates-wrap">
+    <table class="rates">
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th>🇨🇳 中国</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇺🇸 美国</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>政策 / 隔夜利率</td>
+          <td class="rate-val">1Y LPR 3.00%</td>
+          <td class="rate-val">SORA 暂无可靠数据</td>
+          <td class="rate-val">联邦基金 3.63%</td>
+        </tr>
+        <tr>
+          <td>短端（1–2Y / T-bill）</td>
+          <td class="rate-val">2Y 国债 1.24%</td>
+          <td class="rate-val">6M T-bill 1.57%</td>
+          <td class="rate-val">2Y 4.34%</td>
+        </tr>
+        <tr>
+          <td>长端（10Y 国债）</td>
+          <td class="rate-val">1.69%</td>
+          <td class="rate-val">2.43%</td>
+          <td class="rate-val">4.75%</td>
+        </tr>
+        <tr>
+          <td>房贷 / 5Y LPR / 30Y</td>
+          <td class="rate-val">5Y LPR 3.50%</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">30Y 房贷 6.66%</td>
+        </tr>
+        <tr>
+          <td>1Y 定存参考</td>
+          <td class="rate-val">暂无可靠数据</td>
+          <td class="rate-val">12M T-bill 1.65%</td>
+          <td class="rate-val">暂无可靠数据</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="rates-insight">美国利率显著上行——10Y 升至 4.75%、2Y 4.34%，鹰派 Warsh 与加息预期抬头令美债价格与 REITs 估值承压，但新入场短债/CD 票息吸引力增强（<strong>存量偏空、新配置偏多</strong>）。中国利率维持历史低位（10Y 1.69%，LPR 3.0%/3.5%），定存与债券收益有限，红利低波资产相对占优。新加坡收益率温和（10Y 2.43%，T-bill 1.5–1.7%），处防御性配置友好区间。</div>
+</div>
+
+<!-- ══ 宏观 & 房地产 ══ -->
+<div class="section-group">
+  <div class="card">
+    <div class="card-title">🌍 宏观经济</div>
+    <ul class="news">
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/markets/live/stock-market-today-tuesday-september-1-dow-sp-500-nasdaq-080617884.html">美国对伊朗发动军事打击，油价与美债收益率跳升，三大股指走弱</a></div>
+        <div class="item-summary">地缘冲突升级引发避险，风险资产承压、能源走强，短线主导市场情绪。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> · 9/2</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/economy/policy/article/fed-chairman-warsh-says-inflation-is-running-too-high-offers-first-assesment-of-economy-140031752.html">美联储主席 Warsh：通胀仍偏高，市场加息预期升温</a></div>
+        <div class="item-summary">前副主席解读其杰克逊霍尔讲话为变相前瞻指引，"可能加息"预期重新定价，压制成长股估值。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> · 8/28</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://tradingeconomics.com/china/government-bond-yield">中国 8 月制造业 PMI 改善：财新 51.5、官方 49.8 均超预期</a></div>
+        <div class="item-summary">财新 PMI 从 50.9 升至 51.5，官方从 49.2 升至 49.8，出口与科技产业韧性支撑，但内需与地产仍偏弱。</div>
+        <div class="item-meta"><span class="tag macro">TradingEconomics</span> · 9/2</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://www.reddit.com/r/HollowPointTrading/comments/1w4vg56/100_oil_is_now_on_the_table_and_stocks_havent/">交易员：100 美元油价重回视野，而股市尚未充分定价</a></div>
+        <div class="item-summary">与中东局势共振，油价上行风险成为压制风险偏好、抬升通胀预期的新变量。</div>
+        <div class="item-meta"><span class="tag macro">Reddit</span> r/HollowPointTrading · misanthropicitis · 9/1</div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">🏠 房地产 &amp; REITs</div>
+    <ul class="news">
+      <li>
+        <div class="item-title"><a href="https://finance.yahoo.com/real-estate/article/more-than-i-expected-to-pay-rents-are-rising-at-the-fastest-rate-in-over-a-year-160229184.html">美国租金以一年多来最快速度上涨</a></div>
+        <div class="item-summary">利好住宅 REITs 租金端，但强化通胀黏性、支撑高利率环境。</div>
+        <div class="item-meta"><span class="tag macro">Yahoo Finance</span> · 8/31</div>
+      </li>
+      <li>
+        <div class="item-title"><a href="https://fred.stlouisfed.org/series/MORTGAGE30US">美国 30 年期房贷利率维持 6.66% 高位</a></div>
+        <div class="item-summary">在 10Y 收益率上行推动下，房贷成本居高不下，压制购房需求，利空非住宅与高杠杆 REITs 估值。</div>
+        <div class="item-meta"><span class="tag macro">FRED</span> · 8/27</div>
+      </li>
+      <li>
+        <div class="item-title">利率上行下 REITs 承压，红利防御属性凸显</div>
+        <div class="item-summary">美债收益率抬升压制 REITs 估值分母端；中国/新加坡低利率环境下，稳健分红型 REITs 与红利资产相对占优。[基于 FRED / TradingEconomics 数据]</div>
+        <div class="item-meta"><span class="tag macro">分析师整理</span> · 9/2</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ 板块轮动 ══ -->
+<div class="card">
+  <div class="card-title">🔄 板块轮动判断</div>
+  <div class="rotation-grid">
+    <div class="rotation-item">
+      <div class="label">资金主要流入</div>
+      <div class="value">能源/油气、防御板块、现金类短债</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">资金主要流出</div>
+      <div class="value">高估值 AI 硬件、长久期成长股</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">AI 主线状态</div>
+      <div class="value">分化延续——软件补涨强于硬件，硬件需求仍旺但估值承压</div>
+    </div>
+    <div class="rotation-item">
+      <div class="label">市场风格</div>
+      <div class="value">Risk-off，价值/防御占优</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 雪球热帖 & 热股 ══ -->
+<div class="card">
+  <div class="card-title">🔥 雪球热帖 &amp; 热股</div>
+  <ul class="news">
+    <li>
+      <div class="item-title">暂无可靠数据</div>
+      <div class="item-summary">当日雪球热帖与热股数据未能获取。</div>
+      <div class="item-meta"><span class="tag">雪球</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ B站 & 社区 ══ -->
+<div class="card">
+  <div class="card-title">📺 B站 &amp; 社区精选</div>
+  <ul class="news">
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1rRg36hE9t">算力要变期货了！CME 挂牌英伟达 GPU 租赁价格指数，一场影响所有 AI 玩家的定价革命</a></div>
+      <div class="item-summary">正经的阿干 · 233 次播放 · 4:18</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1UVtM6CEKm">2026.09.01 闭门会议核心拆解——AI 投资逻辑迁移：从硬件算力向软件应用轮动</a></div>
+      <div class="item-summary">财经速达 · 48 次播放 · 5:10</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1Qqt369EA2">手机集体涨价背后：AI 算力挤占存储，半导体供需逻辑已变</a></div>
+      <div class="item-summary">苏木的行业投研 · 40 次播放 · 5:23</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV1ibt36cEGk">止盈算力落袋 16 个点！新布局华为昇腾 AI + 线控转向两大主线</a></div>
+      <div class="item-summary">逐浪寻策 · 1143 次播放 · 1:06</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV15Wt86jEZz">00 后炒股分享 54 期：持续看好超节点、算力租赁，分享液冷与 AI 应用看法</a></div>
+      <div class="item-summary">CrueltyX · 1526 次播放 · 10:34</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+    <li>
+      <div class="item-title"><a href="https://www.bilibili.com/video/BV14wt36UE2r">2026 年 7-8 月 AI 算力赛道复盘｜80 家公司涨跌幅统计</a></div>
+      <div class="item-summary">知行卡卡 · 69 次播放 · 0:39</div>
+      <div class="item-meta"><span class="tag">B站</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ 风险评估 ══ -->
+<div class="card">
+  <div class="card-title">⚠️ 风险评估</div>
+  <table class="risk">
+    <thead>
+      <tr><th>风险维度</th><th>当前状态</th><th>等级</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>宏观利率</td>
+        <td>鹰派 Warsh + 加息预期升温，10Y 升至 4.75%、2Y 4.34%，利率上行压制估值</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>AI 拥挤度</td>
+        <td>硬件估值偏高但内部分化，软件补涨、算力金融化，需求仍旺</td>
+        <td><span class="risk-midhigh">中高</span></td>
+      </tr>
+      <tr>
+        <td>市场情绪</td>
+        <td>美国对伊朗动武、油价飙升，避险主导，纳指领跌</td>
+        <td><span class="risk-high">高</span></td>
+      </tr>
+      <tr>
+        <td>财报风险</td>
+        <td>英伟达/Dell 财报已落地且强劲，近期无重磅财报，但本周就业数据临近</td>
+        <td><span class="risk-mid">中</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ 明日关注 ══ -->
+<div class="card">
+  <div class="card-title">🎯 明日关注</div>
+  <ol class="focus">
+    <li><strong>美债收益率</strong> — 10Y 能否站稳 4.75% 上方，决定成长股与 REITs 估值方向</li>
+    <li><strong>中东局势与油价</strong> — 美伊冲突升级路径，油价是否逼近 100 美元推高通胀预期</li>
+    <li><strong>美国就业数据</strong> — 本周 JOLTS/非农将检验劳动力市场，直接影响加息定价</li>
+    <li><strong>美联储官员讲话</strong> — Warsh 之后官员口径是否延续鹰派，观察加息预期修正</li>
+    <li><strong>AI 软硬件轮动</strong> — 软件对芯片的相对强势能否延续，关注板块内部离散度</li>
+  </ol>
+</div>
+
+<footer>
+  2026-09-02 10:00 自动生成 · 数据来源：Reddit · B站 · FRED · TradingEconomics · Bloomberg · Yahoo Finance<br>
+  仅供参考，不构成投资建议
+</footer>
+
+</div>
+</body>
+</html>
